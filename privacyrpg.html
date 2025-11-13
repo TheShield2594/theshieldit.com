@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy RPG | The Shield IT</title>
+  <meta name="description" content="Level up your digital privacy through interactive quests and challenges.">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --success: #22c55e;
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --text-light: #f1f5f9;
+      --text-gray: #94a3b8;
+      --border: #1e293b;
+      --card-bg: rgba(30, 41, 59, 0.5);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-darker);
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.4;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0 3rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .shield-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-gray);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+
+    .back-link:hover {
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-gray);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .character-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      backdrop-filter: blur(10px);
+      margin-bottom: 3rem;
+      transition: all 0.3s ease;
+      animation: fadeInUp 1s ease-out 0.2s both;
+    }
+
+    .character-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .character-info h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .character-level {
+      color: var(--text-gray);
+      font-size: 1rem;
+    }
+
+    .xp-info {
+      text-align: right;
+    }
+
+    .xp-label {
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      margin-bottom: 0.25rem;
+    }
+
+    .xp-numbers {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .xp-bar-container {
+      width: 100%;
+      height: 12px;
+      background: var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .xp-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.5s ease;
+      position: relative;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .xp-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      to { left: 100%; }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .stat-item {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      color: var(--text-gray);
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+
+    .stat-bar-fill.encryption { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+    .stat-bar-fill.tracking { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+    .stat-bar-fill.minimization { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .stat-bar-fill.authentication { background: linear-gradient(90deg, #ef4444, #dc2626); }
+    .stat-bar-fill.awareness { background: linear-gradient(90deg, #eab308, #ca8a04); }
+
+    .quests-section {
+      margin-bottom: 3rem;
+    }
+
+    .difficulty-section {
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 1s ease-out both;
+    }
+
+    .difficulty-section:nth-child(1) { animation-delay: 0.4s; }
+    .difficulty-section:nth-child(2) { animation-delay: 0.5s; }
+    .difficulty-section:nth-child(3) { animation-delay: 0.6s; }
+
+    .difficulty-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .difficulty-header.easy { color: #22c55e; }
+    .difficulty-header.medium { color: #eab308; }
+    .difficulty-header.hard { color: #ef4444; }
+
+    .quests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .quest-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quest-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.1);
+    }
+
+    .quest-card.completed {
+      border-color: var(--success);
+      background: rgba(34, 197, 94, 0.05);
+      opacity: 0.7;
+    }
+
+    .quest-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .quest-title-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+    }
+
+    .quest-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-light);
+      line-height: 1.3;
+    }
+
+    .quest-xp {
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      white-space: nowrap;
+      padding: 0.25rem 0.75rem;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .quest-description {
+      font-size: 0.95rem;
+      color: var(--text-gray);
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .quest-button {
+      width: 100%;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .quest-button.incomplete {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .quest-button.incomplete:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .quest-button.completed {
+      background: var(--success);
+      color: white;
+      cursor: not-allowed;
+    }
+
+    .level-up-notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #eab308, #f59e0b);
+      color: #000;
+      padding: 2rem 3rem;
+      border-radius: 16px;
+      font-size: 2rem;
+      font-weight: 800;
+      box-shadow: 0 20px 60px rgba(234, 179, 8, 0.4);
+      z-index: 1000;
+      animation: levelUpBounce 0.6s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes levelUpBounce {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    .reset-button {
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .reset-btn {
+      color: var(--text-gray);
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      text-decoration: underline;
+    }
+
+    .reset-btn:hover {
+      color: var(--text-light);
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .character-card {
+        padding: 1.75rem;
+      }
+
+      .character-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .xp-info {
+        text-align: left;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+
+      .quests-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const Shield = ({ size = 24 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+    );
+
+    const ArrowLeft = ({ size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    );
+
+    const Lock = ({ size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    );
+
+    const Eye = ({ size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+    );
+
+    const Database = ({ size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+      </svg>
+    );
+
+    const Brain = ({ size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path>
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path>
+      </svg>
+    );
+
+    const CheckCircle = ({ size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="9 12 11 14 15 10"></polyline>
+      </svg>
+    );
+
+    const ChevronRight = ({ size = 16 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    );
+
+    const PrivacyRPG = () => {
+      const [character, setCharacter] = useState({
+        name: "Privacy Guardian",
+        level: 1,
+        xp: 0,
+        stats: {
+          encryption: 0,
+          tracking: 0,
+          minimization: 0,
+          authentication: 0,
+          awareness: 0
+        }
+      });
+
+      const [completedQuests, setCompletedQuests] = useState(new Set());
+      const [showLevelUp, setShowLevelUp] = useState(false);
+
+      const quests = [
+        // Easy Quests
+        { id: 'enc1', stat: 'encryption', difficulty: 'easy', xp: 10, title: 'Enable device encryption', description: 'Turn on full disk encryption on your computer or phone' },
+        { id: 'enc2', stat: 'encryption', difficulty: 'easy', xp: 15, title: 'Install a password manager', description: 'Set up Bitwarden, 1Password, or KeePass' },
+        { id: 'trk1', stat: 'tracking', difficulty: 'easy', xp: 10, title: 'Install an ad blocker', description: 'Add uBlock Origin or similar to your browser' },
+        { id: 'trk2', stat: 'tracking', difficulty: 'easy', xp: 15, title: 'Switch to privacy browser', description: 'Use Firefox, Brave, or Librewolf as default' },
+        { id: 'min1', stat: 'minimization', difficulty: 'easy', xp: 10, title: 'Delete 5 old accounts', description: 'Close unused social media or web accounts' },
+        { id: 'auth1', stat: 'authentication', difficulty: 'easy', xp: 15, title: 'Enable 2FA on email', description: 'Turn on two-factor authentication for primary email' },
+        { id: 'awr1', stat: 'awareness', difficulty: 'easy', xp: 10, title: 'Learn about threat modeling', description: 'Read about personal threat models and identify yours' },
+        { id: 'awr2', stat: 'awareness', difficulty: 'easy', xp: 15, title: 'Review privacy policies', description: 'Actually read the privacy policy of 3 services you use' },
+        
+        // Medium Quests
+        { id: 'enc3', stat: 'encryption', difficulty: 'medium', xp: 25, title: 'Use encrypted messaging', description: 'Switch to Signal or another E2E encrypted messenger' },
+        { id: 'trk3', stat: 'tracking', difficulty: 'medium', xp: 25, title: 'Configure DNS privacy', description: 'Switch to encrypted DNS (DoH/DoT)' },
+        { id: 'min2', stat: 'minimization', difficulty: 'medium', xp: 20, title: 'Review app permissions', description: 'Audit and restrict unnecessary mobile app permissions' },
+        { id: 'min3', stat: 'minimization', difficulty: 'medium', xp: 25, title: 'Clear old data', description: 'Delete old emails, files, and unused cloud storage' },
+        { id: 'auth2', stat: 'authentication', difficulty: 'medium', xp: 20, title: 'Enable 2FA everywhere', description: 'Activate 2FA on all important accounts' },
+        { id: 'auth3', stat: 'authentication', difficulty: 'medium', xp: 30, title: 'Use TOTP authenticator', description: 'Switch from SMS to app-based 2FA (Aegis, Authy)' },
+        { id: 'awr3', stat: 'awareness', difficulty: 'medium', xp: 25, title: 'Understand metadata', description: 'Learn what metadata is and how it can reveal information' },
+        
+        // Hard Quests
+        { id: 'enc4', stat: 'encryption', difficulty: 'hard', xp: 40, title: 'Encrypt your backups', description: 'Set up encrypted cloud or local backup solution' },
+        { id: 'trk4', stat: 'tracking', difficulty: 'hard', xp: 40, title: 'Set up a VPN', description: 'Configure and use a trustworthy VPN service' },
+        { id: 'min4', stat: 'minimization', difficulty: 'hard', xp: 35, title: 'Opt out of data brokers', description: 'Submit removal requests to major data brokers' },
+        { id: 'auth4', stat: 'authentication', difficulty: 'hard', xp: 45, title: 'Get a hardware security key', description: 'Purchase and configure a YubiKey or similar' },
+        { id: 'awr4', stat: 'awareness', difficulty: 'hard', xp: 35, title: 'Study encryption basics', description: 'Learn the difference between encryption types (symmetric, asymmetric, etc.)' }
+      ];
+
+      const statIcons = {
+        encryption: Lock,
+        tracking: Eye,
+        minimization: Database,
+        authentication: Shield,
+        awareness: Brain
+      };
+
+      const xpToLevel = (level) => level * 50;
+
+      useEffect(() => {
+        const saved = localStorage.getItem('privacyRPG');
+        if (saved) {
+          const data = JSON.parse(saved);
+          setCharacter(data.character);
+          setCompletedQuests(new Set(data.completedQuests));
+        }
+      }, []);
+
+      const saveProgress = (newChar, newCompleted) => {
+        localStorage.setItem('privacyRPG', JSON.stringify({
+          character: newChar,
+          completedQuests: Array.from(newCompleted)
+        }));
+      };
+
+      const completeQuest = (quest) => {
+        if (completedQuests.has(quest.id)) return;
+
+        const newCompleted = new Set(completedQuests);
+        newCompleted.add(quest.id);
+
+        const newXP = character.xp + quest.xp;
+        const newStats = { ...character.stats };
+        newStats[quest.stat] += quest.xp;
+
+        let newLevel = character.level;
+        let remainingXP = newXP;
+
+        while (remainingXP >= xpToLevel(newLevel)) {
+          remainingXP -= xpToLevel(newLevel);
+          newLevel++;
+          setShowLevelUp(true);
+          setTimeout(() => setShowLevelUp(false), 2000);
+        }
+
+        const newChar = {
+          ...character,
+          level: newLevel,
+          xp: remainingXP,
+          stats: newStats
+        };
+
+        setCharacter(newChar);
+        setCompletedQuests(newCompleted);
+        saveProgress(newChar, newCompleted);
+      };
+
+      const resetProgress = () => {
+        if (confirm('Reset all progress? This cannot be undone.')) {
+          const fresh = {
+            name: "Privacy Guardian",
+            level: 1,
+            xp: 0,
+            stats: {
+              encryption: 0,
+              tracking: 0,
+              minimization: 0,
+              authentication: 0,
+              awareness: 0
+            }
+          };
+          setCharacter(fresh);
+          setCompletedQuests(new Set());
+          localStorage.removeItem('privacyRPG');
+        }
+      };
+
+      const questsByDifficulty = {
+        'easy': quests.filter(q => q.difficulty === 'easy'),
+        'medium': quests.filter(q => q.difficulty === 'medium'),
+        'hard': quests.filter(q => q.difficulty === 'hard')
+      };
+
+      return (
+        <div className="container">
+          <header>
+            <a href="/" className="logo">
+              <div className="shield-icon">
+                <Shield size={20} />
+              </div>
+              The Shield IT
+            </a>
+            <a href="/" className="back-link">
+              <ArrowLeft />
+              Back to Home
+            </a>
+          </header>
+
+          <div className="hero">
+            <h1>Privacy Guardian RPG</h1>
+            <p>Level up your digital privacy skills through practical quests. Track your progress and become a privacy expert.</p>
+          </div>
+
+          {showLevelUp && (
+            <div className="level-up-notification">
+              🎉 LEVEL UP! 🎉
+            </div>
+          )}
+
+          <div className="character-card">
+            <div className="character-header">
+              <div className="character-info">
+                <h2>{character.name}</h2>
+                <div className="character-level">Level {character.level}</div>
+              </div>
+              <div className="xp-info">
+                <div className="xp-label">Experience</div>
+                <div className="xp-numbers">{character.xp} / {xpToLevel(character.level)} XP</div>
+              </div>
+            </div>
+
+            <div className="xp-bar-container">
+              <div 
+                className="xp-bar"
+                style={{ width: `${(character.xp / xpToLevel(character.level)) * 100}%` }}
+              />
+            </div>
+
+            <div className="stats-grid">
+              {Object.entries(character.stats).map(([stat, value]) => {
+                const Icon = statIcons[stat];
+                return (
+                  <div key={stat} className="stat-item">
+                    <div className="stat-header">
+                      <Icon size={18} />
+                      <span className="stat-name">{stat}</span>
+                    </div>
+                    <div className="stat-value">{value}</div>
+                    <div className="stat-bar">
+                      <div 
+                        className={`stat-bar-fill ${stat}`}
+                        style={{ width: `${Math.min((value / 200) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="quests-section">
+            {['easy', 'medium', 'hard'].map((difficulty, index) => (
+              <div key={difficulty} className="difficulty-section">
+                <h3 className={`difficulty-header ${difficulty}`}>
+                  {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Quests
+                </h3>
+                <div className="quests-grid">
+                  {questsByDifficulty[difficulty].map(quest => {
+                    const isCompleted = completedQuests.has(quest.id);
+                    const Icon = statIcons[quest.stat];
+                    
+                    return (
+                      <div 
+                        key={quest.id}
+                        className={`quest-card ${isCompleted ? 'completed' : ''}`}
+                      >
+                        <div className="quest-header">
+                          <div className="quest-title-wrapper">
+                            <Icon size={18} />
+                            <h4 className="quest-title">{quest.title}</h4>
+                          </div>
+                          <span className="quest-xp">+{quest.xp} XP</span>
+                        </div>
+                        <p className="quest-description">{quest.description}</p>
+                        <button
+                          onClick={() => completeQuest(quest)}
+                          disabled={isCompleted}
+                          className={`quest-button ${isCompleted ? 'completed' : 'incomplete'}`}
+                        >
+                          {isCompleted ? (
+                            <>
+                              <CheckCircle size={18} />
+                              Completed
+                            </>
+                          ) : (
+                            <>
+                              Mark Complete
+                              <ChevronRight />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="reset-button">
+            <button onClick={resetProgress} className="reset-btn">
+              Reset All Progress
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<PrivacyRPG />);
+  </script>
+</body>
+</html>
+
