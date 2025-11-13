@@ -1,0 +1,18 @@
+# robots.txt for theshieldit.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://theshieldit.com/sitemap.xml
+
+# Optional: Block AI training scrapers (GPTBot, etc.) if desired
+# Uncomment the lines below if you want to opt-out of AI training
+# User-agent: GPTBot
+# Disallow: /
+# User-agent: CCBot
+# Disallow: /
+# User-agent: ChatGPT-User
+# Disallow: /
+# User-agent: Google-Extended
+# Disallow: /

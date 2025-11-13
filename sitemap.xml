@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Homepage - Highest priority -->
+  <url>
+    <loc>https://theshieldit.com/</loc>
+    <lastmod>2025-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Tools Landing Page -->
+  <url>
+    <loc>https://theshieldit.com/tools.html</loc>
+    <lastmod>2025-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Password Strength Quest Tool -->
+  <url>
+    <loc>https://theshieldit.com/password-quest.html</loc>
+    <lastmod>2025-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Privacy Guardian RPG Tool -->
+  <url>
+    <loc>https://theshieldit.com/privacy-rpg.html</loc>
+    <lastmod>2025-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+</urlset>
