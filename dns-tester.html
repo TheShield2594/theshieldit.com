@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags -->
+  <title>DNS Lookup Tester - Free Online Tool | The Shield IT</title>
+  <meta name="title" content="DNS Lookup Tester - Free Online Tool | The Shield IT">
+  <meta name="description" content="Free DNS lookup tool. Query A, AAAA, MX, NS, TXT, CNAME, and SOA records for any domain. Uses DNS-over-HTTPS for privacy. No sign-up required.">
+  <meta name="keywords" content="DNS lookup, DNS tester, DNS checker, DNS records, MX lookup, NS lookup, TXT records, domain lookup, DNS over HTTPS">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/dns-tester.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/dns-tester.html">
+  <meta property="og:title" content="DNS Lookup Tester - Free Online Tool">
+  <meta property="og:description" content="Look up DNS records for any domain. Supports A, AAAA, MX, NS, TXT, CNAME, and SOA records. Privacy-friendly DNS-over-HTTPS.">
+  <meta property="og:site_name" content="The Shield IT">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DNS Lookup Tester - Free Online Tool">
+  <meta name="twitter:description" content="Look up DNS records for any domain. Supports A, AAAA, MX, NS, TXT, CNAME, and SOA records.">
+
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --text-light: #f1f5f9;
+      --text-gray: #94a3b8;
+      --border: #1e293b;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-darker);
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.4;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 0;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .shield-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-gray);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+
+    .back-link:hover {
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-gray);
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.8s ease-out 0.1s both;
+    }
+
+    /* Tool Layout */
+    .tool-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .tool-panel {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-gray);
+      margin-bottom: 1rem;
+    }
+
+    /* Input row */
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .input-row .form-group.select-group {
+      flex: 0 0 160px;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-gray);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+    }
+
+    .form-group select option {
+      background: var(--bg-dark);
+    }
+
+    /* Record type tabs */
+    .record-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .record-tab {
+      padding: 0.5rem 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-gray);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .record-tab:hover {
+      border-color: var(--primary);
+      color: var(--text-light);
+    }
+
+    .record-tab.active {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Lookup Button */
+    .lookup-btn {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      margin-top: 0.5rem;
+    }
+
+    .lookup-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+    }
+
+    .lookup-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Results */
+    .results-placeholder {
+      color: var(--text-gray);
+      text-align: center;
+      font-size: 0.95rem;
+      padding: 2rem 0;
+    }
+
+    .results-placeholder svg {
+      display: block;
+      margin: 0 auto 1rem;
+      opacity: 0.3;
+    }
+
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-gray);
+    }
+
+    .results-meta .resolver {
+      font-size: 0.8rem;
+    }
+
+    .response-time {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Results table */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-table th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-gray);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-table td {
+      padding: 0.6rem 0.75rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+      word-break: break-all;
+    }
+
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .results-table .record-type-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .badge-a { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .badge-aaaa { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+    .badge-mx { background: rgba(249, 115, 22, 0.15); color: #fb923c; }
+    .badge-ns { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .badge-txt { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+    .badge-cname { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .badge-soa { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+
+    .ttl-value {
+      color: var(--text-gray);
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.85rem;
+    }
+
+    .record-value {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.85rem;
+    }
+
+    /* Error */
+    .error-message {
+      color: #ef4444;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* Loading spinner */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-gray);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Privacy note */
+    .privacy-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--text-gray);
+      line-height: 1.5;
+    }
+
+    .privacy-note svg {
+      flex-shrink: 0;
+      margin-top: 1px;
+      color: var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-gray);
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .input-row .form-group.select-group {
+        flex: auto;
+      }
+
+      .results-table th:nth-child(3),
+      .results-table td:nth-child(3) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        All Tools
+      </a>
+    </header>
+
+    <main>
+      <h1>DNS Lookup Tester</h1>
+      <p class="subtitle">Query DNS records for any domain using DNS-over-HTTPS</p>
+
+      <div class="tool-layout">
+        <div class="tool-panel">
+          <div class="panel-title">Query</div>
+
+          <div class="form-group">
+            <label for="domainInput">Domain name</label>
+            <input type="text" id="domainInput" placeholder="example.com" autocomplete="off" spellcheck="false">
+          </div>
+
+          <label style="display:block; font-size:0.85rem; font-weight:500; color:var(--text-gray); margin-bottom:0.4rem;">Record type</label>
+          <div class="record-tabs" id="recordTabs">
+            <button class="record-tab active" data-type="A">A</button>
+            <button class="record-tab" data-type="AAAA">AAAA</button>
+            <button class="record-tab" data-type="MX">MX</button>
+            <button class="record-tab" data-type="NS">NS</button>
+            <button class="record-tab" data-type="TXT">TXT</button>
+            <button class="record-tab" data-type="CNAME">CNAME</button>
+            <button class="record-tab" data-type="SOA">SOA</button>
+          </div>
+
+          <div class="form-group">
+            <label for="resolverSelect">DNS resolver</label>
+            <select id="resolverSelect">
+              <option value="cloudflare">Cloudflare (1.1.1.1)</option>
+              <option value="google">Google (8.8.8.8)</option>
+            </select>
+          </div>
+
+          <button class="lookup-btn" id="lookupBtn">Lookup DNS Records</button>
+
+          <div class="privacy-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Queries are sent over encrypted HTTPS to your chosen resolver. No data is stored on our servers.</span>
+          </div>
+        </div>
+
+        <div class="tool-panel">
+          <div class="panel-title">Results</div>
+          <div id="resultsArea">
+            <div class="results-placeholder">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              Enter a domain and click Lookup
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 The Shield IT &middot; All queries use encrypted DNS-over-HTTPS</p>
+    </footer>
+  </div>
+
+  <script>
+  (function() {
+    var domainInput = document.getElementById('domainInput');
+    var lookupBtn = document.getElementById('lookupBtn');
+    var resultsArea = document.getElementById('resultsArea');
+    var resolverSelect = document.getElementById('resolverSelect');
+    var recordTabs = document.querySelectorAll('.record-tab');
+    var selectedType = 'A';
+
+    // Record type tab switching
+    recordTabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        recordTabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        selectedType = tab.getAttribute('data-type');
+      });
+    });
+
+    // Allow Enter key to trigger lookup
+    domainInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        lookupBtn.click();
+      }
+    });
+
+    // DNS type number mapping
+    var typeNumbers = {
+      A: 1,
+      AAAA: 28,
+      MX: 15,
+      NS: 2,
+      TXT: 16,
+      CNAME: 5,
+      SOA: 6
+    };
+
+    // Reverse mapping for display
+    var typeNames = {};
+    Object.keys(typeNumbers).forEach(function(k) {
+      typeNames[typeNumbers[k]] = k;
+    });
+
+    function getResolverUrl() {
+      if (resolverSelect.value === 'google') {
+        return 'https://dns.google/resolve';
+      }
+      return 'https://cloudflare-dns.com/dns-query';
+    }
+
+    function cleanDomain(input) {
+      var domain = input.trim().toLowerCase();
+      // Strip protocol if pasted as URL
+      domain = domain.replace(/^https?:\/\//, '');
+      // Strip path, query, fragment
+      domain = domain.split('/')[0];
+      // Strip port
+      domain = domain.split(':')[0];
+      // Strip trailing dot
+      domain = domain.replace(/\.$/, '');
+      return domain;
+    }
+
+    function formatSOA(data) {
+      // SOA data comes as a single string: "mname rname serial refresh retry expire minimum"
+      var parts = data.split(/\s+/);
+      if (parts.length >= 7) {
+        return 'Primary NS: ' + parts[0] +
+          '\nAdmin: ' + parts[1] +
+          '\nSerial: ' + parts[2] +
+          '\nRefresh: ' + parts[3] + 's' +
+          '\nRetry: ' + parts[4] + 's' +
+          '\nExpire: ' + parts[5] + 's' +
+          '\nMin TTL: ' + parts[6] + 's';
+      }
+      return data;
+    }
+
+    function formatTTL(seconds) {
+      if (seconds < 60) return seconds + 's';
+      if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
+      if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
+      return Math.floor(seconds / 86400) + 'd';
+    }
+
+    function renderResults(data, responseTime, resolver) {
+      var typeName = selectedType;
+      var resolverLabel = resolver === 'google' ? 'Google (8.8.8.8)' : 'Cloudflare (1.1.1.1)';
+
+      if (!data.Answer || data.Answer.length === 0) {
+        // Check for authority section (common for NS lookups via some resolvers)
+        if (data.Authority && data.Authority.length > 0) {
+          data.Answer = data.Authority;
+        } else {
+          resultsArea.innerHTML =
+            '<div class="results-meta">' +
+              '<span class="resolver">Resolver: ' + resolverLabel + '</span>' +
+              '<span class="response-time">' + responseTime + 'ms</span>' +
+            '</div>' +
+            '<div class="error-message">No ' + typeName + ' records found for this domain.</div>';
+          return;
+        }
+      }
+
+      var html =
+        '<div class="results-meta">' +
+          '<span class="resolver">Resolver: ' + resolverLabel + '</span>' +
+          '<span class="response-time">' + responseTime + 'ms</span>' +
+        '</div>' +
+        '<table class="results-table">' +
+          '<thead><tr>' +
+            '<th>Type</th>' +
+            '<th>Value</th>' +
+            '<th>TTL</th>' +
+          '</tr></thead>' +
+          '<tbody>';
+
+      data.Answer.forEach(function(record) {
+        var rType = typeNames[record.type] || ('TYPE' + record.type);
+        var badgeClass = 'badge-' + rType.toLowerCase();
+        var value = record.data || '';
+
+        // Strip trailing dot from DNS names
+        if (value.endsWith('.')) {
+          value = value.slice(0, -1);
+        }
+
+        // Format SOA records nicely
+        if (record.type === 6) {
+          value = formatSOA(value);
+        }
+
+        // For MX records, show priority
+        if (record.type === 15) {
+          var mxParts = value.split(/\s+/);
+          if (mxParts.length >= 2) {
+            var priority = mxParts[0];
+            var server = mxParts[1].replace(/\.$/, '');
+            value = server + ' (priority: ' + priority + ')';
+          }
+        }
+
+        // For TXT records, clean up quotes
+        if (record.type === 16) {
+          value = value.replace(/^"|"$/g, '');
+        }
+
+        html +=
+          '<tr>' +
+            '<td><span class="record-type-badge ' + badgeClass + '">' + rType + '</span></td>' +
+            '<td class="record-value">' + escapeHtml(value).replace(/\n/g, '<br>') + '</td>' +
+            '<td class="ttl-value">' + formatTTL(record.TTL) + '</td>' +
+          '</tr>';
+      });
+
+      html += '</tbody></table>';
+      resultsArea.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    lookupBtn.addEventListener('click', function() {
+      var domain = cleanDomain(domainInput.value);
+      if (!domain) {
+        resultsArea.innerHTML = '<div class="error-message">Please enter a domain name.</div>';
+        return;
+      }
+
+      // Basic domain validation
+      if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/.test(domain)) {
+        resultsArea.innerHTML = '<div class="error-message">Please enter a valid domain name (e.g., example.com).</div>';
+        return;
+      }
+
+      lookupBtn.disabled = true;
+      lookupBtn.textContent = 'Looking up...';
+      resultsArea.innerHTML =
+        '<div class="loading">' +
+          '<div class="spinner"></div>' +
+          '<div>Querying DNS records...</div>' +
+        '</div>';
+
+      var resolver = resolverSelect.value;
+      var url = getResolverUrl();
+      var typeNum = typeNumbers[selectedType] || 1;
+
+      var startTime = performance.now();
+
+      var fetchUrl = url + '?name=' + encodeURIComponent(domain) + '&type=' + typeNum;
+
+      fetch(fetchUrl, {
+        headers: {
+          'Accept': 'application/dns-json'
+        }
+      })
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('DNS query failed (HTTP ' + response.status + ')');
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        var responseTime = Math.round(performance.now() - startTime);
+        renderResults(data, responseTime, resolver);
+      })
+      .catch(function(err) {
+        resultsArea.innerHTML = '<div class="error-message">Error: ' + escapeHtml(err.message) + '</div>';
+      })
+      .finally(function() {
+        lookupBtn.disabled = false;
+        lookupBtn.textContent = 'Lookup DNS Records';
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
