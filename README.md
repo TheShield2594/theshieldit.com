@@ -75,19 +75,6 @@ Edit the social links in the HTML file around line 550:
 
 Note: Substack link is included in the "Educational Content" card, not in the top social links.
 
-### Updating Pricing
-The pricing section starts around line 650. Current pricing:
-- Privacy Starter Audit: $49 (one-time)
-- Full Privacy Setup: $199 (one-time) - Most Popular
-- Family Safety Plan: $299 (one-time)
-- Ongoing Privacy Support: $39/month
-
-To customize:
-- Change prices in the `price-amount` spans
-- Modify service features in the `pricing-features` lists
-- Update email subjects in the `mailto:` links (currently set to brandon@theshieldit.com)
-- Adjust service names and descriptions as needed
-
 ### Changing Colors
 The color scheme uses CSS variables defined at the top of the `<style>` section:
 ```css
