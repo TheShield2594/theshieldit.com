@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHOIS Lookup - Domain Registration Info | The Shield IT</title>
+  <meta name="description" content="Free WHOIS lookup tool. Find domain registration details, registrar info, nameservers, and expiration dates for any domain.">
+  <meta name="keywords" content="WHOIS lookup, domain info, domain registration, registrar lookup, domain expiry, nameserver lookup">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/whois-lookup.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/whois-lookup.html">
+  <meta property="og:title" content="WHOIS Lookup - Domain Registration Info">
+  <meta property="og:description" content="Look up domain registration details, registrar info, and nameservers.">
+  <meta property="og:site_name" content="The Shield IT">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="WHOIS Lookup - Domain Registration Info">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --primary-dark: #2563eb; --secondary: #8b5cf6;
+      --accent: #06b6d4; --bg-dark: #0f172a; --bg-darker: #020617;
+      --text-light: #f1f5f9; --text-gray: #94a3b8; --border: #1e293b;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; animation: fadeInDown 0.8s ease-out; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
+      font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
+    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; animation: fadeInUp 0.8s ease-out; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
+    .tool-layout { display: flex; flex-direction: column; gap: 2rem; animation: fadeInUp 0.8s ease-out 0.2s both; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px); }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-gray); margin-bottom: 0.4rem; }
+    .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s ease; }
+    .form-group input:focus { border-color: var(--primary); }
+    .lookup-btn { width: 100%; padding: 0.875rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; margin-top: 0.5rem; }
+    .lookup-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .lookup-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .privacy-note { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem 1rem;
+      background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2); border-radius: 8px;
+      font-size: 0.8rem; color: var(--text-gray); line-height: 1.5; }
+    .privacy-note svg { flex-shrink: 0; margin-top: 1px; color: var(--accent); }
+    .results-placeholder { color: var(--text-gray); text-align: center; font-size: 0.95rem; padding: 2rem 0; }
+    .results-placeholder svg { display: block; margin: 0 auto 1rem; opacity: 0.3; }
+    .loading { text-align: center; padding: 2rem; color: var(--text-gray); }
+    .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border);
+      border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 0.5rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-message { color: #ef4444; text-align: center; padding: 1.5rem; font-size: 0.95rem; }
+    .whois-section { margin-bottom: 1.5rem; }
+    .whois-section:last-child { margin-bottom: 0; }
+    .section-header { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-light);
+      display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .section-header svg { color: var(--primary); }
+    .info-row { display: flex; padding: 0.5rem 0; border-bottom: 1px solid rgba(30,41,59,0.5); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { width: 160px; flex-shrink: 0; font-size: 0.8rem; color: var(--text-gray); font-weight: 500; padding-top: 0.1rem; }
+    .info-value { font-size: 0.85rem; word-break: break-all;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .status-badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .status-badge.active { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .status-badge.expired { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .ns-list { list-style: none; }
+    .ns-list li { padding: 0.25rem 0; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.85rem; }
+    .raw-toggle { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; background: rgba(30,41,59,0.5);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text-gray); cursor: pointer; font-size: 0.8rem;
+      font-family: inherit; transition: all 0.2s ease; margin-top: 1rem; }
+    .raw-toggle:hover { border-color: var(--primary); color: var(--text-light); }
+    .raw-output { margin-top: 0.75rem; padding: 1rem; background: rgba(15,23,42,0.6); border-radius: 8px;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.8rem;
+      white-space: pre-wrap; word-break: break-all; color: var(--text-gray); max-height: 400px; overflow-y: auto; display: none; }
+    footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border);
+      color: var(--text-gray); font-size: 0.85rem; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; }
+      header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .info-row { flex-direction: column; gap: 0.2rem; }
+      .info-label { width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        All Tools
+      </a>
+    </header>
+    <main>
+      <h1>WHOIS Lookup</h1>
+      <p class="subtitle">Look up domain registration details, registrar, nameservers, and expiry dates</p>
+      <div class="tool-layout">
+        <div class="tool-panel">
+          <div class="panel-title">Query</div>
+          <div class="form-group">
+            <label for="domainInput">Domain name</label>
+            <input type="text" id="domainInput" placeholder="example.com" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="lookup-btn" id="lookupBtn">Lookup WHOIS</button>
+          <div class="privacy-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>WHOIS data is queried from public RDAP servers. No personal data is collected.</span>
+          </div>
+        </div>
+        <div class="tool-panel">
+          <div class="panel-title">Results</div>
+          <div id="resultsArea">
+            <div class="results-placeholder">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Enter a domain and click Lookup
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer><p>&copy; 2025 The Shield IT &middot; WHOIS data from public RDAP servers</p></footer>
+  </div>
+  <script>
+  (function() {
+    var domainInput = document.getElementById('domainInput');
+    var lookupBtn = document.getElementById('lookupBtn');
+    var resultsArea = document.getElementById('resultsArea');
+
+    domainInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') lookupBtn.click(); });
+
+    function cleanDomain(input) {
+      var d = input.trim().toLowerCase();
+      d = d.replace(/^https?:\/\//, '').split('/')[0].split(':')[0].replace(/\.$/, '');
+      return d;
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str || ''));
+      return div.innerHTML;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return 'N/A';
+      try {
+        var d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        var now = new Date();
+        var diff = d.getTime() - now.getTime();
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var formatted = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        if (days > 0) formatted += ' (' + days + ' days from now)';
+        else if (days < 0) formatted += ' (' + Math.abs(days) + ' days ago)';
+        return formatted;
+      } catch (e) { return dateStr; }
+    }
+
+    function getTLD(domain) {
+      var parts = domain.split('.');
+      return parts[parts.length - 1];
+    }
+
+    function getRDAPUrl(domain) {
+      var tld = getTLD(domain);
+      var rdapServers = {
+        'com': 'https://rdap.verisign.com/com/v1/',
+        'net': 'https://rdap.verisign.com/net/v1/',
+        'org': 'https://rdap.org/org/v1/',
+        'io': 'https://rdap.nic.io/',
+        'dev': 'https://rdap.nic.google/',
+        'app': 'https://rdap.nic.google/',
+        'me': 'https://rdap.nic.me/',
+        'co': 'https://rdap.nic.co/',
+        'info': 'https://rdap.afilias.net/rdap/info/',
+        'xyz': 'https://rdap.nic.xyz/',
+        'tech': 'https://rdap.nic.tech/'
+      };
+      return rdapServers[tld] || null;
+    }
+
+    function parseRDAP(data) {
+      var result = {
+        domainName: data.ldhName || '',
+        status: [],
+        events: {},
+        nameservers: [],
+        registrar: '',
+        registrarUrl: '',
+        rawData: JSON.stringify(data, null, 2)
+      };
+
+      if (data.status) result.status = data.status;
+
+      if (data.events) {
+        data.events.forEach(function(ev) {
+          result.events[ev.eventAction] = ev.eventDate;
+        });
+      }
+
+      if (data.nameservers) {
+        data.nameservers.forEach(function(ns) {
+          if (ns.ldhName) result.nameservers.push(ns.ldhName.toLowerCase());
+        });
+      }
+
+      if (data.entities) {
+        data.entities.forEach(function(entity) {
+          if (entity.roles && entity.roles.indexOf('registrar') !== -1) {
+            if (entity.vcardArray && entity.vcardArray[1]) {
+              entity.vcardArray[1].forEach(function(field) {
+                if (field[0] === 'fn') result.registrar = field[3];
+              });
+            }
+            if (entity.publicIds) {
+              entity.publicIds.forEach(function(pid) {
+                if (pid.type === 'IANA Registrar ID') result.registrarIANA = pid.identifier;
+              });
+            }
+          }
+        });
+      }
+
+      if (data.links) {
+        data.links.forEach(function(link) {
+          if (link.rel === 'related' || link.type === 'text/html') {
+            result.registrarUrl = link.href;
+          }
+        });
+      }
+
+      return result;
+    }
+
+    function renderResults(info) {
+      var isActive = info.status.some(function(s) { return s === 'active' || s === 'ok'; });
+      var html = '';
+
+      // Domain & Status
+      html += '<div class="whois-section">';
+      html += '<div class="section-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Domain Info</div>';
+      html += '<div class="info-row"><div class="info-label">Domain Name</div><div class="info-value">' + escapeHtml(info.domainName) + '</div></div>';
+      html += '<div class="info-row"><div class="info-label">Status</div><div class="info-value"><span class="status-badge ' + (isActive ? 'active' : 'expired') + '">' + (isActive ? 'Active' : 'Inactive') + '</span></div></div>';
+      if (info.status.length > 0) {
+        html += '<div class="info-row"><div class="info-label">EPP Status</div><div class="info-value">' + info.status.map(escapeHtml).join(', ') + '</div></div>';
+      }
+      html += '</div>';
+
+      // Registrar
+      html += '<div class="whois-section">';
+      html += '<div class="section-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Registrar</div>';
+      html += '<div class="info-row"><div class="info-label">Registrar</div><div class="info-value">' + escapeHtml(info.registrar || 'N/A') + '</div></div>';
+      if (info.registrarIANA) {
+        html += '<div class="info-row"><div class="info-label">IANA ID</div><div class="info-value">' + escapeHtml(info.registrarIANA) + '</div></div>';
+      }
+      html += '</div>';
+
+      // Dates
+      html += '<div class="whois-section">';
+      html += '<div class="section-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Dates</div>';
+      html += '<div class="info-row"><div class="info-label">Created</div><div class="info-value">' + formatDate(info.events['registration']) + '</div></div>';
+      html += '<div class="info-row"><div class="info-label">Updated</div><div class="info-value">' + formatDate(info.events['last changed']) + '</div></div>';
+      html += '<div class="info-row"><div class="info-label">Expires</div><div class="info-value">' + formatDate(info.events['expiration']) + '</div></div>';
+      html += '</div>';
+
+      // Nameservers
+      if (info.nameservers.length > 0) {
+        html += '<div class="whois-section">';
+        html += '<div class="section-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>Nameservers</div>';
+        html += '<ul class="ns-list">';
+        info.nameservers.forEach(function(ns) {
+          html += '<li>' + escapeHtml(ns) + '</li>';
+        });
+        html += '</ul></div>';
+      }
+
+      // Raw data toggle
+      html += '<button class="raw-toggle" id="rawToggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>Raw RDAP Data</button>';
+      html += '<div class="raw-output" id="rawOutput">' + escapeHtml(info.rawData) + '</div>';
+
+      resultsArea.innerHTML = html;
+
+      document.getElementById('rawToggle').addEventListener('click', function() {
+        var raw = document.getElementById('rawOutput');
+        raw.style.display = raw.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+
+    lookupBtn.addEventListener('click', function() {
+      var domain = cleanDomain(domainInput.value);
+      if (!domain) { resultsArea.innerHTML = '<div class="error-message">Please enter a domain name.</div>'; return; }
+      if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/.test(domain)) {
+        resultsArea.innerHTML = '<div class="error-message">Please enter a valid domain name (e.g., example.com).</div>'; return;
+      }
+
+      var rdapUrl = getRDAPUrl(domain);
+      if (!rdapUrl) {
+        resultsArea.innerHTML = '<div class="error-message">RDAP lookup is not supported for the .' + escapeHtml(getTLD(domain)) + ' TLD. Supported: .com, .net, .org, .io, .dev, .app, .me, .co, .info, .xyz, .tech</div>';
+        return;
+      }
+
+      lookupBtn.disabled = true;
+      lookupBtn.textContent = 'Looking up...';
+      resultsArea.innerHTML = '<div class="loading"><div class="spinner"></div><div>Querying RDAP servers...</div></div>';
+
+      fetch(rdapUrl + 'domain/' + encodeURIComponent(domain))
+        .then(function(response) {
+          if (response.status === 404) throw new Error('Domain not found in WHOIS database.');
+          if (!response.ok) throw new Error('RDAP query failed (HTTP ' + response.status + ')');
+          return response.json();
+        })
+        .then(function(data) {
+          var info = parseRDAP(data);
+          renderResults(info);
+        })
+        .catch(function(err) {
+          resultsArea.innerHTML = '<div class="error-message">' + escapeHtml(err.message) + '</div>';
+        })
+        .finally(function() {
+          lookupBtn.disabled = false;
+          lookupBtn.textContent = 'Lookup WHOIS';
+        });
+    });
+  })();
+  </script>
+</body>
+</html>

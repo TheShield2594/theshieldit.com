@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Breach Timeline - Major Breaches Visualized | The Shield IT</title>
+  <meta name="description" content="Interactive timeline of major data breaches. Explore the biggest cybersecurity incidents from 2004 to present, with records affected, data types, and lessons learned.">
+  <meta name="keywords" content="data breach timeline, cybersecurity breaches, data breach history, biggest data breaches, breach visualization, security incidents">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/breach-timeline.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/breach-timeline.html">
+  <meta property="og:title" content="Data Breach Timeline - Major Breaches Visualized">
+  <meta property="og:description" content="Interactive timeline of the biggest data breaches in history.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444; --yellow: #eab308; --orange: #f97316;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; animation: fadeInDown 0.8s ease-out; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
+      font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
+    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; animation: fadeInUp 0.8s ease-out; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
+
+    /* Stats bar */
+    .stats-bar { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+    .stat-card { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem;
+      text-align: center; min-width: 140px; }
+    .stat-num { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Filter */
+    .filter-row { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; justify-content: center; }
+    .filter-btn { padding: 0.4rem 0.8rem; background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text-gray); cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: all 0.2s ease; font-family: inherit; }
+    .filter-btn:hover { border-color: var(--primary); color: var(--text-light); }
+    .filter-btn.active { background: rgba(59,130,246,0.15); border-color: var(--primary); color: var(--primary); }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary), var(--accent)); }
+    .timeline-year { position: relative; margin-bottom: 0.5rem; }
+    .year-label { position: absolute; left: -40px; width: 30px; text-align: right; font-size: 0.75rem; font-weight: 700;
+      color: var(--primary); top: 0.75rem; }
+    .year-dot { position: absolute; left: -33px; top: 0.9rem; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--primary); border: 2px solid var(--bg-darker); }
+
+    .breach-card { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1rem 1.25rem; margin-bottom: 1rem; transition: all 0.3s ease; cursor: pointer; }
+    .breach-card:hover { border-color: var(--primary); transform: translateX(4px); }
+    .breach-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+    .breach-company { font-size: 1.05rem; font-weight: 700; }
+    .breach-date { font-size: 0.75rem; color: var(--text-gray); white-space: nowrap; }
+    .breach-records { font-size: 0.85rem; margin: 0.5rem 0; }
+    .breach-records strong { color: var(--red); }
+    .breach-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .breach-tag { padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; }
+    .breach-tag.type-hack { background: rgba(239,68,68,0.1); color: var(--red); }
+    .breach-tag.type-exposure { background: rgba(234,179,8,0.1); color: var(--yellow); }
+    .breach-tag.type-insider { background: rgba(249,115,22,0.1); color: var(--orange); }
+    .breach-tag.type-ransom { background: rgba(139,92,246,0.1); color: var(--secondary); }
+    .breach-tag.data { background: rgba(59,130,246,0.1); color: var(--primary); }
+
+    .breach-detail { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .breach-detail.open { display: block; }
+    .breach-desc { font-size: 0.85rem; color: var(--text-gray); line-height: 1.6; margin-bottom: 0.75rem; }
+    .breach-lesson { font-size: 0.8rem; padding: 0.5rem 0.75rem; background: rgba(6,182,212,0.08);
+      border-radius: 8px; color: var(--accent); }
+    .breach-lesson strong { display: block; margin-bottom: 0.25rem; color: var(--text-light); font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .show-more { display: block; width: 200px; margin: 2rem auto; padding: 0.75rem; background: rgba(30,41,59,0.5);
+      border: 1px solid var(--border); border-radius: 10px; color: var(--text-gray); cursor: pointer;
+      font-size: 0.9rem; font-family: inherit; text-align: center; transition: all 0.2s ease; }
+    .show-more:hover { border-color: var(--primary); color: var(--text-light); }
+
+    footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.85rem; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; }
+      header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .stats-bar { gap: 0.5rem; }
+      .stat-card { min-width: 100px; padding: 0.75rem 1rem; }
+      .stat-num { font-size: 1.2rem; }
+      .timeline { padding-left: 30px; }
+      .year-label { left: -30px; font-size: 0.7rem; }
+      .year-dot { left: -23px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        All Tools
+      </a>
+    </header>
+    <main>
+      <h1>Data Breach Timeline</h1>
+      <p class="subtitle">Explore the biggest data breaches in history and the lessons they teach us</p>
+      <div id="app"></div>
+    </main>
+    <footer><p>&copy; 2025 The Shield IT &middot; Data sourced from public breach disclosures</p></footer>
+  </div>
+  <script>
+  (function() {
+    var app = document.getElementById('app');
+
+    var breaches = [
+      { company: 'Yahoo', year: 2013, disclosed: 2016, records: 3000000000, type: 'hack', dataTypes: ['Email','Passwords','Names','Phone numbers','DOBs'],
+        desc: 'The largest data breach in history affected all 3 billion Yahoo accounts. Attackers used forged cookies to access accounts without passwords. Not disclosed until 2016 during the Verizon acquisition.',
+        lesson: 'Companies may not discover breaches for years. Use unique passwords for every account so one breach doesn\'t compromise everything.' },
+      { company: 'First American Financial', year: 2019, records: 885000000, type: 'exposure', dataTypes: ['Bank accounts','SSNs','Wire transfers','Tax records'],
+        desc: 'A website design flaw exposed 885 million financial documents dating back to 2003. Anyone could access the documents by changing a number in the URL - no authentication required.',
+        lesson: 'Even without "hacking," poor security design can expose massive amounts of data. Always verify that financial institutions protect your documents properly.' },
+      { company: 'Facebook', year: 2019, records: 533000000, type: 'exposure', dataTypes: ['Phone numbers','Email','Names','Locations','DOBs'],
+        desc: 'Phone numbers and personal data of 533 million users from 106 countries were scraped through a vulnerability in Facebook\'s contact import feature. Data was later posted freely online.',
+        lesson: 'Limit what personal information you share on social media. Even if a platform is secure, scrapers can collect publicly available data at scale.' },
+      { company: 'LinkedIn', year: 2021, records: 700000000, type: 'exposure', dataTypes: ['Email','Phone numbers','Names','Geolocation','Salaries'],
+        desc: 'Data of 700 million LinkedIn users (93% of all users) was scraped and put up for sale. Included professional details, email addresses, phone numbers, and inferred salaries.',
+        lesson: 'Professional networking data is valuable to attackers for spear-phishing. Be cautious of unsolicited messages that reference your work history.' },
+      { company: 'Marriott', year: 2018, records: 500000000, type: 'hack', dataTypes: ['Names','Passports','Credit cards','Email','Phone numbers'],
+        desc: 'Starwood guest reservation database was compromised from 2014-2018. Attackers had access for 4 years before detection. Included encrypted passport numbers and payment card data.',
+        lesson: 'Breaches from acquisitions are common - Marriott inherited the vulnerability from Starwood. Monitor your credit cards for unauthorized charges and consider a credit freeze.' },
+      { company: 'Adult Friend Finder', year: 2016, records: 412000000, type: 'hack', dataTypes: ['Email','Passwords','Usernames','IP addresses'],
+        desc: 'Passwords were stored in plain text or with weak SHA-1 hashing. The breach included 20 years of data including supposedly "deleted" accounts.',
+        lesson: 'Deleted accounts may not actually be deleted. Assume any data you submit to a service may persist indefinitely. Use throwaway emails for sensitive registrations.' },
+      { company: 'Equifax', year: 2017, records: 147000000, type: 'hack', dataTypes: ['SSNs','DOBs','Addresses','Driver licenses','Credit cards'],
+        desc: 'Attackers exploited a known vulnerability in Apache Struts that Equifax failed to patch. One of the most damaging breaches due to the sensitivity of credit bureau data.',
+        lesson: 'You can\'t choose which companies hold your data. Freeze your credit at all three bureaus (free) and monitor for identity theft. Patch management is critical.' },
+      { company: 'Capital One', year: 2019, records: 106000000, type: 'hack', dataTypes: ['SSNs','Bank accounts','Credit scores','Addresses'],
+        desc: 'A former Amazon Web Services employee exploited a misconfigured firewall to access Capital One\'s cloud storage. Affected 100M Americans and 6M Canadians.',
+        lesson: 'Cloud misconfigurations are a leading cause of breaches. This shows that even large financial institutions can have basic security failures.' },
+      { company: 'Aadhaar', year: 2018, records: 1100000000, type: 'exposure', dataTypes: ['Biometrics','Names','Addresses','Phone numbers','ID numbers'],
+        desc: 'India\'s national ID database was reportedly accessible through a $8 payment to middlemen. Exposed biometric and demographic data of virtually every Indian citizen.',
+        lesson: 'Government databases are not immune to breaches. Biometric data (fingerprints, iris scans) cannot be changed like passwords, making these breaches permanently damaging.' },
+      { company: 'Target', year: 2013, records: 110000000, type: 'hack', dataTypes: ['Credit cards','Debit cards','Names','Addresses','Phone numbers'],
+        desc: 'Attackers gained access through an HVAC vendor\'s network credentials, then installed malware on point-of-sale systems across 1,800 stores during the holiday season.',
+        lesson: 'Third-party vendors are a common attack vector. This breach led to widespread adoption of chip-enabled credit cards in the US.' },
+      { company: 'Adobe', year: 2013, records: 153000000, type: 'hack', dataTypes: ['Email','Passwords','Usernames','Credit cards'],
+        desc: 'Poorly encrypted passwords (using 3DES instead of proper hashing) and source code for several Adobe products were stolen. Many passwords were easily decrypted.',
+        lesson: 'Even large tech companies can implement encryption incorrectly. This breach highlighted why proper password hashing (bcrypt, argon2) matters.' },
+      { company: 'Uber', year: 2016, disclosed: 2017, records: 57000000, type: 'hack', dataTypes: ['Email','Names','Phone numbers','Driver licenses'],
+        desc: 'Hackers accessed a private GitHub repo to find AWS credentials, then downloaded rider and driver data. Uber paid $100K to the hackers and concealed the breach for over a year.',
+        lesson: 'Companies have incentives to hide breaches. Breach notification laws exist to protect consumers. Never store credentials in source code repositories.' },
+      { company: 'T-Mobile', year: 2021, records: 77000000, type: 'hack', dataTypes: ['SSNs','Names','DOBs','Driver licenses','Phone numbers'],
+        desc: 'An attacker gained access through an unprotected router, found stored credentials, and accessed databases containing customer data. T-Mobile has suffered multiple breaches.',
+        lesson: 'Repeated breaches at the same company suggest systemic security issues. Consider which carriers take security seriously when choosing a provider.' },
+      { company: 'SolarWinds', year: 2020, records: 0, type: 'hack', dataTypes: ['Government data','Corporate networks','Emails'],
+        desc: 'Russian state hackers compromised SolarWinds\' software update process, distributing malware to 18,000+ organizations including US government agencies. A landmark supply chain attack.',
+        lesson: 'Supply chain attacks can affect thousands of organizations at once. Even the most secure organizations are vulnerable when their vendors are compromised.' },
+      { company: 'Colonial Pipeline', year: 2021, records: 0, type: 'ransom', dataTypes: ['Industrial systems','Business operations'],
+        desc: 'DarkSide ransomware group shut down the largest fuel pipeline in the US using a compromised VPN password. Caused fuel shortages across the Southeast. $4.4M ransom was paid.',
+        lesson: 'A single compromised password without 2FA can shut down critical infrastructure. This showed how cybersecurity directly impacts physical infrastructure and daily life.' },
+      { company: 'MOVEit', year: 2023, records: 62000000, type: 'hack', dataTypes: ['Names','SSNs','Financial data','Health records'],
+        desc: 'The Cl0p ransomware gang exploited a zero-day SQL injection vulnerability in MOVEit file transfer software. Affected 2,000+ organizations including government agencies, airlines, and banks.',
+        lesson: 'File transfer software is a high-value target. Organizations need to quickly patch critical vulnerabilities and have incident response plans ready.' },
+      { company: 'LastPass', year: 2022, records: 25000000, type: 'hack', dataTypes: ['Password vaults','Email','Billing info','IP addresses'],
+        desc: 'Attackers compromised a developer\'s home computer, then used stolen credentials to access encrypted password vaults. Some vault data could be brute-forced if master passwords were weak.',
+        lesson: 'Even password managers can be breached. Use a very strong master password (20+ characters) and enable 2FA. Consider whether your password manager stores vaults in the cloud.' },
+      { company: 'MGM Resorts', year: 2023, records: 10600000, type: 'ransom', dataTypes: ['Names','SSNs','Passports','Driver licenses'],
+        desc: 'ALPHV/BlackCat ransomware group gained access through a social engineering call to MGM\'s IT help desk. Caused 10 days of disrupted operations and $100M+ in losses.',
+        lesson: 'Social engineering remains one of the most effective attack methods. A 10-minute phone call led to hundreds of millions in damages. Verify identity through multiple channels.' }
+    ];
+
+    breaches.sort(function(a, b) { return b.year - a.year || b.records - a.records; });
+
+    var totalRecords = breaches.reduce(function(sum, b) { return sum + b.records; }, 0);
+    var uniqueYears = [];
+    breaches.forEach(function(b) { if (uniqueYears.indexOf(b.year) === -1) uniqueYears.push(b.year); });
+
+    function formatNum(n) {
+      if (n >= 1000000000) return (n / 1000000000).toFixed(1) + 'B';
+      if (n >= 1000000) return (n / 1000000).toFixed(0) + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
+      return n === 0 ? 'N/A' : n.toString();
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    var currentFilter = 'all';
+    var visibleCount = 10;
+
+    function render() {
+      var filtered = currentFilter === 'all' ? breaches : breaches.filter(function(b) { return b.type === currentFilter; });
+      var showing = filtered.slice(0, visibleCount);
+
+      var html = '<div class="stats-bar">' +
+        '<div class="stat-card"><div class="stat-num">' + breaches.length + '</div><div class="stat-label">Breaches</div></div>' +
+        '<div class="stat-card"><div class="stat-num">' + formatNum(totalRecords) + '</div><div class="stat-label">Records Exposed</div></div>' +
+        '<div class="stat-card"><div class="stat-num">' + uniqueYears.length + '</div><div class="stat-label">Years Covered</div></div>' +
+        '</div>';
+
+      html += '<div class="filter-row">';
+      [['all','All'],['hack','Hacks'],['exposure','Exposures'],['ransom','Ransomware'],['insider','Insider']].forEach(function(f) {
+        html += '<button class="filter-btn' + (currentFilter === f[0] ? ' active' : '') + '" data-filter="' + f[0] + '">' + f[1] + '</button>';
+      });
+      html += '</div>';
+
+      html += '<div class="timeline">';
+      var lastYear = null;
+      showing.forEach(function(b, i) {
+        var showYear = b.year !== lastYear;
+        lastYear = b.year;
+        if (showYear) {
+          html += '<div class="timeline-year"><div class="year-label">' + b.year + '</div><div class="year-dot"></div></div>';
+        }
+        var typeClass = 'type-' + b.type;
+        html += '<div class="breach-card" data-idx="' + i + '">';
+        html += '<div class="breach-header"><div class="breach-company">' + escapeHtml(b.company) + '</div>';
+        html += '<div class="breach-date">' + b.year + (b.disclosed ? ' (disclosed ' + b.disclosed + ')' : '') + '</div></div>';
+        html += '<div class="breach-records">' + (b.records > 0 ? '<strong>' + formatNum(b.records) + '</strong> records affected' : '<strong>Infrastructure attack</strong> - operational impact') + '</div>';
+        html += '<div class="breach-tags"><span class="breach-tag ' + typeClass + '">' + b.type.charAt(0).toUpperCase() + b.type.slice(1) + '</span>';
+        b.dataTypes.forEach(function(dt) { html += '<span class="breach-tag data">' + escapeHtml(dt) + '</span>'; });
+        html += '</div>';
+        html += '<div class="breach-detail" id="detail-' + i + '"><div class="breach-desc">' + escapeHtml(b.desc) + '</div>';
+        html += '<div class="breach-lesson"><strong>Lesson Learned</strong>' + escapeHtml(b.lesson) + '</div></div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      if (visibleCount < filtered.length) {
+        html += '<button class="show-more" id="showMore">Show More (' + (filtered.length - visibleCount) + ' remaining)</button>';
+      }
+
+      app.innerHTML = html;
+
+      // Event listeners
+      app.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          currentFilter = btn.getAttribute('data-filter');
+          visibleCount = 10;
+          render();
+        });
+      });
+
+      app.querySelectorAll('.breach-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          var idx = card.getAttribute('data-idx');
+          var detail = document.getElementById('detail-' + idx);
+          detail.classList.toggle('open');
+        });
+      });
+
+      var showMoreBtn = document.getElementById('showMore');
+      if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+          visibleCount += 10;
+          render();
+        });
+      }
+    }
+
+    render();
+  })();
+  </script>
+</body>
+</html>
