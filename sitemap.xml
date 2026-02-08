@@ -4,7 +4,7 @@
   <!-- Homepage - Tools Directory -->
   <url>
     <loc>https://theshieldit.com/</loc>
-    <lastmod>2026-02-07</lastmod>
+    <lastmod>2026-02-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -45,6 +45,94 @@
   <url>
     <loc>https://theshieldit.com/vendor-lock-in.html</loc>
     <lastmod>2026-02-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Email Header Analyzer -->
+  <url>
+    <loc>https://theshieldit.com/email-analyzer.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- WHOIS Lookup -->
+  <url>
+    <loc>https://theshieldit.com/whois-lookup.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- SSL/TLS Certificate Checker -->
+  <url>
+    <loc>https://theshieldit.com/ssl-checker.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Text Diff/Compare -->
+  <url>
+    <loc>https://theshieldit.com/text-diff.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Hash Generator & Verifier -->
+  <url>
+    <loc>https://theshieldit.com/hash-generator.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Base64 Encoder/Decoder -->
+  <url>
+    <loc>https://theshieldit.com/base64.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- JSON Formatter & Validator -->
+  <url>
+    <loc>https://theshieldit.com/json-formatter.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Regex Tester -->
+  <url>
+    <loc>https://theshieldit.com/regex-tester.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Phishing Email Quiz -->
+  <url>
+    <loc>https://theshieldit.com/phishing-quiz.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Privacy Score Calculator -->
+  <url>
+    <loc>https://theshieldit.com/privacy-score.html</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Data Breach Timeline -->
+  <url>
+    <loc>https://theshieldit.com/breach-timeline.html</loc>
+    <lastmod>2026-02-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Tester - Interactive Pattern Testing | The Shield IT</title>
+  <meta name="description" content="Free interactive regex tester. Test regular expression patterns in real-time with match highlighting, capture groups, and a quick reference guide.">
+  <meta name="keywords" content="regex tester, regular expression, regex, pattern matching, regex tool, regex debugger, regex validator">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/regex-tester.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/regex-tester.html">
+  <meta property="og:title" content="Regex Tester - Interactive Pattern Testing">
+  <meta property="og:description" content="Test regex patterns in real-time with match highlighting and capture groups.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+      --match-bg: rgba(59,130,246,0.25); --match-border: rgba(59,130,246,0.6);
+      --group-bg: rgba(139,92,246,0.2); --group-border: rgba(139,92,246,0.5);
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; animation: fadeInDown 0.8s ease-out; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
+      font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
+    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; animation: fadeInUp 0.8s ease-out; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.2s both; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+
+    .regex-input-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .regex-slash { font-size: 1.5rem; color: var(--text-gray); font-weight: 300; }
+    .regex-input { flex: 1; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--primary); font-size: 1rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; transition: border-color 0.2s ease; font-weight: 500; }
+    .regex-input:focus { border-color: var(--primary); }
+    .flags-input { width: 60px; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--accent); font-size: 1rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; text-align: center; }
+    .flags-input:focus { border-color: var(--primary); }
+
+    .error-msg { padding: 0.5rem 0.75rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 8px; color: var(--red); font-size: 0.8rem; margin-bottom: 1rem; display: none;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+
+    .test-label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-gray); margin-bottom: 0.4rem; }
+    textarea { width: 100%; min-height: 150px; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.85rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; resize: vertical; line-height: 1.6; }
+    textarea:focus { border-color: var(--primary); }
+    textarea::placeholder { color: var(--text-gray); }
+
+    /* Highlighted output */
+    .highlight-area { min-height: 150px; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.85rem; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      line-height: 1.6; white-space: pre-wrap; word-break: break-all; margin-top: 0.75rem; }
+    .match-hl { background: var(--match-bg); border-bottom: 2px solid var(--match-border); padding: 0.1rem 0; }
+    .group-hl { background: var(--group-bg); border-bottom: 2px solid var(--group-border); }
+
+    .match-info { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+    .match-stat { font-size: 0.8rem; color: var(--text-gray); }
+    .match-stat strong { color: var(--text-light); }
+
+    /* Matches detail */
+    .matches-list { margin-top: 1rem; }
+    .match-item { padding: 0.5rem 0.75rem; background: rgba(15,23,42,0.4); border-radius: 8px; margin-bottom: 0.5rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.8rem; }
+    .match-num { font-size: 0.7rem; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .match-full { color: var(--text-light); margin: 0.25rem 0; word-break: break-all; }
+    .match-groups { color: var(--text-gray); font-size: 0.75rem; }
+    .match-groups span { color: var(--secondary); }
+    .match-pos { color: var(--text-gray); font-size: 0.7rem; }
+
+    /* Quick reference */
+    .ref-toggle { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; background: rgba(30,41,59,0.5);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text-gray); cursor: pointer; font-size: 0.8rem;
+      font-family: inherit; transition: all 0.2s ease; margin-top: 1rem; }
+    .ref-toggle:hover { border-color: var(--primary); color: var(--text-light); }
+    .ref-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.75rem; }
+    .ref-grid.open { display: grid; }
+    .ref-item { padding: 0.4rem 0.6rem; background: rgba(15,23,42,0.4); border-radius: 6px; }
+    .ref-pattern { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      color: var(--primary); font-size: 0.8rem; font-weight: 600; }
+    .ref-desc { font-size: 0.7rem; color: var(--text-gray); }
+
+    footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.85rem; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; }
+      header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        All Tools
+      </a>
+    </header>
+    <main>
+      <h1>Regex Tester</h1>
+      <p class="subtitle">Test regular expression patterns in real-time with match highlighting</p>
+      <div class="tool-panel">
+        <div class="panel-title">Pattern</div>
+        <div class="regex-input-row">
+          <span class="regex-slash">/</span>
+          <input type="text" class="regex-input" id="regexInput" placeholder="Enter regex pattern..." value="">
+          <span class="regex-slash">/</span>
+          <input type="text" class="flags-input" id="flagsInput" placeholder="gim" value="g">
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+
+        <label class="test-label">Test String</label>
+        <textarea id="testString" placeholder="Enter text to test against...&#10;&#10;Example: The quick brown fox jumps over the lazy dog."></textarea>
+
+        <div class="highlight-area" id="highlightArea"></div>
+
+        <div class="match-info" id="matchInfo"></div>
+
+        <div class="matches-list" id="matchesList"></div>
+
+        <button class="ref-toggle" id="refToggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Quick Reference
+        </button>
+        <div class="ref-grid" id="refGrid">
+          <div class="ref-item"><div class="ref-pattern">.</div><div class="ref-desc">Any character except newline</div></div>
+          <div class="ref-item"><div class="ref-pattern">\\d</div><div class="ref-desc">Digit [0-9]</div></div>
+          <div class="ref-item"><div class="ref-pattern">\\w</div><div class="ref-desc">Word char [a-zA-Z0-9_]</div></div>
+          <div class="ref-item"><div class="ref-pattern">\\s</div><div class="ref-desc">Whitespace</div></div>
+          <div class="ref-item"><div class="ref-pattern">\\b</div><div class="ref-desc">Word boundary</div></div>
+          <div class="ref-item"><div class="ref-pattern">^</div><div class="ref-desc">Start of string/line</div></div>
+          <div class="ref-item"><div class="ref-pattern">$</div><div class="ref-desc">End of string/line</div></div>
+          <div class="ref-item"><div class="ref-pattern">*</div><div class="ref-desc">0 or more</div></div>
+          <div class="ref-item"><div class="ref-pattern">+</div><div class="ref-desc">1 or more</div></div>
+          <div class="ref-item"><div class="ref-pattern">?</div><div class="ref-desc">0 or 1 (optional)</div></div>
+          <div class="ref-item"><div class="ref-pattern">{n,m}</div><div class="ref-desc">Between n and m times</div></div>
+          <div class="ref-item"><div class="ref-pattern">[abc]</div><div class="ref-desc">Character class</div></div>
+          <div class="ref-item"><div class="ref-pattern">[^abc]</div><div class="ref-desc">Negated class</div></div>
+          <div class="ref-item"><div class="ref-pattern">(abc)</div><div class="ref-desc">Capture group</div></div>
+          <div class="ref-item"><div class="ref-pattern">(?:abc)</div><div class="ref-desc">Non-capture group</div></div>
+          <div class="ref-item"><div class="ref-pattern">a|b</div><div class="ref-desc">Alternation (or)</div></div>
+          <div class="ref-item"><div class="ref-pattern">(?=abc)</div><div class="ref-desc">Positive lookahead</div></div>
+          <div class="ref-item"><div class="ref-pattern">(?!abc)</div><div class="ref-desc">Negative lookahead</div></div>
+        </div>
+      </div>
+    </main>
+    <footer><p>&copy; 2025 The Shield IT &middot; All processing happens locally</p></footer>
+  </div>
+  <script>
+  (function() {
+    var regexInput = document.getElementById('regexInput');
+    var flagsInput = document.getElementById('flagsInput');
+    var testString = document.getElementById('testString');
+    var highlightArea = document.getElementById('highlightArea');
+    var matchInfo = document.getElementById('matchInfo');
+    var matchesList = document.getElementById('matchesList');
+    var errorMsg = document.getElementById('errorMsg');
+    var refToggle = document.getElementById('refToggle');
+    var refGrid = document.getElementById('refGrid');
+
+    refToggle.addEventListener('click', function() { refGrid.classList.toggle('open'); });
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function runTest() {
+      var pattern = regexInput.value;
+      var flags = flagsInput.value;
+      var text = testString.value;
+
+      errorMsg.style.display = 'none';
+      highlightArea.innerHTML = escapeHtml(text);
+      matchInfo.innerHTML = '';
+      matchesList.innerHTML = '';
+
+      if (!pattern || !text) return;
+
+      var regex;
+      try {
+        regex = new RegExp(pattern, flags);
+      } catch(e) {
+        errorMsg.textContent = e.message;
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      // Collect matches
+      var matches = [];
+      var isGlobal = flags.indexOf('g') !== -1;
+
+      if (isGlobal) {
+        var m;
+        var safety = 0;
+        while ((m = regex.exec(text)) !== null && safety < 10000) {
+          matches.push({ index: m.index, length: m[0].length, full: m[0], groups: Array.from(m).slice(1) });
+          if (m[0].length === 0) { regex.lastIndex++; }
+          safety++;
+        }
+      } else {
+        var m = regex.exec(text);
+        if (m) {
+          matches.push({ index: m.index, length: m[0].length, full: m[0], groups: Array.from(m).slice(1) });
+        }
+      }
+
+      // Stats
+      matchInfo.innerHTML =
+        '<span class="match-stat"><strong>' + matches.length + '</strong> match' + (matches.length !== 1 ? 'es' : '') + '</span>';
+
+      if (matches.length === 0) {
+        highlightArea.innerHTML = escapeHtml(text);
+        return;
+      }
+
+      // Build highlighted HTML
+      var html = '';
+      var pos = 0;
+      matches.forEach(function(match) {
+        if (match.index > pos) {
+          html += escapeHtml(text.substring(pos, match.index));
+        }
+        html += '<span class="match-hl">' + escapeHtml(text.substring(match.index, match.index + match.length)) + '</span>';
+        pos = match.index + match.length;
+      });
+      if (pos < text.length) {
+        html += escapeHtml(text.substring(pos));
+      }
+      highlightArea.innerHTML = html;
+
+      // Match details
+      var detailHtml = '';
+      matches.forEach(function(match, i) {
+        detailHtml += '<div class="match-item">';
+        detailHtml += '<div class="match-num">Match ' + (i + 1) + '</div>';
+        detailHtml += '<div class="match-full">' + escapeHtml(match.full) + '</div>';
+        detailHtml += '<div class="match-pos">Index: ' + match.index + ', Length: ' + match.length + '</div>';
+        if (match.groups.length > 0 && match.groups.some(function(g) { return g !== undefined; })) {
+          detailHtml += '<div class="match-groups">';
+          match.groups.forEach(function(g, gi) {
+            if (g !== undefined) {
+              detailHtml += 'Group ' + (gi + 1) + ': <span>' + escapeHtml(g) + '</span> ';
+            }
+          });
+          detailHtml += '</div>';
+        }
+        detailHtml += '</div>';
+      });
+      matchesList.innerHTML = detailHtml;
+    }
+
+    regexInput.addEventListener('input', runTest);
+    flagsInput.addEventListener('input', runTest);
+    testString.addEventListener('input', runTest);
+  })();
+  </script>
+</body>
+</html>

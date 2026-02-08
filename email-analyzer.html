@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Email Header Analyzer - Identify Phishing & Suspicious Emails | The Shield IT</title>
+  <meta name="description" content="Free email header analyzer. Paste email headers to trace the email path, identify phishing attempts, check SPF/DKIM/DMARC authentication, and spot suspicious patterns.">
+  <meta name="keywords" content="email header analyzer, phishing detection, email authentication, SPF check, DKIM check, DMARC, email security, header parser">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/email-analyzer.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/email-analyzer.html">
+  <meta property="og:title" content="Email Header Analyzer - Identify Phishing Attempts">
+  <meta property="og:description" content="Paste email headers to trace the sending path, check authentication, and identify red flags.">
+  <meta property="og:site_name" content="The Shield IT">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Email Header Analyzer - Identify Phishing Attempts">
+  <meta name="twitter:description" content="Paste email headers to trace the sending path, check authentication, and identify red flags.">
+
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --primary-dark: #2563eb; --secondary: #8b5cf6;
+      --accent: #06b6d4; --bg-dark: #0f172a; --bg-darker: #020617;
+      --text-light: #f1f5f9; --text-gray: #94a3b8; --border: #1e293b;
+      --green: #22c55e; --red: #ef4444; --yellow: #eab308; --orange: #f97316;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden;
+    }
+    .bg-animation {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite;
+    }
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(30px,-30px) scale(1.1); }
+      66% { transform: translate(-20px,20px) scale(0.9); }
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; animation: fadeInDown 0.8s ease-out; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
+      font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
+    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; animation: fadeInUp 0.8s ease-out; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
+    .tool-layout { display: flex; flex-direction: column; gap: 2rem; animation: fadeInUp 0.8s ease-out 0.2s both; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--text-gray); margin-bottom: 1rem; }
+    textarea {
+      width: 100%; min-height: 200px; padding: 1rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.85rem; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; resize: vertical; transition: border-color 0.2s ease; line-height: 1.5;
+    }
+    textarea:focus { border-color: var(--primary); }
+    textarea::placeholder { color: var(--text-gray); }
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .analyze-btn {
+      flex: 1; padding: 0.875rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: all 0.3s ease; font-family: inherit;
+    }
+    .analyze-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .sample-btn {
+      padding: 0.875rem 1.5rem; background: rgba(30,41,59,0.5); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text-gray); font-size: 0.9rem; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit;
+    }
+    .sample-btn:hover { border-color: var(--primary); color: var(--text-light); }
+    .privacy-note {
+      display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem 1rem;
+      background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2); border-radius: 8px;
+      font-size: 0.8rem; color: var(--text-gray); line-height: 1.5;
+    }
+    .privacy-note svg { flex-shrink: 0; margin-top: 1px; color: var(--accent); }
+
+    /* Results */
+    .results-placeholder { color: var(--text-gray); text-align: center; font-size: 0.95rem; padding: 2rem 0; }
+    .results-placeholder svg { display: block; margin: 0 auto 1rem; opacity: 0.3; }
+
+    .score-banner {
+      display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;
+    }
+    .score-banner.safe { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); }
+    .score-banner.warning { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.3); }
+    .score-banner.danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+    .score-circle {
+      width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; font-weight: 700; flex-shrink: 0;
+    }
+    .score-banner.safe .score-circle { background: rgba(34,197,94,0.2); color: var(--green); }
+    .score-banner.warning .score-circle { background: rgba(234,179,8,0.2); color: var(--yellow); }
+    .score-banner.danger .score-circle { background: rgba(239,68,68,0.2); color: var(--red); }
+    .score-info h3 { font-size: 1.1rem; margin-bottom: 0.25rem; }
+    .score-info p { font-size: 0.85rem; color: var(--text-gray); }
+
+    .section-title { font-size: 0.95rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--text-light);
+      display: flex; align-items: center; gap: 0.5rem; }
+    .section-title svg { color: var(--primary); }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .info-item { padding: 0.6rem 0.75rem; background: rgba(15,23,42,0.4); border-radius: 8px; }
+    .info-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 0.15rem; }
+    .info-value { font-size: 0.85rem; word-break: break-all;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+
+    .auth-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
+      background: rgba(15,23,42,0.4); border-radius: 8px; margin-bottom: 0.5rem; }
+    .auth-badge { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    .auth-badge.pass { background: rgba(34,197,94,0.15); color: var(--green); }
+    .auth-badge.fail { background: rgba(239,68,68,0.15); color: var(--red); }
+    .auth-badge.none { background: rgba(148,163,184,0.15); color: var(--text-gray); }
+    .auth-name { font-weight: 600; font-size: 0.85rem; min-width: 60px; }
+    .auth-detail { font-size: 0.8rem; color: var(--text-gray); word-break: break-all; }
+
+    .hop-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .hop-item { padding: 0.75rem; background: rgba(15,23,42,0.4); border-radius: 8px; position: relative;
+      border-left: 3px solid var(--primary); }
+    .hop-num { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+    .hop-from, .hop-by { font-size: 0.8rem; color: var(--text-gray); word-break: break-all; }
+    .hop-from span, .hop-by span { color: var(--text-light);
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .hop-delay { font-size: 0.75rem; color: var(--accent); margin-top: 0.25rem; }
+
+    .flag-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0.75rem;
+      background: rgba(15,23,42,0.4); border-radius: 8px; margin-bottom: 0.5rem; }
+    .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .flag-text { font-size: 0.85rem; }
+    .flag-text strong { display: block; margin-bottom: 0.1rem; }
+    .flag-text span { color: var(--text-gray); font-size: 0.8rem; }
+
+    footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border);
+      color: var(--text-gray); font-size: 0.85rem; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; }
+      header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .info-grid { grid-template-columns: 1fr; }
+      .btn-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        All Tools
+      </a>
+    </header>
+
+    <main>
+      <h1>Email Header Analyzer</h1>
+      <p class="subtitle">Paste email headers to trace the path, check authentication, and spot phishing red flags</p>
+
+      <div class="tool-layout">
+        <div class="tool-panel">
+          <div class="panel-title">Email Headers</div>
+          <textarea id="headerInput" placeholder="Paste your email headers here...&#10;&#10;To find headers in Gmail: Open email → ⋮ menu → Show original&#10;In Outlook: Open email → File → Properties → Internet Headers"></textarea>
+          <div class="btn-row">
+            <button class="analyze-btn" id="analyzeBtn">Analyze Headers</button>
+            <button class="sample-btn" id="sampleBtn">Load Sample</button>
+          </div>
+          <div class="privacy-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>All analysis happens in your browser. No email data is sent to any server.</span>
+          </div>
+        </div>
+
+        <div class="tool-panel">
+          <div class="panel-title">Analysis Results</div>
+          <div id="resultsArea">
+            <div class="results-placeholder">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              Paste email headers and click Analyze
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 The Shield IT &middot; All analysis runs locally in your browser</p>
+    </footer>
+  </div>
+
+  <script>
+  (function() {
+    var headerInput = document.getElementById('headerInput');
+    var analyzeBtn = document.getElementById('analyzeBtn');
+    var sampleBtn = document.getElementById('sampleBtn');
+    var resultsArea = document.getElementById('resultsArea');
+
+    var sampleHeaders = [
+      'Delivered-To: user@example.com',
+      'Received: by 2002:a05:6a00:1a8b:0:0:0:0 with SMTP id s11csp234567wrb;',
+      '        Thu, 15 Feb 2025 08:23:45 -0800 (PST)',
+      'X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601;',
+      'X-Gm-Message-State: AOJu0YwR9example',
+      'X-Received: by 2002:a05:6a00:2d12:b0:6e3:example with SMTP id d18-2024;',
+      '        Thu, 15 Feb 2025 08:23:44 -0800 (PST)',
+      'ARC-Seal: i=1; a=rsa-sha256; t=1708010624; cv=none;',
+      'ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;',
+      'ARC-Authentication-Results: i=1; mx.google.com;',
+      '       dkim=pass header.i=@company.com header.s=selector1;',
+      '       spf=pass (google.com: domain of noreply@company.com designates 198.51.100.42 as permitted sender) smtp.mailfrom=noreply@company.com;',
+      '       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=company.com',
+      'Return-Path: <noreply@company.com>',
+      'Received: from mail-out.company.com (mail-out.company.com. [198.51.100.42])',
+      '        by mx.google.com with ESMTPS id abc123.456.2025.02.15.08.23.43',
+      '        for <user@example.com>',
+      '        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);',
+      '        Thu, 15 Feb 2025 08:23:44 -0800 (PST)',
+      'Received-SPF: pass (google.com: domain of noreply@company.com designates 198.51.100.42 as permitted sender) client-ip=198.51.100.42;',
+      'Authentication-Results: mx.google.com;',
+      '       dkim=pass header.i=@company.com header.s=selector1 header.b=abc123de;',
+      '       spf=pass (google.com: domain of noreply@company.com designates 198.51.100.42 as permitted sender) smtp.mailfrom=noreply@company.com;',
+      '       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=company.com',
+      'Received: from internal-app.company.com (internal-app.lan [10.0.1.50])',
+      '        by mail-out.company.com (Postfix) with ESMTP id ABC123DEF456',
+      '        for <user@example.com>; Thu, 15 Feb 2025 11:23:42 -0500 (EST)',
+      'DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=company.com; s=selector1;',
+      '        h=from:to:subject:date:message-id:content-type; bh=abc123hash;',
+      '        b=signaturedata123',
+      'From: Company Notifications <noreply@company.com>',
+      'To: user@example.com',
+      'Subject: Your monthly account summary is ready',
+      'Date: Thu, 15 Feb 2025 11:23:42 -0500',
+      'Message-ID: <20250215162342.ABC123@company.com>',
+      'MIME-Version: 1.0',
+      'Content-Type: text/html; charset=UTF-8',
+      'X-Mailer: CompanyMailer/2.1'
+    ].join('\n');
+
+    sampleBtn.addEventListener('click', function() {
+      headerInput.value = sampleHeaders;
+    });
+
+    function parseHeaders(raw) {
+      // Unfold continuation lines
+      var unfolded = raw.replace(/\r\n/g, '\n').replace(/\n([ \t]+)/g, ' ');
+      var lines = unfolded.split('\n');
+      var headers = [];
+      lines.forEach(function(line) {
+        var m = line.match(/^([\w-]+):\s*(.*)$/);
+        if (m) {
+          headers.push({ name: m[1].toLowerCase(), rawName: m[1], value: m[2] });
+        }
+      });
+      return headers;
+    }
+
+    function getHeader(headers, name) {
+      for (var i = 0; i < headers.length; i++) {
+        if (headers[i].name === name.toLowerCase()) return headers[i].value;
+      }
+      return null;
+    }
+
+    function getAllHeaders(headers, name) {
+      var results = [];
+      headers.forEach(function(h) {
+        if (h.name === name.toLowerCase()) results.push(h.value);
+      });
+      return results;
+    }
+
+    function parseReceivedHeaders(headers) {
+      var received = getAllHeaders(headers, 'received');
+      var hops = [];
+      received.forEach(function(val) {
+        var fromMatch = val.match(/from\s+([\w.\-]+(?:\s*\([^)]*\))?)/i);
+        var byMatch = val.match(/by\s+([\w.\-]+)/i);
+        var dateMatch = val.match(/;\s*(.+)$/);
+        var ipMatch = val.match(/\[(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\]/);
+        var tlsMatch = val.match(/version=(TLS[\w.]+)/i);
+        hops.push({
+          from: fromMatch ? fromMatch[1].trim() : 'Unknown',
+          by: byMatch ? byMatch[1].trim() : 'Unknown',
+          date: dateMatch ? dateMatch[1].trim() : null,
+          ip: ipMatch ? ipMatch[1] : null,
+          tls: tlsMatch ? tlsMatch[1] : null
+        });
+      });
+      return hops.reverse();
+    }
+
+    function checkAuth(headers) {
+      var authResults = getHeader(headers, 'authentication-results') || '';
+      var arcAuth = getHeader(headers, 'arc-authentication-results') || '';
+      var fullAuth = authResults + ' ' + arcAuth;
+      var receivedSpf = getHeader(headers, 'received-spf') || '';
+      var dkimSig = getHeader(headers, 'dkim-signature');
+
+      var spfStatus = 'none';
+      var spfDetail = 'No SPF record found';
+      if (/spf=pass/i.test(fullAuth) || /^pass/i.test(receivedSpf)) {
+        spfStatus = 'pass'; spfDetail = 'Sender IP is authorized';
+      } else if (/spf=fail/i.test(fullAuth) || /^fail/i.test(receivedSpf)) {
+        spfStatus = 'fail'; spfDetail = 'Sender IP is NOT authorized';
+      } else if (/spf=softfail/i.test(fullAuth)) {
+        spfStatus = 'fail'; spfDetail = 'SPF softfail - sender IP not fully authorized';
+      } else if (/spf=neutral/i.test(fullAuth)) {
+        spfStatus = 'none'; spfDetail = 'SPF neutral - no assertion';
+      }
+
+      var dkimStatus = 'none';
+      var dkimDetail = 'No DKIM signature found';
+      if (/dkim=pass/i.test(fullAuth)) {
+        dkimStatus = 'pass'; dkimDetail = 'Signature verified successfully';
+      } else if (/dkim=fail/i.test(fullAuth)) {
+        dkimStatus = 'fail'; dkimDetail = 'Signature verification failed';
+      } else if (dkimSig) {
+        dkimStatus = 'none'; dkimDetail = 'DKIM signature present but not verified in headers';
+      }
+
+      var dmarcStatus = 'none';
+      var dmarcDetail = 'No DMARC results found';
+      if (/dmarc=pass/i.test(fullAuth)) {
+        dmarcStatus = 'pass'; dmarcDetail = 'DMARC alignment passed';
+      } else if (/dmarc=fail/i.test(fullAuth)) {
+        dmarcStatus = 'fail'; dmarcDetail = 'DMARC alignment failed';
+      }
+
+      var dmarcPolicyMatch = fullAuth.match(/dmarc=\w+\s*\(p=(\w+)/i);
+      var dmarcPolicy = dmarcPolicyMatch ? dmarcPolicyMatch[1].toUpperCase() : null;
+      if (dmarcPolicy) {
+        dmarcDetail += ' (policy: ' + dmarcPolicy + ')';
+      }
+
+      return {
+        spf: { status: spfStatus, detail: spfDetail },
+        dkim: { status: dkimStatus, detail: dkimDetail },
+        dmarc: { status: dmarcStatus, detail: dmarcDetail }
+      };
+    }
+
+    function detectFlags(headers, auth, hops) {
+      var flags = [];
+      var from = getHeader(headers, 'from') || '';
+      var returnPath = getHeader(headers, 'return-path') || '';
+      var replyTo = getHeader(headers, 'reply-to') || '';
+      var subject = getHeader(headers, 'subject') || '';
+      var xMailer = getHeader(headers, 'x-mailer') || '';
+
+      // Extract email addresses
+      var fromEmail = (from.match(/<([^>]+)>/) || from.match(/([\w.\-+]+@[\w.\-]+)/)) || [];
+      fromEmail = fromEmail[1] || from;
+      var rpEmail = (returnPath.match(/<([^>]+)>/) || returnPath.match(/([\w.\-+]+@[\w.\-]+)/)) || [];
+      rpEmail = rpEmail[1] || returnPath;
+      var replyEmail = (replyTo.match(/<([^>]+)>/) || replyTo.match(/([\w.\-+]+@[\w.\-]+)/)) || [];
+      replyEmail = replyEmail[1] || replyTo;
+
+      var fromDomain = fromEmail.split('@')[1] || '';
+      var rpDomain = rpEmail.split('@')[1] || '';
+      var replyDomain = replyEmail.split('@')[1] || '';
+
+      // Auth failures
+      if (auth.spf.status === 'fail') {
+        flags.push({ level: 'danger', title: 'SPF Failed', desc: 'The sending server is not authorized to send on behalf of this domain.' });
+      }
+      if (auth.dkim.status === 'fail') {
+        flags.push({ level: 'danger', title: 'DKIM Failed', desc: 'The email signature could not be verified - the message may have been tampered with.' });
+      }
+      if (auth.dmarc.status === 'fail') {
+        flags.push({ level: 'danger', title: 'DMARC Failed', desc: 'Domain alignment check failed - this is a strong indicator of spoofing.' });
+      }
+
+      // Missing auth
+      if (auth.spf.status === 'none' && auth.dkim.status === 'none') {
+        flags.push({ level: 'warning', title: 'No Email Authentication', desc: 'Neither SPF nor DKIM authentication found. The sender cannot be verified.' });
+      }
+
+      // Return-Path mismatch
+      if (rpDomain && fromDomain && rpDomain.toLowerCase() !== fromDomain.toLowerCase()) {
+        flags.push({ level: 'warning', title: 'Return-Path Mismatch',
+          desc: 'From domain (' + fromDomain + ') differs from Return-Path domain (' + rpDomain + '). This can be normal for mailing services but is also used in phishing.' });
+      }
+
+      // Reply-To mismatch
+      if (replyDomain && fromDomain && replyDomain.toLowerCase() !== fromDomain.toLowerCase()) {
+        flags.push({ level: 'warning', title: 'Reply-To Mismatch',
+          desc: 'Reply-To (' + replyDomain + ') differs from From (' + fromDomain + '). Replies would go to a different domain.' });
+      }
+
+      // Suspicious subject keywords
+      var urgentWords = /urgent|immediate|action required|verify your|suspend|locked|compromised|unusual activity|click here|act now|limited time/i;
+      if (urgentWords.test(subject)) {
+        flags.push({ level: 'warning', title: 'Urgency Language in Subject',
+          desc: 'The subject line uses urgency tactics commonly found in phishing emails.' });
+      }
+
+      // Check for TLS
+      var hasTLS = hops.some(function(h) { return h.tls; });
+      if (!hasTLS && hops.length > 0) {
+        flags.push({ level: 'warning', title: 'No TLS Encryption Detected',
+          desc: 'No TLS/SSL encryption was detected in the email transit path. The email may have been transmitted in plaintext.' });
+      }
+
+      // All good
+      if (flags.length === 0) {
+        if (auth.spf.status === 'pass' && auth.dkim.status === 'pass' && auth.dmarc.status === 'pass') {
+          flags.push({ level: 'safe', title: 'All Checks Passed',
+            desc: 'SPF, DKIM, and DMARC all passed. The sender is properly authenticated.' });
+        }
+      }
+
+      return flags;
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function calculateScore(auth, flags) {
+      var score = 100;
+      if (auth.spf.status === 'fail') score -= 25;
+      else if (auth.spf.status === 'none') score -= 10;
+      if (auth.dkim.status === 'fail') score -= 25;
+      else if (auth.dkim.status === 'none') score -= 10;
+      if (auth.dmarc.status === 'fail') score -= 30;
+      else if (auth.dmarc.status === 'none') score -= 10;
+      flags.forEach(function(f) {
+        if (f.level === 'danger') score -= 10;
+        else if (f.level === 'warning') score -= 5;
+      });
+      return Math.max(0, Math.min(100, score));
+    }
+
+    analyzeBtn.addEventListener('click', function() {
+      var raw = headerInput.value.trim();
+      if (!raw) {
+        resultsArea.innerHTML = '<div style="color:var(--red);text-align:center;padding:1.5rem;">Please paste email headers to analyze.</div>';
+        return;
+      }
+
+      var headers = parseHeaders(raw);
+      if (headers.length < 2) {
+        resultsArea.innerHTML = '<div style="color:var(--red);text-align:center;padding:1.5rem;">Could not parse enough headers. Make sure you pasted the full email headers.</div>';
+        return;
+      }
+
+      var from = getHeader(headers, 'from') || 'Unknown';
+      var to = getHeader(headers, 'to') || 'Unknown';
+      var subject = getHeader(headers, 'subject') || 'Unknown';
+      var date = getHeader(headers, 'date') || 'Unknown';
+      var returnPath = getHeader(headers, 'return-path') || 'Not present';
+      var messageId = getHeader(headers, 'message-id') || 'Unknown';
+      var xMailer = getHeader(headers, 'x-mailer') || getHeader(headers, 'user-agent') || 'Not specified';
+
+      var hops = parseReceivedHeaders(headers);
+      var auth = checkAuth(headers);
+      var flags = detectFlags(headers, auth, hops);
+      var score = calculateScore(auth, flags);
+
+      var scoreClass = score >= 80 ? 'safe' : score >= 50 ? 'warning' : 'danger';
+      var scoreLabel = score >= 80 ? 'Looks Legitimate' : score >= 50 ? 'Some Concerns' : 'Suspicious';
+      var scoreDesc = score >= 80 ? 'Authentication checks passed and no major red flags were detected.'
+        : score >= 50 ? 'Some authentication checks are missing or there are minor concerns.'
+        : 'Multiple red flags detected. This email may be a phishing attempt.';
+
+      var html = '';
+
+      // Score banner
+      html += '<div class="score-banner ' + scoreClass + '">' +
+        '<div class="score-circle">' + score + '</div>' +
+        '<div class="score-info"><h3>' + escapeHtml(scoreLabel) + '</h3><p>' + escapeHtml(scoreDesc) + '</p></div></div>';
+
+      // Basic info
+      html += '<div class="section-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>Message Info</div>';
+      html += '<div class="info-grid">' +
+        '<div class="info-item"><div class="info-label">From</div><div class="info-value">' + escapeHtml(from) + '</div></div>' +
+        '<div class="info-item"><div class="info-label">To</div><div class="info-value">' + escapeHtml(to) + '</div></div>' +
+        '<div class="info-item"><div class="info-label">Subject</div><div class="info-value">' + escapeHtml(subject) + '</div></div>' +
+        '<div class="info-item"><div class="info-label">Date</div><div class="info-value">' + escapeHtml(date) + '</div></div>' +
+        '<div class="info-item"><div class="info-label">Return-Path</div><div class="info-value">' + escapeHtml(returnPath) + '</div></div>' +
+        '<div class="info-item"><div class="info-label">X-Mailer</div><div class="info-value">' + escapeHtml(xMailer) + '</div></div>' +
+        '</div>';
+
+      // Authentication
+      html += '<div class="section-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Authentication</div>';
+      ['spf', 'dkim', 'dmarc'].forEach(function(key) {
+        var a = auth[key];
+        var badgeClass = a.status === 'pass' ? 'pass' : a.status === 'fail' ? 'fail' : 'none';
+        var badgeText = a.status === 'pass' ? 'PASS' : a.status === 'fail' ? 'FAIL' : 'NONE';
+        html += '<div class="auth-row">' +
+          '<div class="auth-name">' + key.toUpperCase() + '</div>' +
+          '<div class="auth-badge ' + badgeClass + '">' + badgeText + '</div>' +
+          '<div class="auth-detail">' + escapeHtml(a.detail) + '</div></div>';
+      });
+
+      // Hops
+      if (hops.length > 0) {
+        html += '<div class="section-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>Delivery Path (' + hops.length + ' hops)</div>';
+        html += '<div class="hop-list">';
+        hops.forEach(function(hop, i) {
+          html += '<div class="hop-item">';
+          html += '<div class="hop-num">Hop ' + (i + 1) + (hop.tls ? ' &middot; ' + escapeHtml(hop.tls) : '') + '</div>';
+          html += '<div class="hop-from">From: <span>' + escapeHtml(hop.from) + '</span>' + (hop.ip ? ' [' + escapeHtml(hop.ip) + ']' : '') + '</div>';
+          html += '<div class="hop-by">By: <span>' + escapeHtml(hop.by) + '</span></div>';
+          if (hop.date) html += '<div class="hop-delay">' + escapeHtml(hop.date) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      // Flags
+      if (flags.length > 0) {
+        html += '<div class="section-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Findings</div>';
+        flags.forEach(function(f) {
+          var icon = f.level === 'danger' ? '&#x1F6A8;' : f.level === 'warning' ? '&#x26A0;&#xFE0F;' : '&#x2705;';
+          html += '<div class="flag-item"><div class="flag-icon">' + icon + '</div>' +
+            '<div class="flag-text"><strong>' + escapeHtml(f.title) + '</strong><span>' + escapeHtml(f.desc) + '</span></div></div>';
+        });
+      }
+
+      resultsArea.innerHTML = html;
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phishing Email Quiz - Can You Spot the Scam? | The Shield IT</title>
+  <meta name="description" content="Test your ability to spot phishing emails with 20 realistic scenarios. Learn the red flags that give away scam emails. Free interactive quiz.">
+  <meta name="keywords" content="phishing quiz, phishing test, spot phishing, email scam quiz, phishing awareness, cybersecurity quiz, phishing training">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/phishing-quiz.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/phishing-quiz.html">
+  <meta property="og:title" content="Phishing Email Quiz - Can You Spot the Scam?">
+  <meta property="og:description" content="Test your ability to identify phishing emails with 20 realistic scenarios.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444; --yellow: #eab308;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 700px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; animation: fadeInDown 0.8s ease-out; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
+      font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
+    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; animation: fadeInUp 0.8s ease-out; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
+
+    /* Progress bar */
+    .progress-bar { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px;
+      transition: width 0.4s ease; }
+    .progress-text { text-align: center; font-size: 0.8rem; color: var(--text-gray); margin-bottom: 1rem; }
+
+    /* Email card */
+    .email-card { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; animation: fadeInUp 0.3s ease-out; }
+    .email-header { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .email-field { display: flex; gap: 0.5rem; margin-bottom: 0.35rem; font-size: 0.85rem; }
+    .email-field-label { color: var(--text-gray); font-weight: 500; min-width: 55px; }
+    .email-field-value { color: var(--text-light); word-break: break-all; }
+    .email-subject { font-size: 1.1rem; font-weight: 600; margin-top: 0.5rem; }
+    .email-body { font-size: 0.9rem; color: var(--text-gray); line-height: 1.7; white-space: pre-line; }
+
+    /* Buttons */
+    .answer-row { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .answer-btn { flex: 1; padding: 1rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .answer-btn:hover { transform: translateY(-2px); }
+    .legit-btn { background: rgba(34,197,94,0.1); border: 2px solid rgba(34,197,94,0.3); color: var(--green); }
+    .legit-btn:hover { background: rgba(34,197,94,0.2); border-color: var(--green); }
+    .phish-btn { background: rgba(239,68,68,0.1); border: 2px solid rgba(239,68,68,0.3); color: var(--red); }
+    .phish-btn:hover { background: rgba(239,68,68,0.2); border-color: var(--red); }
+    .answer-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+    /* Feedback */
+    .feedback { padding: 1rem; border-radius: 12px; margin-top: 1rem; display: none; }
+    .feedback.correct { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); }
+    .feedback.incorrect { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+    .feedback-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .feedback.correct .feedback-title { color: var(--green); }
+    .feedback.incorrect .feedback-title { color: var(--red); }
+    .feedback-text { font-size: 0.85rem; color: var(--text-gray); line-height: 1.6; }
+    .feedback-text strong { color: var(--text-light); }
+    .next-btn { width: 100%; padding: 0.875rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; margin-top: 1rem; }
+    .next-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+
+    /* Results screen */
+    .results-screen { text-align: center; animation: fadeInUp 0.5s ease-out; }
+    .score-circle-lg { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 2rem auto; font-size: 2.5rem; font-weight: 800; }
+    .score-circle-lg.great { background: rgba(34,197,94,0.15); color: var(--green); border: 3px solid rgba(34,197,94,0.3); }
+    .score-circle-lg.good { background: rgba(6,182,212,0.15); color: var(--accent); border: 3px solid rgba(6,182,212,0.3); }
+    .score-circle-lg.ok { background: rgba(234,179,8,0.15); color: var(--yellow); border: 3px solid rgba(234,179,8,0.3); }
+    .score-circle-lg.poor { background: rgba(239,68,68,0.15); color: var(--red); border: 3px solid rgba(239,68,68,0.3); }
+    .results-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .results-desc { color: var(--text-gray); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .results-stats { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+    .result-stat { text-align: center; }
+    .result-stat .num { font-size: 1.5rem; font-weight: 700; }
+    .result-stat .label { font-size: 0.8rem; color: var(--text-gray); }
+    .restart-btn { padding: 1rem 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; }
+    .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+
+    /* Start screen */
+    .start-screen { text-align: center; padding: 3rem 0; }
+    .start-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+    .start-desc { color: var(--text-gray); max-width: 500px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.7; }
+    .start-btn { padding: 1rem 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+
+    footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.85rem; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; }
+      header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .answer-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        All Tools
+      </a>
+    </header>
+    <main>
+      <h1>Phishing Email Quiz</h1>
+      <p class="subtitle">Can you spot the phishing emails? Test your skills with 20 realistic scenarios.</p>
+      <div id="app"></div>
+    </main>
+    <footer><p>&copy; 2025 The Shield IT &middot; All scenarios are educational simulations</p></footer>
+  </div>
+  <script>
+  (function() {
+    var app = document.getElementById('app');
+    var emails = [
+      { from: "security@apple.com", fromFull: "security@apple.com <no-reply@apple-id-secure.xyz>", to: "you@email.com", subject: "Your Apple ID was used to sign in on a new device", body: "Dear Customer,\n\nYour Apple ID was used to sign in to iCloud via a web browser.\n\nDate: February 10, 2025\nDevice: Windows PC\nLocation: Moscow, Russia\n\nIf this wasn't you, your account may be compromised. Click here to verify your identity immediately:\n\nhttps://apple-id-secure.xyz/verify\n\nApple Support", isPhishing: true, explanation: "The display name shows apple.com but the actual email is from apple-id-secure.xyz. The link also goes to a fake domain. Legitimate Apple emails come from @apple.com or @id.apple.com and link to apple.com.", redFlags: ["Fake sender domain (apple-id-secure.xyz)", "Suspicious link URL", "Fear-based urgency", "Generic greeting"] },
+      { from: "noreply@github.com", fromFull: "GitHub <noreply@github.com>", to: "you@email.com", subject: "[GitHub] A new public key was added to your account", body: "Hey username,\n\nA new public key was added to your account:\n\nSHA256:a7F3kL9m2xP4wQ8...\n\nIf you did not make this change, please review your SSH and GPG keys:\n\nhttps://github.com/settings/keys\n\nThanks,\nThe GitHub Team", isPhishing: false, explanation: "This is a legitimate GitHub notification. The sender is @github.com, the link goes to github.com/settings, and it follows GitHub's standard notification format.", redFlags: [] },
+      { from: "PayPal Service", fromFull: "PayPal Service <paypa1@mail-service-center.com>", to: "you@email.com", subject: "Unusual activity on your PayPal account - Action Required", body: "Dear Valued Customer,\n\nWe've detected unusual activity on your PayPal account. For your security, we've temporarily limited your account.\n\nTo restore access, verify your information within 24 hours or your account will be permanently suspended.\n\nClick Here To Verify: https://paypa1-verify.com/secure\n\nSincerely,\nPayPal Security Team", isPhishing: true, explanation: "The sender email uses 'paypa1' (with number 1) instead of 'paypal' and comes from a non-PayPal domain. The link goes to a fake site. The 24-hour deadline creates false urgency. PayPal always addresses you by name.", redFlags: ["Spoofed sender (paypa1 not paypal)", "Non-PayPal domain", "24-hour threat deadline", "Generic greeting", "Fake verification link"] },
+      { from: "Amazon.com", fromFull: "Amazon.com <ship-confirm@amazon.com>", to: "you@email.com", subject: "Your Amazon.com order #112-4859372-9174628 has shipped", body: "Hello Jane,\n\nYour package has been shipped!\n\nOrder #112-4859372-9174628\nEstimated delivery: February 15, 2025\nShipping speed: Two-Day Shipping\n\nTrack your package:\nhttps://www.amazon.com/gp/your-account/order-details?orderID=112-4859372-9174628\n\nThank you for shopping with us.\nAmazon.com", isPhishing: false, explanation: "This is a legitimate Amazon shipping notification. The sender is @amazon.com, links go to amazon.com, it uses a specific name, and the order number format is consistent with Amazon's system.", redFlags: [] },
+      { from: "IT Department", fromFull: "IT Department <admin@company-helpdesk.net>", to: "all-staff@company.com", subject: "URGENT: Password Expiry Notice - Immediate Action Required", body: "Dear Employee,\n\nYour email password will expire in 2 HOURS. If you do not update it immediately, you will lose access to all company systems.\n\nClick here to update your password now:\nhttp://company-portal-login.com/update-password\n\nNote: This is mandatory. Failure to comply will result in account deactivation.\n\nIT Department", isPhishing: true, explanation: "Real IT departments use internal company domains, not generic ones like company-helpdesk.net. The link goes to an external site. The extreme urgency (2 hours) and threat of deactivation are classic social engineering tactics.", redFlags: ["External domain for internal IT", "HTTP (not HTTPS) link", "Extreme urgency (2 hours)", "Threat of deactivation", "Generic 'Dear Employee'"] },
+      { from: "LinkedIn", fromFull: "LinkedIn <messages-noreply@linkedin.com>", to: "you@email.com", subject: "Sarah Chen sent you a message", body: "Hi John,\n\nSarah Chen sent you a new message.\n\n\"Hi John, I came across your profile and would love to connect about a Senior Developer role at our company. Would you be open to a quick chat?\"\n\nView message:\nhttps://www.linkedin.com/messaging/thread/123456789\n\nThis email was intended for John Smith. Learn why we included this:\nhttps://www.linkedin.com/help/linkedin/answer/67", isPhishing: false, explanation: "This is a legitimate LinkedIn message notification. The sender is from @linkedin.com, all links go to linkedin.com, and it follows LinkedIn's standard notification format with the privacy footer.", redFlags: [] },
+      { from: "Microsoft 365", fromFull: "Microsoft 365 <no-reply@microsoft365-admin.co>", to: "you@email.com", subject: "Your Microsoft 365 subscription has been cancelled", body: "Your Microsoft 365 subscription has been cancelled due to a billing issue.\n\nIf this was an error, you can reactivate your subscription within 48 hours before all data is permanently deleted.\n\nReactivate Now: https://microsoft365-admin.co/reactivate\n\nMicrosoft 365 Team", isPhishing: true, explanation: "Microsoft doesn't use microsoft365-admin.co - legitimate emails come from @microsoft.com. The threat of permanent data deletion creates panic. Real Microsoft billing issues are handled through account.microsoft.com.", redFlags: ["Fake domain (microsoft365-admin.co)", "Data deletion threat", "48-hour deadline", "No personal greeting", "Non-Microsoft link"] },
+      { from: "Slack", fromFull: "Slack <feedback@slack.com>", to: "you@email.com", subject: "Your weekly Slack activity digest", body: "Hi there,\n\nHere's your weekly digest from your Slack workspace:\n\n- 47 messages in #general\n- 12 mentions\n- 3 new channels created\n\nView your workspace: https://app.slack.com\n\nManage email preferences: https://app.slack.com/account/notifications\n\nSlack Technologies, LLC", isPhishing: false, explanation: "This is a legitimate Slack weekly digest. The sender is @slack.com, links go to app.slack.com, and it's a standard informational digest with no urgent calls to action.", redFlags: [] },
+      { from: "Netflix", fromFull: "Netflix <account-update@netfliix.com>", to: "you@email.com", subject: "Your Netflix membership is on hold", body: "Hi Customer,\n\nWe're having trouble with your current billing information. We'll try again, but in the meantime you may want to update your payment details.\n\nUpdate Account Now:\nhttps://netfliix.com/payment/update\n\nIf you don't update within 72 hours your account will be closed.\n\nThe Netflix Team", isPhishing: true, explanation: "The domain is 'netfliix.com' (double i) - a typosquatting attack. Real Netflix uses @netflix.com. The 72-hour account closure threat is a pressure tactic. Netflix always addresses you by your profile name.", redFlags: ["Typosquatted domain (netfliix)", "Generic 'Hi Customer'", "72-hour closure threat", "Suspicious payment link"] },
+      { from: "Google", fromFull: "Google <no-reply@accounts.google.com>", to: "you@email.com", subject: "Security alert: New sign-in from Chrome on Windows", body: "Someone just signed in to your Google Account from a new Windows device.\n\nNew sign-in\njohn.doe@gmail.com\n\nWindows device\nChrome browser\nUnited States\n\nIf this was you, you don't need to do anything. If not, we'll help you secure your account.\n\nCheck activity:\nhttps://myaccount.google.com/notifications", isPhishing: false, explanation: "This is a legitimate Google security alert. It comes from @accounts.google.com, links to myaccount.google.com, uses your actual email, and doesn't pressure you into immediate action.", redFlags: [] },
+      { from: "DHL Express", fromFull: "DHL Express <delivery@dhl-tracking-info.com>", to: "you@email.com", subject: "DHL: Your package is waiting for delivery", body: "Dear Customer,\n\nYour package (AWB: 7294816350) could not be delivered because the shipping fee ($2.99) was not paid.\n\nPay the fee now to receive your package:\nhttps://dhl-tracking-info.com/pay\n\nIf payment is not received within 24 hours, your package will be returned to sender.\n\nDHL Express", isPhishing: true, explanation: "DHL doesn't use dhl-tracking-info.com - legitimate emails come from @dhl.com. Requesting a small payment via email for delivery is a classic phishing tactic. DHL handles shipping fees through official channels.", redFlags: ["Fake domain (dhl-tracking-info.com)", "Small payment request", "24-hour return threat", "Generic greeting"] },
+      { from: "Dropbox", fromFull: "Dropbox <no-reply@dropbox.com>", to: "you@email.com", subject: "Jane Smith shared 'Q4 Report.pdf' with you", body: "Jane Smith (jane@company.com) shared a file with you.\n\nQ4 Report.pdf\n2.4 MB\n\nView file: https://www.dropbox.com/s/abc123def456/Q4%20Report.pdf\n\nEnjoy!\n- The Dropbox Team", isPhishing: false, explanation: "This is a legitimate Dropbox sharing notification. The sender is @dropbox.com, the link goes to dropbox.com with a standard sharing URL format, and it includes specific file details.", redFlags: [] },
+      { from: "Wells Fargo", fromFull: "Wells Fargo <alerts@wellsfarg0.com>", to: "you@email.com", subject: "Fraud Alert: Suspicious transaction on your account", body: "FRAUD ALERT\n\nWe have detected a suspicious transaction on your Wells Fargo account:\n\nAmount: $4,892.00\nMerchant: Wire Transfer - International\nDate: Feb 10, 2025\n\nIf you did not authorize this transaction, click below immediately to block it:\n\nhttps://wellsfarg0.com/fraud-center/block\n\nWells Fargo Security", isPhishing: true, explanation: "The domain is 'wellsfarg0.com' (zero instead of 'o') - another typosquatting attack. Wells Fargo uses @wellsfargo.com. Banks won't ask you to block transactions via email links. They'd ask you to call their fraud department.", redFlags: ["Typosquatted domain (wellsfarg0)", "Asks to block transaction via link", "High-urgency fraud alert", "No account details or name"] },
+      { from: "Zoom", fromFull: "Zoom <no-reply@zoom.us>", to: "you@email.com", subject: "Cloud Recording: Project Standup is now available", body: "Hi John,\n\nYour cloud recording is now available.\n\nTopic: Project Standup\nDate: Feb 10, 2025 10:00 AM\nDuration: 28 minutes\n\nPlay recording:\nhttps://zoom.us/rec/play/abc123-recording-link\n\nNote: This recording will be available for 30 days.\n\nBest regards,\nZoom Team", isPhishing: false, explanation: "This is a legitimate Zoom recording notification. The sender is @zoom.us (Zoom's official domain), links go to zoom.us, and it contains specific meeting details.", redFlags: [] },
+      { from: "IRS", fromFull: "IRS Tax Refund <refund@irs-gov-refund.com>", to: "you@email.com", subject: "Tax Refund Notification - $3,847.00 pending", body: "Dear Taxpayer,\n\nAfter reviewing your tax return, we have determined you are eligible for a tax refund of $3,847.00.\n\nTo claim your refund, please submit your information:\nhttps://irs-gov-refund.com/claim\n\nYou must claim within 7 business days or the refund will be forfeited.\n\nInternal Revenue Service", isPhishing: true, explanation: "The IRS NEVER initiates contact via email about refunds or personal tax issues. The domain irs-gov-refund.com is not a government site (which end in .gov). This is a very common phishing template.", redFlags: ["IRS doesn't email about refunds", "Non-.gov domain", "7-day claim deadline", "Asks for personal information", "Generic 'Dear Taxpayer'"] },
+      { from: "Twitter", fromFull: "X (formerly Twitter) <info@x.com>", to: "you@email.com", subject: "Your account @username was logged in from a new device", body: "Hi @username,\n\nThere was a login to your account @username from a new device.\n\nApp: X for Android\nWhen: February 10, 2025, 3:45 PM UTC\n\nIf this was you\nYou can disregard this email.\n\nIf this wasn't you\nYou should change your password and review your account security:\nhttps://x.com/settings/security", isPhishing: false, explanation: "This is a legitimate X/Twitter security notification. The sender is @x.com, links go to x.com/settings, and it follows their standard notification format without pressure tactics.", redFlags: [] },
+      { from: "DocuSign", fromFull: "DocuSign <dse@docusign.net>", to: "you@email.com", subject: "Sarah Johnson sent you a document to sign", body: "Review and sign this document.\n\nSarah Johnson\nsarah.johnson@company.com\n\nSent you a document: \"Employment Agreement - John Smith\"\n\nREVIEW DOCUMENT:\nhttps://app.docusign.com/documents/abc123\n\nAlternate signing method: Contact your organization's admin to sign with a different method.\n\nDo Not Share This Email: This email contains a secure link for only you.", isPhishing: false, explanation: "This is a legitimate DocuSign notification. DocuSign uses @docusign.net for notifications, links go to app.docusign.com, and the format matches standard DocuSign emails.", redFlags: [] },
+      { from: "WhatsApp", fromFull: "WhatsApp <support@whatsapp-verify.com>", to: "you@email.com", subject: "Your WhatsApp account needs verification", body: "Dear User,\n\nYour WhatsApp account needs to be verified to prevent deactivation.\n\nClick the link below to verify your account within 48 hours:\nhttps://whatsapp-verify.com/verify?id=294817\n\nIf you fail to verify, your account and all messages will be permanently deleted.\n\nWhatsApp Support", isPhishing: true, explanation: "WhatsApp doesn't send verification emails from whatsapp-verify.com. Their domain is @whatsapp.com. WhatsApp primarily communicates through its own app, not email. The deletion threat is a classic scare tactic.", redFlags: ["Non-WhatsApp domain", "WhatsApp rarely emails users", "48-hour deletion threat", "Generic 'Dear User'", "Fake verification link"] },
+      { from: "Spotify", fromFull: "Spotify <no-reply@spotify.com>", to: "you@email.com", subject: "Your 2024 Wrapped is here", body: "Hey John,\n\nYour 2024 Wrapped is here!\n\nDiscover your top songs, artists, and listening trends from this year.\n\nSee Your Wrapped: https://open.spotify.com/wrapped\n\nThanks for listening,\nThe Spotify Team", isPhishing: false, explanation: "This is a legitimate Spotify notification. The sender is @spotify.com, the link goes to open.spotify.com, and it's a common annual feature without any urgency or suspicious elements.", redFlags: [] },
+      { from: "FedEx", fromFull: "FedEx <tracking@fedex-delivery-notice.com>", to: "you@email.com", subject: "FedEx: Failed delivery attempt - Package being held", body: "FedEx DELIVERY NOTIFICATION\n\nTracking Number: 7849201538462\n\nWe attempted to deliver your package but no one was available. Your package is being held at our facility.\n\nTo schedule redelivery, please confirm your address and pay the redelivery fee ($1.50):\nhttps://fedex-delivery-notice.com/redeliver\n\nPackages not claimed within 5 days will be returned.\n\nFedEx Customer Service", isPhishing: true, explanation: "FedEx uses @fedex.com, not fedex-delivery-notice.com. Legitimate redelivery is free and arranged through fedex.com or the FedEx app. The small fee request is designed to steal payment information.", redFlags: ["Fake domain (fedex-delivery-notice.com)", "Small redelivery fee request", "5-day return threat", "No specific package or name details"] }
+    ];
+
+    var currentQuestion = 0;
+    var score = 0;
+    var answered = false;
+    var shuffledEmails;
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function showStart() {
+      app.innerHTML = '<div class="start-screen">' +
+        '<div class="start-icon">&#x1F3A3;</div>' +
+        '<h2 style="font-size:1.5rem;margin-bottom:1rem;">Can You Spot the Phish?</h2>' +
+        '<p class="start-desc">You\'ll be shown 20 emails - some legitimate, some phishing attempts. For each one, decide if it\'s real or a scam. Learn the red flags that help identify phishing emails.</p>' +
+        '<button class="start-btn" id="startBtn">Start Quiz</button></div>';
+      document.getElementById('startBtn').addEventListener('click', startQuiz);
+    }
+
+    function startQuiz() {
+      shuffledEmails = shuffle(emails);
+      currentQuestion = 0;
+      score = 0;
+      answered = false;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      answered = false;
+      var email = shuffledEmails[currentQuestion];
+      var pct = ((currentQuestion) / shuffledEmails.length * 100).toFixed(0);
+      var html = '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="progress-text">Question ' + (currentQuestion + 1) + ' of ' + shuffledEmails.length + ' &middot; Score: ' + score + '/' + currentQuestion + '</div>' +
+        '<div class="email-card">' +
+        '<div class="email-header">' +
+        '<div class="email-field"><span class="email-field-label">From:</span><span class="email-field-value">' + escapeHtml(email.fromFull) + '</span></div>' +
+        '<div class="email-field"><span class="email-field-label">To:</span><span class="email-field-value">' + escapeHtml(email.to) + '</span></div>' +
+        '<div class="email-subject">' + escapeHtml(email.subject) + '</div></div>' +
+        '<div class="email-body">' + escapeHtml(email.body) + '</div></div>' +
+        '<div class="answer-row">' +
+        '<button class="answer-btn legit-btn" id="legitBtn">&#x2705; Legitimate</button>' +
+        '<button class="answer-btn phish-btn" id="phishBtn">&#x1F6A8; Phishing</button></div>' +
+        '<div class="feedback" id="feedback"></div>';
+
+      app.innerHTML = html;
+      document.getElementById('legitBtn').addEventListener('click', function() { answer(false); });
+      document.getElementById('phishBtn').addEventListener('click', function() { answer(true); });
+    }
+
+    function answer(guessedPhishing) {
+      if (answered) return;
+      answered = true;
+      var email = shuffledEmails[currentQuestion];
+      var correct = guessedPhishing === email.isPhishing;
+      if (correct) score++;
+
+      document.getElementById('legitBtn').disabled = true;
+      document.getElementById('phishBtn').disabled = true;
+
+      var feedback = document.getElementById('feedback');
+      feedback.className = 'feedback ' + (correct ? 'correct' : 'incorrect');
+      feedback.style.display = 'block';
+
+      var flagsHtml = '';
+      if (email.redFlags.length > 0) {
+        flagsHtml = '<br><br><strong>Red flags:</strong><br>';
+        email.redFlags.forEach(function(f) { flagsHtml += '&bull; ' + escapeHtml(f) + '<br>'; });
+      }
+
+      feedback.innerHTML = '<div class="feedback-title">' + (correct ? 'Correct!' : 'Incorrect!') + ' This email is ' + (email.isPhishing ? 'PHISHING' : 'LEGITIMATE') + '.</div>' +
+        '<div class="feedback-text">' + escapeHtml(email.explanation) + flagsHtml + '</div>' +
+        '<button class="next-btn" id="nextBtn">' + (currentQuestion < shuffledEmails.length - 1 ? 'Next Email' : 'See Results') + '</button>';
+
+      document.getElementById('nextBtn').addEventListener('click', function() {
+        currentQuestion++;
+        if (currentQuestion < shuffledEmails.length) showQuestion();
+        else showResults();
+      });
+    }
+
+    function showResults() {
+      var pct = Math.round(score / shuffledEmails.length * 100);
+      var grade, gradeClass, desc;
+      if (pct >= 90) { grade = pct + '%'; gradeClass = 'great'; desc = 'Excellent! You have a sharp eye for phishing. You\'d be very difficult to fool.'; }
+      else if (pct >= 70) { grade = pct + '%'; gradeClass = 'good'; desc = 'Good job! You caught most of them. Review the ones you missed to sharpen your skills.'; }
+      else if (pct >= 50) { grade = pct + '%'; gradeClass = 'ok'; desc = 'Not bad, but there\'s room to improve. Pay attention to sender domains and urgency tactics.'; }
+      else { grade = pct + '%'; gradeClass = 'poor'; desc = 'You might be vulnerable to phishing attacks. Review the explanations and try again to build your awareness.'; }
+
+      var phishCount = shuffledEmails.filter(function(e) { return e.isPhishing; }).length;
+      app.innerHTML = '<div class="results-screen">' +
+        '<div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>' +
+        '<div class="score-circle-lg ' + gradeClass + '">' + grade + '</div>' +
+        '<div class="results-title">Quiz Complete!</div>' +
+        '<div class="results-desc">' + escapeHtml(desc) + '</div>' +
+        '<div class="results-stats">' +
+        '<div class="result-stat"><div class="num" style="color:var(--green)">' + score + '</div><div class="label">Correct</div></div>' +
+        '<div class="result-stat"><div class="num" style="color:var(--red)">' + (shuffledEmails.length - score) + '</div><div class="label">Incorrect</div></div>' +
+        '<div class="result-stat"><div class="num" style="color:var(--accent)">' + phishCount + '</div><div class="label">Were Phishing</div></div>' +
+        '</div>' +
+        '<button class="restart-btn" id="restartBtn">Try Again</button></div>';
+      document.getElementById('restartBtn').addEventListener('click', startQuiz);
+    }
+
+    showStart();
+  })();
+  </script>
+</body>
+</html>
