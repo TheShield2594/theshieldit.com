@@ -1,17 +1,11 @@
 import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
 import Script from "next/script"
 import "./globals.css"
 
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-})
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-})
+const geistSans = GeistSans
+const geistMono = GeistMono
 
 export const metadata: Metadata = {
   title: "The Shield IT - Free Online IT & Privacy Tools",
