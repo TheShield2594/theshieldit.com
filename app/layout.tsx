@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   keywords:
     "IT tools, QR code generator, password strength tester, privacy tools, online tools, free tools, developer tools, security tools",
   authors: [{ name: "Brandon Shields" }],
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+  },
   openGraph: {
     type: "website",
     url: "https://theshieldit.com/",
