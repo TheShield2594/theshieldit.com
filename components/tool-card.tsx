@@ -1,21 +1,9 @@
+"use client"
+
 import {
-  Mail,
-  Search,
-  Lock,
-  Globe,
-  KeyRound,
-  FileDiff,
-  Hash,
-  Code,
-  Braces,
-  Regex,
-  QrCode,
-  CircleHelp,
-  ShieldCheck,
-  Activity,
-  Shield,
-  LockKeyhole,
-  ArrowUpRight,
+  Mail, Search, Lock, Globe, KeyRound, FileDiff, Hash, Code,
+  Braces, Regex, QrCode, CircleHelp, ShieldCheck, Activity,
+  Shield, LockKeyhole, ArrowRight,
 } from "lucide-react"
 import type { Tool } from "@/lib/tools"
 import { cn } from "@/lib/utils"
@@ -46,33 +34,46 @@ export function ToolCard({ tool, index }: { tool: Tool; index: number }) {
     <a
       href={tool.href}
       className={cn(
-        "group relative flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-5 backdrop-blur-sm transition-all duration-300",
-        "hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        "group relative flex flex-col gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-300",
+        "hover:border-primary/40 hover:bg-card/80 hover:shadow-[0_0_30px_-6px_hsl(var(--primary)/0.15)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "animate-fade-in-up"
       )}
-      style={{ animationDelay: `${index * 50}ms` }}
+      style={{ animationDelay: `${index * 40}ms` }}
     >
-      <div className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100 rounded-t-xl" />
+      {/* Top accent line */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+      {/* Icon + tag row */}
       <div className="flex items-start justify-between">
         <div
           className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-lg",
+            "flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
             tool.iconColor
           )}
         >
           <Icon className="h-5 w-5" />
         </div>
-        <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <span className="rounded-md bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+          {tool.tagLabel}
+        </span>
       </div>
-      <h3 className="text-[15px] font-semibold text-foreground leading-snug">
+
+      {/* Title */}
+      <h3 className="text-[15px] font-semibold text-foreground leading-snug group-hover:text-primary transition-colors duration-200">
         {tool.title}
       </h3>
-      <p className="text-sm leading-relaxed text-muted-foreground">
+
+      {/* Description */}
+      <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
         {tool.description}
       </p>
-      <span className="mt-auto inline-block self-start rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-        {tool.tagLabel}
-      </span>
+
+      {/* CTA row */}
+      <div className="mt-auto flex items-center gap-1.5 text-xs font-medium text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1">
+        <span>Open tool</span>
+        <ArrowRight className="h-3.5 w-3.5" />
+      </div>
     </a>
   )
 }

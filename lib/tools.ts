@@ -12,10 +12,10 @@ export interface Tool {
 }
 
 export const CATEGORIES: { value: string; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "security", label: "Security & Investigation" },
-  { value: "developer", label: "Developer Utilities" },
-  { value: "education", label: "Education & Engagement" },
+  { value: "all", label: "All Tools" },
+  { value: "security", label: "Security" },
+  { value: "developer", label: "Developer" },
+  { value: "education", label: "Education" },
 ]
 
 export const TOOLS: Tool[] = [
@@ -27,7 +27,7 @@ export const TOOLS: Tool[] = [
     tags: "email header analyzer phishing detection spf dkim dmarc authentication",
     category: "security",
     tagLabel: "Security",
-    iconColor: "text-chart-5 bg-chart-5/15",
+    iconColor: "text-chart-5 bg-chart-5/10",
     icon: "mail",
   },
   {
@@ -38,7 +38,7 @@ export const TOOLS: Tool[] = [
     tags: "whois lookup domain registration registrar nameserver expiry",
     category: "security",
     tagLabel: "Investigation",
-    iconColor: "text-primary bg-primary/15",
+    iconColor: "text-primary bg-primary/10",
     icon: "search",
   },
   {
@@ -49,7 +49,7 @@ export const TOOLS: Tool[] = [
     tags: "ssl tls certificate checker https security expiry grade",
     category: "security",
     tagLabel: "Security",
-    iconColor: "text-chart-3 bg-chart-3/15",
+    iconColor: "text-chart-3 bg-chart-3/10",
     icon: "lock",
   },
   {
@@ -60,7 +60,7 @@ export const TOOLS: Tool[] = [
     tags: "dns lookup tester records domain mx ns txt cname soa networking",
     category: "security",
     tagLabel: "Networking",
-    iconColor: "text-chart-3 bg-chart-3/15",
+    iconColor: "text-accent bg-accent/10",
     icon: "globe",
   },
   {
@@ -71,7 +71,7 @@ export const TOOLS: Tool[] = [
     tags: "password strength tester checker security entropy",
     category: "security",
     tagLabel: "Security",
-    iconColor: "text-primary bg-primary/15",
+    iconColor: "text-chart-4 bg-chart-4/10",
     icon: "key-round",
   },
   {
@@ -82,7 +82,7 @@ export const TOOLS: Tool[] = [
     tags: "text diff compare difference config code compare tool",
     category: "developer",
     tagLabel: "Developer",
-    iconColor: "text-chart-2 bg-chart-2/15",
+    iconColor: "text-accent bg-accent/10",
     icon: "file-diff",
   },
   {
@@ -93,7 +93,7 @@ export const TOOLS: Tool[] = [
     tags: "hash generator md5 sha256 sha1 sha512 checksum verifier file integrity",
     category: "developer",
     tagLabel: "Developer",
-    iconColor: "text-chart-4 bg-chart-4/15",
+    iconColor: "text-chart-4 bg-chart-4/10",
     icon: "hash",
   },
   {
@@ -104,7 +104,7 @@ export const TOOLS: Tool[] = [
     tags: "base64 encoder decoder converter encode decode",
     category: "developer",
     tagLabel: "Developer",
-    iconColor: "text-primary bg-primary/15",
+    iconColor: "text-primary bg-primary/10",
     icon: "code",
   },
   {
@@ -115,7 +115,7 @@ export const TOOLS: Tool[] = [
     tags: "json formatter validator beautifier minifier parser format validate",
     category: "developer",
     tagLabel: "Developer",
-    iconColor: "text-primary bg-primary/15",
+    iconColor: "text-chart-3 bg-chart-3/10",
     icon: "braces",
   },
   {
@@ -126,7 +126,7 @@ export const TOOLS: Tool[] = [
     tags: "regex regular expression tester pattern matching capture groups",
     category: "developer",
     tagLabel: "Developer",
-    iconColor: "text-chart-5 bg-chart-5/15",
+    iconColor: "text-chart-5 bg-chart-5/10",
     icon: "regex",
   },
   {
@@ -137,7 +137,7 @@ export const TOOLS: Tool[] = [
     tags: "qr code generator encode barcode",
     category: "developer",
     tagLabel: "Generator",
-    iconColor: "text-primary bg-primary/15",
+    iconColor: "text-primary bg-primary/10",
     icon: "qr-code",
   },
   {
@@ -147,8 +147,8 @@ export const TOOLS: Tool[] = [
     href: "/phishing-quiz.html",
     tags: "phishing quiz test email scam awareness training spot phishing",
     category: "education",
-    tagLabel: "Education",
-    iconColor: "text-chart-4 bg-chart-4/15",
+    tagLabel: "Quiz",
+    iconColor: "text-chart-4 bg-chart-4/10",
     icon: "circle-help",
   },
   {
@@ -159,7 +159,7 @@ export const TOOLS: Tool[] = [
     tags: "privacy score calculator assessment digital habits security rating",
     category: "education",
     tagLabel: "Assessment",
-    iconColor: "text-chart-2 bg-chart-2/15",
+    iconColor: "text-accent bg-accent/10",
     icon: "shield-check",
   },
   {
@@ -169,8 +169,8 @@ export const TOOLS: Tool[] = [
     href: "/breach-timeline.html",
     tags: "data breach timeline history visualization cybersecurity incidents",
     category: "education",
-    tagLabel: "Education",
-    iconColor: "text-chart-5 bg-chart-5/15",
+    tagLabel: "Timeline",
+    iconColor: "text-chart-5 bg-chart-5/10",
     icon: "activity",
   },
   {
@@ -180,8 +180,8 @@ export const TOOLS: Tool[] = [
     href: "/privacy-rpg.html",
     tags: "privacy guardian rpg security quests audit",
     category: "education",
-    tagLabel: "Security",
-    iconColor: "text-chart-2 bg-chart-2/15",
+    tagLabel: "Game",
+    iconColor: "text-chart-3 bg-chart-3/10",
     icon: "shield",
   },
   {
@@ -192,7 +192,7 @@ export const TOOLS: Tool[] = [
     tags: "vendor lock-in score risk assessment cloud saas dependency portability",
     category: "education",
     tagLabel: "Assessment",
-    iconColor: "text-chart-4 bg-chart-4/15",
+    iconColor: "text-chart-4 bg-chart-4/10",
     icon: "lock-keyhole",
   },
 ]
