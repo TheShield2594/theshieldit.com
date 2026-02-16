@@ -200,19 +200,18 @@
 
             <div class="input-group">
                 <label for="cidr">CIDR / Subnet Mask</label>
-                <select id="cidr">
-                    <option value="8">/8 - 255.0.0.0</option>
-                    <option value="16">/16 - 255.255.0.0</option>
-                    <option value="24" selected>/24 - 255.255.255.0</option>
-                    <option value="25">/25 - 255.255.255.128</option>
-                    <option value="26">/26 - 255.255.255.192</option>
-                    <option value="27">/27 - 255.255.255.224</option>
-                    <option value="28">/28 - 255.255.255.240</option>
-                    <option value="29">/29 - 255.255.255.248</option>
-                    <option value="30">/30 - 255.255.255.252</option>
-                    <option value="31">/31 - 255.255.255.254</option>
-                    <option value="32">/32 - 255.255.255.255</option>
-                </select>
+                <select id="cidr"></select>
+                <script>
+                    // Populate CIDR options from /1 to /32
+                    const cidrSelect = document.getElementById('cidr');
+                    for (let i = 1; i <= 32; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = `/${i}`;
+                        if (i === 24) option.selected = true;
+                        cidrSelect.appendChild(option);
+                    }
+                </script>
             </div>
 
             <button onclick="calculate()">🔍 Calculate</button>
@@ -255,8 +254,8 @@
 
             const networkAddress = getNetworkAddress(ipParts, subnetMask);
             const broadcastAddress = getBroadcastAddress(networkAddress, cidr);
-            const firstHost = getFirstHost(networkAddress);
-            const lastHost = getLastHost(broadcastAddress);
+            const firstHost = getFirstHost(networkAddress, broadcastAddress);
+            const lastHost = getLastHost(networkAddress, broadcastAddress);
 
             const totalHosts = Math.pow(2, 32 - cidr);
             const usableHosts = cidr === 31 ? 2 : (cidr === 32 ? 1 : totalHosts - 2);
@@ -330,24 +329,40 @@
             ].join('.');
         }
 
-        function getFirstHost(networkAddress) {
-            const parts = networkAddress.split('.').map(Number);
-            parts[3] += 1;
-            if (parts[3] > 255) {
-                parts[3] = 0;
-                parts[2] += 1;
-            }
-            return parts.join('.');
+        function ipToInt(ip) {
+            return ip.split('.').reduce((int, octet) => (int << 8) + parseInt(octet), 0) >>> 0;
         }
 
-        function getLastHost(broadcastAddress) {
-            const parts = broadcastAddress.split('.').map(Number);
-            parts[3] -= 1;
-            if (parts[3] < 0) {
-                parts[3] = 255;
-                parts[2] -= 1;
+        function intToIp(int) {
+            return [(int >>> 24) & 0xFF, (int >>> 16) & 0xFF, (int >>> 8) & 0xFF, int & 0xFF].join('.');
+        }
+
+        function getFirstHost(networkAddress, broadcastAddress) {
+            const networkInt = ipToInt(networkAddress);
+            const broadcastInt = ipToInt(broadcastAddress);
+            const diff = broadcastInt - networkInt;
+
+            if (diff === 0) { // /32
+                return networkAddress;
+            } else if (diff === 1) { // /31
+                return networkAddress;
+            } else {
+                return intToIp(networkInt + 1);
             }
-            return parts.join('.');
+        }
+
+        function getLastHost(networkAddress, broadcastAddress) {
+            const networkInt = ipToInt(networkAddress);
+            const broadcastInt = ipToInt(broadcastAddress);
+            const diff = broadcastInt - networkInt;
+
+            if (diff === 0) { // /32
+                return broadcastAddress;
+            } else if (diff === 1) { // /31
+                return broadcastAddress;
+            } else {
+                return intToIp(broadcastInt - 1);
+            }
         }
 
         function displayResults(data) {

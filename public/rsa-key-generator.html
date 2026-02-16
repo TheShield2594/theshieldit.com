@@ -387,19 +387,46 @@
         }
 
         function arrayBufferToBase64(buffer) {
-            const binary = String.fromCharCode.apply(null, new Uint8Array(buffer));
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+
+            // Process in chunks to avoid call stack size limits
+            const chunkSize = 0x8000; // 32KB chunks
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                const chunk = bytes.subarray(i, i + chunkSize);
+                binary += String.fromCharCode.apply(null, chunk);
+            }
+
             return window.btoa(binary);
         }
 
         function copyPublicKey() {
             navigator.clipboard.writeText(publicKeyPem).then(() => {
                 showToast();
+            }).catch(err => {
+                const toast = document.getElementById('toast');
+                toast.textContent = 'Copy failed: ' + err.message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.textContent = 'Copied to clipboard!';
+                }, 3000);
+                console.error('Copy failed:', err);
             });
         }
 
         function copyPrivateKey() {
             navigator.clipboard.writeText(privateKeyPem).then(() => {
                 showToast();
+            }).catch(err => {
+                const toast = document.getElementById('toast');
+                toast.textContent = 'Copy failed: ' + err.message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.textContent = 'Copied to clipboard!';
+                }, 3000);
+                console.error('Copy failed:', err);
             });
         }
 

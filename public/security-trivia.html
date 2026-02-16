@@ -502,14 +502,21 @@
             }
         }
 
+        function fisherYatesShuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         function showResults() {
             document.getElementById('quizSection').style.display = 'none';
             document.getElementById('resultsSection').classList.add('show');
 
             const totalPossible = questions.length * 10;
-            const percentage = (score / totalPossible) * 100;
+            const percentage = Math.min(100, (score / totalPossible) * 100);
 
-            document.getElementById('finalScore').textContent = `${score}/${totalPossible}`;
+            document.getElementById('finalScore').textContent = `${score}`;
 
             let message;
             if (percentage >= 90) {
@@ -537,7 +544,7 @@
             document.getElementById('resultsSection').classList.remove('show');
 
             // Shuffle questions
-            questions.sort(() => Math.random() - 0.5);
+            fisherYatesShuffle(questions);
 
             loadQuestion();
         }
@@ -545,7 +552,7 @@
         // Initialize quiz on page load
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('totalQuestions').textContent = questions.length;
-            questions.sort(() => Math.random() - 0.5); // Shuffle questions
+            fisherYatesShuffle(questions); // Shuffle questions
             loadQuestion();
         });
     </script>

@@ -459,6 +459,9 @@
                 riskScore += 35;
             }
 
+            // Cap risk score at 100
+            riskScore = Math.min(riskScore, 100);
+
             // Determine overall safety
             let safety;
             if (riskScore >= 60) {
@@ -472,8 +475,23 @@
             return { warnings, riskScore, safety };
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function displayResults(analysis, urlObj) {
             const resultsDiv = document.getElementById('results');
+
+            // Escape URL parts to prevent XSS
+            const safeUrl = {
+                protocol: escapeHtml(urlObj.protocol),
+                hostname: escapeHtml(urlObj.hostname),
+                pathname: urlObj.pathname ? escapeHtml(urlObj.pathname) : '',
+                search: urlObj.search ? escapeHtml(urlObj.search) : '',
+                hash: urlObj.hash ? escapeHtml(urlObj.hash) : ''
+            };
 
             let safetyClass, safetyIcon, safetyTitle, safetyDesc;
 
@@ -510,7 +528,7 @@
                     <h3 style="color: #3b82f6; margin-bottom: 15px;">URL Breakdown</h3>
                     <div class="url-part">
                         <div class="url-label">Protocol</div>
-                        <div class="url-value">${urlObj.protocol}
+                        <div class="url-value">${safeUrl.protocol}
                             ${urlObj.protocol === 'https:' ?
                                 '<span class="badge safe">Secure</span>' :
                                 '<span class="badge warning">Not Secure</span>'}
@@ -518,24 +536,24 @@
                     </div>
                     <div class="url-part">
                         <div class="url-label">Domain</div>
-                        <div class="url-value">${urlObj.hostname}</div>
+                        <div class="url-value">${safeUrl.hostname}</div>
                     </div>
                     ${urlObj.pathname !== '/' ? `
                         <div class="url-part">
                             <div class="url-label">Path</div>
-                            <div class="url-value">${urlObj.pathname}</div>
+                            <div class="url-value">${safeUrl.pathname}</div>
                         </div>
                     ` : ''}
                     ${urlObj.search ? `
                         <div class="url-part">
                             <div class="url-label">Query Parameters</div>
-                            <div class="url-value">${urlObj.search}</div>
+                            <div class="url-value">${safeUrl.search}</div>
                         </div>
                     ` : ''}
                     ${urlObj.hash ? `
                         <div class="url-part">
                             <div class="url-label">Fragment</div>
-                            <div class="url-value">${urlObj.hash}</div>
+                            <div class="url-value">${safeUrl.hash}</div>
                         </div>
                     ` : ''}
                 </div>
@@ -544,7 +562,8 @@
             if (analysis.warnings.length > 0) {
                 html += '<div class="warning-list"><h3 style="color: #ef4444; margin-bottom: 15px;">⚠️ Warnings Detected</h3>';
                 analysis.warnings.forEach(warning => {
-                    html += `<div class="warning-item ${warning.level}">${warning.message}</div>`;
+                    const safeMessage = escapeHtml(warning.message);
+                    html += `<div class="warning-item ${warning.level}">${safeMessage}</div>`;
                 });
                 html += '</div>';
             } else {
