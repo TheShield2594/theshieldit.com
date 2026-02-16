@@ -20,17 +20,6 @@ export const CATEGORIES: { value: string; label: string }[] = [
 
 export const TOOLS: Tool[] = [
   {
-    title: "Base64 Encoder / Decoder",
-    description:
-      "Convert text to Base64 and back instantly. Supports UTF-8 and binary data.",
-    href: "/base64.html",
-    tags: "base64 encoder decoder converter encode decode",
-    category: "developer",
-    tagLabel: "Developer",
-    iconColor: "text-primary bg-primary/10",
-    icon: "code",
-  },
-  {
     title: "Data Breach Timeline",
     description:
       "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
@@ -42,6 +31,17 @@ export const TOOLS: Tool[] = [
     icon: "activity",
   },
   {
+    title: "Developer Swiss Army Knife",
+    description:
+      "All-in-one developer toolkit. Base64 encoding, JSON formatting, hash generation, regex testing, and text diff in one place.",
+    href: "/dev-tools.html",
+    tags: "base64 encoder decoder json formatter validator hash generator md5 sha256 regex tester text diff compare developer tools",
+    category: "developer",
+    tagLabel: "Developer",
+    iconColor: "text-primary bg-primary/10",
+    icon: "wrench",
+  },
+  {
     title: "Email Header Analyzer",
     description:
       "Identify phishing attempts by analyzing email headers, authentication, and delivery paths.",
@@ -51,28 +51,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Security",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "mail",
-  },
-  {
-    title: "Hash Generator & Verifier",
-    description:
-      "Generate MD5, SHA-1, SHA-256, SHA-384, SHA-512 hashes for text and files.",
-    href: "/hash-generator.html",
-    tags: "hash generator md5 sha256 sha1 sha512 checksum verifier file integrity",
-    category: "developer",
-    tagLabel: "Developer",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "hash",
-  },
-  {
-    title: "JSON Formatter & Validator",
-    description:
-      "Beautify, minify, and validate JSON with real-time error detection and stats.",
-    href: "/json-formatter.html",
-    tags: "json formatter validator beautifier minifier parser format validate",
-    category: "developer",
-    tagLabel: "Developer",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "braces",
   },
   {
     title: "Password Strength Tester",
@@ -130,17 +108,6 @@ export const TOOLS: Tool[] = [
     icon: "qr-code",
   },
   {
-    title: "Regex Tester",
-    description:
-      "Test regex patterns in real-time with match highlighting, capture groups, and quick reference.",
-    href: "/regex-tester.html",
-    tags: "regex regular expression tester pattern matching capture groups",
-    category: "developer",
-    tagLabel: "Developer",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "regex",
-  },
-  {
     title: "SSL/TLS Certificate Checker",
     description:
       "Check certificate details, expiration, issuer, and security grade for any website.",
@@ -150,17 +117,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Security",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "lock",
-  },
-  {
-    title: "Text Diff / Compare",
-    description:
-      "Compare two text blocks side by side. See additions, deletions, and changes highlighted.",
-    href: "/text-diff.html",
-    tags: "text diff compare difference config code compare tool",
-    category: "developer",
-    tagLabel: "Developer",
-    iconColor: "text-accent bg-accent/10",
-    icon: "file-diff",
   },
   {
     title: "Vendor Lock-In Score",
