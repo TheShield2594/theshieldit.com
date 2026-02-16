@@ -450,12 +450,15 @@
             if (plugins) dataExposureScore += 12;
 
             // Canvas fingerprint (very unique)
+            const canvasValue = await getCanvasFingerprint();
             fingerprint.canvas = {
                 label: 'Canvas Fingerprint',
-                value: await getCanvasFingerprint(),
+                value: canvasValue,
                 risk: 'high'
             };
-            dataExposureScore += 15;
+            if (canvasValue && canvasValue !== 'Not available') {
+                dataExposureScore += 15;
+            }
 
             // WebGL (very unique)
             const webgl = getWebGLInfo();
@@ -469,15 +472,20 @@
                 value: webgl.renderer,
                 risk: 'high'
             };
-            dataExposureScore += 10;
+            if (webgl.vendor && webgl.vendor !== 'Not supported' && webgl.vendor !== 'Not available' && webgl.vendor !== 'Unknown') {
+                dataExposureScore += 10;
+            }
 
             // Audio context
+            const audioValue = await getAudioFingerprint();
             fingerprint.audioContext = {
                 label: 'Audio Context',
-                value: await getAudioFingerprint(),
+                value: audioValue,
                 risk: 'high'
             };
-            dataExposureScore += 6;
+            if (audioValue && audioValue !== 'Not available' && audioValue !== 'Not supported') {
+                dataExposureScore += 6;
+            }
 
             // Cap at 100
             dataExposureScore = Math.min(100, dataExposureScore);
@@ -668,8 +676,24 @@
 
         // Run the fingerprint test on page load
         window.addEventListener('DOMContentLoaded', async () => {
-            const data = await calculateFingerprint();
-            displayResults(data);
+            try {
+                const data = await calculateFingerprint();
+                displayResults(data);
+            } catch (error) {
+                // Hide loading spinner and show error
+                document.getElementById('loading').style.display = 'none';
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid rgba(239, 68, 68, 0.5); border-radius: 12px; padding: 30px; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #ef4444; margin-bottom: 10px;">Error Loading Fingerprint</div>
+                        <div style="color: #cbd5e1;">Unable to calculate browser fingerprint. Please refresh the page to try again.</div>
+                        <div style="margin-top: 15px; font-size: 0.85rem; color: #94a3b8;">${error.message || 'Unknown error'}</div>
+                    </div>
+                `;
+                resultsDiv.style.display = 'block';
+                console.error('Fingerprint calculation error:', error);
+            }
         });
     </script>
 </body>
