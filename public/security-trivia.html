@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Trivia Challenge | The Shield IT</title>
+    <meta name="description" content="Test your cybersecurity knowledge with our interactive trivia game. Learn about privacy, security, and best practices.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .question-card {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .answers-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .answer-option {
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .answer-option:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateX(5px);
+        }
+
+        .answer-option.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .answer-option.correct {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .answer-option.incorrect {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .answer-letter {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .answer-text {
+            flex: 1;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .explanation {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .explanation h4 {
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+
+        .results-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .results-screen.show {
+            display: block;
+        }
+
+        .final-score {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin: 30px 0;
+        }
+
+        .performance-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .score-value {
+                font-size: 1.5rem;
+            }
+
+            .final-score {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🎯 Security Trivia Challenge</h1>
+            <p class="subtitle">Test your cybersecurity knowledge!</p>
+        </header>
+
+        <div class="card">
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">Question</div>
+                    <div class="score-value"><span id="currentQuestion">1</span>/<span id="totalQuestions">10</span></div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Score</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Streak</div>
+                    <div class="score-value" id="streak">0</div>
+                </div>
+            </div>
+
+            <div id="quizSection">
+                <div class="question-card">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="answers-grid" id="answersGrid"></div>
+                </div>
+
+                <div class="explanation" id="explanation"></div>
+
+                <button id="nextButton" onclick="nextQuestion()" style="display: none;">
+                    Next Question →
+                </button>
+            </div>
+
+            <div id="resultsSection" class="results-screen">
+                <div style="font-size: 5rem; margin-bottom: 20px;">🏆</div>
+                <h2 style="margin-bottom: 20px;">Quiz Complete!</h2>
+                <div class="final-score" id="finalScore">0/10</div>
+                <div class="performance-message" id="performanceMessage"></div>
+                <button onclick="restartQuiz()">🔄 Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What does HTTPS stand for?",
+                answers: [
+                    "HyperText Transfer Protocol Secure",
+                    "HyperText Transmission Protocol Security",
+                    "High-Level Transfer Protocol Secure",
+                    "HyperTransfer Text Protocol Secure"
+                ],
+                correct: 0,
+                explanation: "HTTPS stands for HyperText Transfer Protocol Secure. It's the secure version of HTTP, using SSL/TLS encryption to protect data in transit between your browser and the website."
+            },
+            {
+                question: "What is the recommended minimum length for a secure password?",
+                answers: [
+                    "6 characters",
+                    "8 characters",
+                    "12 characters",
+                    "16 characters"
+                ],
+                correct: 2,
+                explanation: "Security experts recommend passwords of at least 12-16 characters. Longer passwords with a mix of character types are significantly harder to crack through brute force attacks."
+            },
+            {
+                question: "What is two-factor authentication (2FA)?",
+                answers: [
+                    "Using two different passwords",
+                    "Logging in from two devices",
+                    "Requiring two forms of identification",
+                    "Having two security questions"
+                ],
+                correct: 2,
+                explanation: "Two-factor authentication requires two forms of identification: something you know (password) and something you have (phone, security key) or something you are (biometric). This adds an extra layer of security."
+            },
+            {
+                question: "Which of these is an example of social engineering?",
+                answers: [
+                    "Installing a firewall",
+                    "Phishing emails",
+                    "Encrypting data",
+                    "Using a VPN"
+                ],
+                correct: 1,
+                explanation: "Social engineering is manipulating people into divulging confidential information. Phishing emails are a common form where attackers impersonate trusted entities to trick victims into revealing sensitive data."
+            },
+            {
+                question: "What does VPN stand for?",
+                answers: [
+                    "Virtual Private Network",
+                    "Very Private Network",
+                    "Verified Protection Network",
+                    "Virtual Protection Node"
+                ],
+                correct: 0,
+                explanation: "VPN stands for Virtual Private Network. It creates an encrypted tunnel for your data, hiding your IP address and protecting your online privacy from ISPs and potential attackers."
+            },
+            {
+                question: "What is malware?",
+                answers: [
+                    "A type of email",
+                    "Malicious software",
+                    "A security feature",
+                    "A type of firewall"
+                ],
+                correct: 1,
+                explanation: "Malware is short for 'malicious software.' It includes viruses, trojans, ransomware, spyware, and other programs designed to harm or exploit computer systems."
+            },
+            {
+                question: "What is the purpose of encryption?",
+                answers: [
+                    "To make files smaller",
+                    "To protect data by converting it into unreadable code",
+                    "To speed up internet connection",
+                    "To delete old files"
+                ],
+                correct: 1,
+                explanation: "Encryption converts data into an unreadable format that can only be decoded with the correct key. This protects sensitive information from unauthorized access, even if intercepted."
+            },
+            {
+                question: "What is a zero-day vulnerability?",
+                answers: [
+                    "A bug that takes no time to fix",
+                    "A security flaw unknown to the vendor",
+                    "A daily security update",
+                    "A type of antivirus"
+                ],
+                correct: 1,
+                explanation: "A zero-day vulnerability is a security flaw unknown to the software vendor, meaning there are 'zero days' of protection. Attackers can exploit these before patches are available."
+            },
+            {
+                question: "What is the safest way to share passwords with team members?",
+                answers: [
+                    "Send via email",
+                    "Write on sticky notes",
+                    "Use a password manager",
+                    "Share via text message"
+                ],
+                correct: 2,
+                explanation: "Password managers are the safest way to share passwords. They use encryption and secure sharing features. Never share passwords via email, text, or written notes as these can be easily intercepted."
+            },
+            {
+                question: "What does 'phishing' mean in cybersecurity?",
+                answers: [
+                    "Hacking into databases",
+                    "Attempting to obtain sensitive information through deception",
+                    "Installing malware on servers",
+                    "Breaking password encryption"
+                ],
+                correct: 1,
+                explanation: "Phishing is a social engineering attack where attackers impersonate legitimate entities (banks, companies) to trick victims into revealing passwords, credit card numbers, or other sensitive information."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let selectedAnswer = null;
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1}`;
+            document.getElementById('questionText').textContent = question.question;
+
+            const answersGrid = document.getElementById('answersGrid');
+            answersGrid.innerHTML = '';
+
+            question.answers.forEach((answer, index) => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer-option';
+                answerDiv.onclick = () => selectAnswer(index);
+                answerDiv.innerHTML = `
+                    <div class="answer-letter">${String.fromCharCode(65 + index)}</div>
+                    <div class="answer-text">${answer}</div>
+                `;
+                answersGrid.appendChild(answerDiv);
+            });
+
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('nextButton').style.display = 'none';
+            selectedAnswer = null;
+        }
+
+        function selectAnswer(index) {
+            if (selectedAnswer !== null) return; // Already answered
+
+            selectedAnswer = index;
+            const question = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.answer-option');
+
+            options.forEach((option, i) => {
+                option.classList.add('disabled');
+                if (i === question.correct) {
+                    option.classList.add('correct');
+                }
+                if (i === index && i !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Update score
+            if (index === question.correct) {
+                score += 10;
+                streak++;
+                if (streak > 1) score += streak * 2; // Bonus for streaks
+                document.getElementById('score').textContent = score;
+                document.getElementById('streak').textContent = streak;
+            } else {
+                streak = 0;
+                document.getElementById('streak').textContent = streak;
+            }
+
+            // Show explanation
+            const explanation = document.getElementById('explanation');
+            explanation.innerHTML = `
+                <h4>${index === question.correct ? '✅ Correct!' : '❌ Incorrect'}</h4>
+                <p>${question.explanation}</p>
+            `;
+            explanation.classList.add('show');
+
+            // Show next button
+            document.getElementById('nextButton').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function fisherYatesShuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultsSection').classList.add('show');
+
+            const totalPossible = questions.length * 10;
+            const percentage = Math.min(100, (score / totalPossible) * 100);
+
+            document.getElementById('finalScore').textContent = `${score}`;
+
+            let message;
+            if (percentage >= 90) {
+                message = "🌟 Outstanding! You're a security expert!";
+            } else if (percentage >= 70) {
+                message = "🎉 Great job! You know your security!";
+            } else if (percentage >= 50) {
+                message = "👍 Good effort! Keep learning!";
+            } else {
+                message = "📚 Keep studying! Security is important!";
+            }
+
+            document.getElementById('performanceMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            streak = 0;
+            selectedAnswer = null;
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('resultsSection').classList.remove('show');
+
+            // Shuffle questions
+            fisherYatesShuffle(questions);
+
+            loadQuestion();
+        }
+
+        // Initialize quiz on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('totalQuestions').textContent = questions.length;
+            fisherYatesShuffle(questions); // Shuffle questions
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>

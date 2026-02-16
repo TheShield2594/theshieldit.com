@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC Leak Test | The Shield IT</title>
+    <meta name="description" content="Test if WebRTC is leaking your real IP address. Check if your VPN is protecting you from WebRTC leaks.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-card {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 12px;
+        }
+
+        .status-card.safe {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+        }
+
+        .status-card.danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        }
+
+        .status-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .status-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .status-description {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .ip-list {
+            margin-top: 30px;
+        }
+
+        .ip-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .ip-item.leak {
+            border-left-color: #ef4444;
+        }
+
+        .ip-address {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3b82f6;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 10px;
+        }
+
+        .ip-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .ip-type.public {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .ip-type.local {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .ip-type.ipv6 {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+        }
+
+        .ip-details {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .status-icon {
+                font-size: 3rem;
+            }
+
+            .status-title {
+                font-size: 1.5rem;
+            }
+
+            .ip-address {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔓 WebRTC Leak Test</h1>
+            <p class="subtitle">Check if WebRTC is exposing your real IP address</p>
+        </header>
+
+        <div class="card">
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Testing for WebRTC leaks...</p>
+            </div>
+
+            <div id="results" style="display: none;">
+                <div class="status-card" id="statusCard">
+                    <div class="status-icon" id="statusIcon">🔍</div>
+                    <div class="status-title" id="statusTitle">Checking...</div>
+                    <div class="status-description" id="statusDesc"></div>
+                    <button onclick="runTest()" style="margin-top: 20px;">🔄 Test Again</button>
+                </div>
+
+                <div class="ip-list" id="ipList"></div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🛡️ What is a WebRTC Leak?</h3>
+            <p style="margin-bottom: 15px; color: #cbd5e1;">
+                WebRTC (Web Real-Time Communication) is a browser feature that enables video/audio chat directly in your browser.
+                However, it can reveal your real IP address even when using a VPN, potentially exposing your location and identity.
+            </p>
+            <h3 style="margin-top: 20px;">How WebRTC Leaks Occur:</h3>
+            <ul>
+                <li><strong>STUN Requests:</strong> WebRTC uses STUN servers to discover your public IP for peer-to-peer connections</li>
+                <li><strong>Local Network Discovery:</strong> Can expose your local (private) IP addresses</li>
+                <li><strong>VPN Bypass:</strong> Operates independently of VPN tunnel, revealing real IP</li>
+                <li><strong>Browser Default:</strong> WebRTC is enabled by default in most browsers</li>
+            </ul>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔧 How to Prevent WebRTC Leaks</h3>
+            <ul>
+                <li><strong>Disable WebRTC:</strong> Use browser settings or about:config (Firefox) to disable WebRTC</li>
+                <li><strong>Browser Extensions:</strong> Install WebRTC Leak Prevent (Chrome) or Disable WebRTC (Firefox)</li>
+                <li><strong>Use Brave Browser:</strong> Has built-in WebRTC leak protection</li>
+                <li><strong>VPN with WebRTC Protection:</strong> Some VPNs include WebRTC leak protection features</li>
+                <li><strong>Firefox Settings:</strong> Set <code>media.peerconnection.enabled</code> to false in about:config</li>
+                <li><strong>Chrome Extensions:</strong> WebRTC Leak Prevent or uBlock Origin (Advanced settings)</li>
+                <li><strong>Test Regularly:</strong> Check for leaks after changing VPN servers or browser settings</li>
+            </ul>
+        </div>
+
+        <div class="card info-box">
+            <h3>🌐 Browser-Specific Instructions</h3>
+            <ul>
+                <li>
+                    <strong>Firefox:</strong>
+                    <ol style="margin-left: 20px; margin-top: 5px;">
+                        <li>Type <code>about:config</code> in address bar</li>
+                        <li>Search for <code>media.peerconnection.enabled</code></li>
+                        <li>Set to <code>false</code></li>
+                    </ol>
+                </li>
+                <li style="margin-top: 10px;">
+                    <strong>Chrome/Edge:</strong>
+                    <ol style="margin-left: 20px; margin-top: 5px;">
+                        <li>Install "WebRTC Leak Prevent" extension</li>
+                        <li>Configure to "Disable non-proxied UDP"</li>
+                    </ol>
+                </li>
+                <li style="margin-top: 10px;">
+                    <strong>Safari:</strong>
+                    <ol style="margin-left: 20px; margin-top: 5px;">
+                        <li>Preferences → Advanced → Show Develop menu</li>
+                        <li>Develop → Experimental Features → Disable WebRTC</li>
+                    </ol>
+                </li>
+                <li style="margin-top: 10px;">
+                    <strong>Brave:</strong> Settings → Privacy and security → WebRTC IP handling policy → "Disable non-proxied UDP"
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let ips = [];
+
+        function runTest() {
+            ips = [];
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            // Start WebRTC leak detection
+            detectWebRTCLeaks();
+        }
+
+        function detectWebRTCLeaks() {
+            const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+
+            if (!RTCPeerConnection) {
+                displayResults(true, 'WebRTC is not supported or is disabled in your browser.');
+                return;
+            }
+
+            let resultResolved = false;
+            let timeoutId = null;
+
+            const pc = new RTCPeerConnection({
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' }
+                ]
+            });
+
+            pc.createDataChannel('');
+
+            pc.createOffer().then(offer => pc.setLocalDescription(offer));
+
+            pc.onicecandidate = (ice) => {
+                if (resultResolved) return;
+
+                if (!ice || !ice.candidate || !ice.candidate.candidate) {
+                    // All candidates gathered
+                    if (!resultResolved) {
+                        resultResolved = true;
+                        clearTimeout(timeoutId);
+                        pc.close();
+                        setTimeout(() => {
+                            displayResults(false, null);
+                        }, 1000);
+                    }
+                    return;
+                }
+
+                const candidate = ice.candidate.candidate;
+                // Extract IP from candidate - handles both IPv4 and compressed IPv6
+                const parts = candidate.split(' ');
+                const ip = parts[4]; // IP is at position 4 in candidate string
+
+                if (ip && !ips.some(item => item.ip === ip)) {
+                    const ipInfo = {
+                        ip: ip,
+                        type: getIPType(ip, candidate),
+                        candidate: candidate
+                    };
+                    ips.push(ipInfo);
+                }
+            };
+
+            // Timeout after 3 seconds
+            timeoutId = setTimeout(() => {
+                if (!resultResolved) {
+                    resultResolved = true;
+                    pc.close();
+                    if (ips.length === 0) {
+                        displayResults(true, 'WebRTC is disabled or blocked. No IP addresses detected.');
+                    } else {
+                        displayResults(false, null);
+                    }
+                }
+            }, 3000);
+        }
+
+        function getIPType(ip, candidate) {
+            // Check if IPv6
+            if (ip.includes(':')) {
+                // Check for link-local (fe80::/10)
+                if (ip.toLowerCase().startsWith('fe80:')) {
+                    return 'local';
+                }
+                // Check for unique local addresses (fc00::/7)
+                if (ip.toLowerCase().startsWith('fc') || ip.toLowerCase().startsWith('fd')) {
+                    return 'local';
+                }
+                // Check for loopback (::1)
+                if (ip === '::1') {
+                    return 'local';
+                }
+                // Check for multicast (ff00::/8)
+                if (ip.toLowerCase().startsWith('ff')) {
+                    return 'local';
+                }
+                // Otherwise it's likely a global unicast IPv6 address
+                return 'public';
+            }
+
+            // Check if local/private IP
+            if (ip.startsWith('192.168.') ||
+                ip.startsWith('10.') ||
+                ip.startsWith('172.16.') ||
+                ip.startsWith('172.17.') ||
+                ip.startsWith('172.18.') ||
+                ip.startsWith('172.19.') ||
+                ip.startsWith('172.20.') ||
+                ip.startsWith('172.21.') ||
+                ip.startsWith('172.22.') ||
+                ip.startsWith('172.23.') ||
+                ip.startsWith('172.24.') ||
+                ip.startsWith('172.25.') ||
+                ip.startsWith('172.26.') ||
+                ip.startsWith('172.27.') ||
+                ip.startsWith('172.28.') ||
+                ip.startsWith('172.29.') ||
+                ip.startsWith('172.30.') ||
+                ip.startsWith('172.31.') ||
+                ip.startsWith('127.')) {
+                return 'local';
+            }
+
+            return 'public';
+        }
+
+        function displayResults(isProtected, message) {
+            const statusCard = document.getElementById('statusCard');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusDesc = document.getElementById('statusDesc');
+            const ipList = document.getElementById('ipList');
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+
+            if (isProtected) {
+                statusCard.className = 'status-card safe';
+                statusIcon.textContent = '✅';
+                statusTitle.textContent = 'Protected!';
+                statusDesc.textContent = message || 'WebRTC is disabled or properly configured. Your IP is not leaking!';
+                ipList.innerHTML = '';
+            } else {
+                const hasPublicIP = ips.some(ip => ip.type === 'public');
+
+                if (hasPublicIP) {
+                    statusCard.className = 'status-card danger';
+                    statusIcon.textContent = '⚠️';
+                    statusTitle.textContent = 'WebRTC Leak Detected!';
+                    statusDesc.textContent = 'Your browser is leaking IP addresses via WebRTC. This may expose your real location even when using a VPN!';
+                } else {
+                    statusCard.className = 'status-card safe';
+                    statusIcon.textContent = '✅';
+                    statusTitle.textContent = 'No Public IP Leak';
+                    statusDesc.textContent = 'Only local IP addresses detected. Your public IP is not leaking via WebRTC.';
+                }
+
+                // Display IP addresses
+                ipList.innerHTML = '<h3 style="color: #3b82f6; margin-bottom: 15px;">Detected IP Addresses</h3>';
+
+                ips.forEach(ipInfo => {
+                    const ipDiv = document.createElement('div');
+                    ipDiv.className = 'ip-item';
+                    if (ipInfo.type === 'public') {
+                        ipDiv.classList.add('leak');
+                    }
+
+                    const typeLabels = {
+                        'public': '🌐 Public IP',
+                        'local': '🏠 Local IP',
+                        'ipv6': '🔷 IPv6'
+                    };
+
+                    const riskText = {
+                        'public': 'HIGH RISK - This is your real public IP address!',
+                        'local': 'Low risk - This is your local network IP',
+                        'ipv6': ipInfo.ip.startsWith('fe80') ? 'Low risk - Link-local IPv6' : 'Potential risk - Public IPv6'
+                    };
+
+                    ipDiv.innerHTML = `
+                        <div class="ip-address">${ipInfo.ip}</div>
+                        <span class="ip-type ${ipInfo.type}">${typeLabels[ipInfo.type]}</span>
+                        <div class="ip-details">${riskText[ipInfo.type]}</div>
+                    `;
+
+                    ipList.appendChild(ipDiv);
+                });
+            }
+        }
+
+        // Run test on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            runTest();
+        });
+    </script>
+</body>
+</html>

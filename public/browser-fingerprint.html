@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Fingerprint Test | The Shield IT</title>
+    <meta name="description" content="Test your browser's uniqueness and see what information websites can collect about you. Check your digital fingerprint.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .uniqueness-score {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0deg, #8b5cf6 180deg, #ef4444 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-inner {
+            width: 170px;
+            height: 170px;
+            background: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .uniqueness-text {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+
+        .uniqueness-description {
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fingerprint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .fingerprint-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .fingerprint-item.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .fingerprint-item.danger {
+            border-left-color: #ef4444;
+        }
+
+        .fingerprint-label {
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fingerprint-value {
+            color: #94a3b8;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .risk-badge.low {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .risk-badge.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .risk-badge.high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .protection-tips {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .protection-tips h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .protection-tips ul {
+            margin-left: 20px;
+        }
+
+        .protection-tips li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .spinner {
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .fingerprint-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-circle {
+                width: 150px;
+                height: 150px;
+            }
+
+            .score-inner {
+                width: 120px;
+                height: 120px;
+            }
+
+            .score-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔍 Browser Fingerprint Test</h1>
+            <p class="subtitle">Discover how unique your browser is and what data websites can collect</p>
+        </header>
+
+        <div id="loading" class="card loading">
+            <div class="spinner"></div>
+            <p>Analyzing your browser fingerprint...</p>
+        </div>
+
+        <div id="results" style="display: none;">
+            <div class="card">
+                <div class="uniqueness-score">
+                    <div class="score-circle">
+                        <div class="score-inner">
+                            <div class="score-value" id="uniquenessScore">0</div>
+                            <div class="score-label">/ 100</div>
+                        </div>
+                    </div>
+                    <div class="uniqueness-text" id="uniquenessText">Calculating uniqueness...</div>
+                    <div class="uniqueness-description" id="uniquenessDesc"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">🎯 Your Browser Fingerprint</h2>
+                <div class="fingerprint-grid" id="fingerprintGrid"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">🛡️ Advanced Tracking Points</h2>
+                <div class="fingerprint-grid" id="advancedGrid"></div>
+            </div>
+
+            <div class="card protection-tips">
+                <h3>🔐 How to Protect Your Privacy</h3>
+                <ul>
+                    <li><strong>Use Privacy-Focused Browsers:</strong> Firefox with privacy extensions or Brave Browser</li>
+                    <li><strong>Enable Browser Features:</strong> Use private/incognito mode and disable third-party cookies</li>
+                    <li><strong>Install Privacy Extensions:</strong> uBlock Origin, Privacy Badger, or NoScript</li>
+                    <li><strong>Use VPN:</strong> Hide your real IP address and location</li>
+                    <li><strong>Disable WebGL & Canvas:</strong> These are commonly used for fingerprinting</li>
+                    <li><strong>Regular Cleaning:</strong> Clear cookies, cache, and browsing data regularly</li>
+                    <li><strong>Update Regularly:</strong> Keep your browser and OS up to date</li>
+                    <li><strong>Consider Tor Browser:</strong> For maximum anonymity (slower but most private)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function calculateFingerprint() {
+            const fingerprint = {};
+            let dataExposureScore = 0;
+
+            // Basic browser info (10 points each)
+            fingerprint.userAgent = {
+                label: 'User Agent',
+                value: navigator.userAgent,
+                risk: 'high'
+            };
+            dataExposureScore += 10;
+
+            fingerprint.language = {
+                label: 'Language',
+                value: navigator.language,
+                risk: 'low'
+            };
+            dataExposureScore += 2;
+
+            fingerprint.languages = {
+                label: 'Languages',
+                value: navigator.languages.join(', '),
+                risk: 'low'
+            };
+            dataExposureScore += 3;
+
+            fingerprint.platform = {
+                label: 'Platform',
+                value: navigator.platform,
+                risk: 'medium'
+            };
+            dataExposureScore += 5;
+
+            // Screen info (5 points each)
+            fingerprint.screenResolution = {
+                label: 'Screen Resolution',
+                value: `${screen.width}x${screen.height}`,
+                risk: 'high'
+            };
+            dataExposureScore += 8;
+
+            fingerprint.colorDepth = {
+                label: 'Color Depth',
+                value: `${screen.colorDepth}-bit`,
+                risk: 'medium'
+            };
+            dataExposureScore += 4;
+
+            fingerprint.pixelRatio = {
+                label: 'Pixel Ratio',
+                value: window.devicePixelRatio,
+                risk: 'medium'
+            };
+            dataExposureScore += 5;
+
+            // Timezone
+            fingerprint.timezone = {
+                label: 'Timezone',
+                value: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                risk: 'high'
+            };
+            dataExposureScore += 7;
+
+            fingerprint.timezoneOffset = {
+                label: 'Timezone Offset',
+                value: `${new Date().getTimezoneOffset()} minutes`,
+                risk: 'medium'
+            };
+            dataExposureScore += 3;
+
+            // Hardware info
+            fingerprint.hardwareConcurrency = {
+                label: 'CPU Cores',
+                value: navigator.hardwareConcurrency || 'Unknown',
+                risk: 'medium'
+            };
+            dataExposureScore += 5;
+
+            fingerprint.deviceMemory = {
+                label: 'Device Memory',
+                value: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Unknown',
+                risk: 'medium'
+            };
+            dataExposureScore += 4;
+
+            // Browser features
+            fingerprint.cookiesEnabled = {
+                label: 'Cookies Enabled',
+                value: navigator.cookieEnabled ? 'Yes' : 'No',
+                risk: 'low'
+            };
+            dataExposureScore += 2;
+
+            fingerprint.doNotTrack = {
+                label: 'Do Not Track',
+                value: navigator.doNotTrack || 'Not set',
+                risk: 'low'
+            };
+            dataExposureScore += 1;
+
+            // Plugins (very unique)
+            const plugins = Array.from(navigator.plugins || []).map(p => p.name).join(', ');
+            fingerprint.plugins = {
+                label: 'Browser Plugins',
+                value: plugins || 'None detected',
+                risk: 'high'
+            };
+            if (plugins) dataExposureScore += 12;
+
+            // Canvas fingerprint (very unique)
+            const canvasValue = await getCanvasFingerprint();
+            fingerprint.canvas = {
+                label: 'Canvas Fingerprint',
+                value: canvasValue,
+                risk: 'high'
+            };
+            if (canvasValue && canvasValue !== 'Not available') {
+                dataExposureScore += 15;
+            }
+
+            // WebGL (very unique)
+            const webgl = getWebGLInfo();
+            fingerprint.webglVendor = {
+                label: 'WebGL Vendor',
+                value: webgl.vendor,
+                risk: 'high'
+            };
+            fingerprint.webglRenderer = {
+                label: 'WebGL Renderer',
+                value: webgl.renderer,
+                risk: 'high'
+            };
+            if (webgl.vendor && webgl.vendor !== 'Not supported' && webgl.vendor !== 'Not available' && webgl.vendor !== 'Unknown') {
+                dataExposureScore += 10;
+            }
+
+            // Audio context
+            const audioValue = await getAudioFingerprint();
+            fingerprint.audioContext = {
+                label: 'Audio Context',
+                value: audioValue,
+                risk: 'high'
+            };
+            if (audioValue && audioValue !== 'Not available' && audioValue !== 'Not supported') {
+                dataExposureScore += 6;
+            }
+
+            // Cap at 100
+            dataExposureScore = Math.min(100, dataExposureScore);
+
+            return { fingerprint, dataExposureScore };
+        }
+
+        function getCanvasFingerprint() {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const text = 'BrowserFingerprint🔒';
+                ctx.textBaseline = 'top';
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#f60';
+                ctx.fillRect(125, 1, 62, 20);
+                ctx.fillStyle = '#069';
+                ctx.fillText(text, 2, 15);
+                ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+                ctx.fillText(text, 4, 17);
+                const dataURL = canvas.toDataURL();
+                // Hash the data URL
+                let hash = 0;
+                for (let i = 0; i < dataURL.length; i++) {
+                    const char = dataURL.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash).toString(16).substring(0, 8);
+            } catch (e) {
+                return 'Not available';
+            }
+        }
+
+        function getWebGLInfo() {
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (!gl) return { vendor: 'Not supported', renderer: 'Not supported' };
+
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                return {
+                    vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'Unknown',
+                    renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Unknown'
+                };
+            } catch (e) {
+                return { vendor: 'Not available', renderer: 'Not available' };
+            }
+        }
+
+        async function getAudioFingerprint() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return 'Not supported';
+
+                const context = new AudioContext();
+
+                // Resume context if suspended
+                if (context.state === 'suspended') {
+                    await context.resume();
+                }
+
+                const oscillator = context.createOscillator();
+                const analyser = context.createAnalyser();
+                const gainNode = context.createGain();
+                const scriptProcessor = context.createScriptProcessor(4096, 1, 1);
+
+                gainNode.gain.value = 0;
+                oscillator.connect(analyser);
+                analyser.connect(scriptProcessor);
+                scriptProcessor.connect(gainNode);
+                gainNode.connect(context.destination);
+                oscillator.start(0);
+
+                return new Promise(resolve => {
+                    let resolved = false;
+
+                    // Safety timeout (2 seconds)
+                    const timeout = setTimeout(() => {
+                        if (!resolved) {
+                            resolved = true;
+                            scriptProcessor.onaudioprocess = null;
+                            try {
+                                oscillator.stop();
+                                context.close();
+                            } catch (e) {}
+                            resolve('Not available');
+                        }
+                    }, 2000);
+
+                    scriptProcessor.onaudioprocess = function(event) {
+                        if (!resolved) {
+                            resolved = true;
+                            clearTimeout(timeout);
+                            const output = event.outputBuffer.getChannelData(0);
+                            let hash = 0;
+                            for (let i = 0; i < output.length; i++) {
+                                hash += Math.abs(output[i]);
+                            }
+                            scriptProcessor.onaudioprocess = null;
+                            oscillator.stop();
+                            context.close();
+                            resolve(hash.toFixed(4));
+                        }
+                    };
+                });
+            } catch (e) {
+                return 'Not available';
+            }
+        }
+
+        function displayResults(data) {
+            const { fingerprint, dataExposureScore } = data;
+
+            // Update score
+            document.getElementById('uniquenessScore').textContent = dataExposureScore;
+
+            // Update text based on score
+            let text, desc;
+            if (dataExposureScore < 30) {
+                text = '🟢 Low Uniqueness';
+                desc = 'Your browser has common characteristics. You blend in well with other users!';
+            } else if (dataExposureScore < 60) {
+                text = '🟡 Moderate Uniqueness';
+                desc = 'Your browser has some unique characteristics. You can be tracked with moderate accuracy.';
+            } else if (dataExposureScore < 80) {
+                text = '🟠 High Uniqueness';
+                desc = 'Your browser is quite unique. Websites can easily identify and track you.';
+            } else {
+                text = '🔴 Very High Uniqueness';
+                desc = 'Your browser is highly unique. You can be tracked very accurately across websites!';
+            }
+
+            document.getElementById('uniquenessText').textContent = text;
+            document.getElementById('uniquenessDesc').textContent = desc;
+
+            // Display basic fingerprint data
+            const basicItems = ['userAgent', 'language', 'languages', 'platform', 'screenResolution', 'colorDepth', 'pixelRatio', 'timezone', 'timezoneOffset', 'cookiesEnabled', 'doNotTrack'];
+            const basicGrid = document.getElementById('fingerprintGrid');
+            basicGrid.innerHTML = '';
+
+            basicItems.forEach(key => {
+                if (fingerprint[key]) {
+                    const item = createFingerprintItem(fingerprint[key]);
+                    basicGrid.appendChild(item);
+                }
+            });
+
+            // Display advanced data
+            const advancedItems = ['hardwareConcurrency', 'deviceMemory', 'plugins', 'canvas', 'webglVendor', 'webglRenderer', 'audioContext'];
+            const advancedGrid = document.getElementById('advancedGrid');
+            advancedGrid.innerHTML = '';
+
+            advancedItems.forEach(key => {
+                if (fingerprint[key]) {
+                    const item = createFingerprintItem(fingerprint[key]);
+                    advancedGrid.appendChild(item);
+                }
+            });
+
+            // Hide loading, show results
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function createFingerprintItem(data) {
+            const div = document.createElement('div');
+            div.className = 'fingerprint-item';
+            if (data.risk === 'medium') div.classList.add('warning');
+            if (data.risk === 'high') div.classList.add('danger');
+
+            const label = document.createElement('div');
+            label.className = 'fingerprint-label';
+            label.innerHTML = `
+                ${data.label}
+                <span class="risk-badge ${data.risk}">${data.risk.toUpperCase()}</span>
+            `;
+
+            const value = document.createElement('div');
+            value.className = 'fingerprint-value';
+            value.textContent = data.value;
+
+            div.appendChild(label);
+            div.appendChild(value);
+
+            return div;
+        }
+
+        // Run the fingerprint test on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const data = await calculateFingerprint();
+                displayResults(data);
+            } catch (error) {
+                // Hide loading spinner and show error
+                document.getElementById('loading').style.display = 'none';
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid rgba(239, 68, 68, 0.5); border-radius: 12px; padding: 30px; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #ef4444; margin-bottom: 10px;">Error Loading Fingerprint</div>
+                        <div style="color: #cbd5e1;">Unable to calculate browser fingerprint. Please refresh the page to try again.</div>
+                        <div style="margin-top: 15px; font-size: 0.85rem; color: #94a3b8;">${error.message || 'Unknown error'}</div>
+                    </div>
+                `;
+                resultsDiv.style.display = 'block';
+                console.error('Fingerprint calculation error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
