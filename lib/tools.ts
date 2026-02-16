@@ -204,6 +204,6 @@ export const TOOLS: Tool[] = [
     category: "security",
     tagLabel: "Analysis",
     iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "shield-check",
+    icon: "radar",
   },
 ]
