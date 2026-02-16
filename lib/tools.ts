@@ -75,11 +75,11 @@ export const TOOLS: Tool[] = [
     icon: "circle-help",
   },
   {
-    title: "Privacy Guardian RPG",
+    title: "Privacy Guardian",
     description:
-      "Level up your digital privacy through practical quests and real-world security tasks.",
+      "Interactive dialogue adventure where you make real privacy decisions and level up your security skills through scenario-based choices.",
     href: "/privacy-rpg.html",
-    tags: "privacy guardian rpg security quests audit",
+    tags: "privacy guardian game dialogue adventure security scenarios interactive",
     category: "education",
     tagLabel: "Game",
     iconColor: "text-chart-3 bg-chart-3/10",

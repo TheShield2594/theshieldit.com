@@ -3,41 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Primary Meta Tags -->
-  <title>Privacy Guardian RPG - Level Up Your Digital Privacy | The Shield IT</title>
-  <meta name="title" content="Privacy Guardian RPG - Level Up Your Digital Privacy | The Shield IT">
-  <meta name="description" content="Free privacy training game with 20+ real-world quests. Learn encryption, VPN setup, password management, and more through gamified challenges. Track your progress and become a privacy expert.">
-  <meta name="keywords" content="privacy game, cybersecurity training, privacy education, digital security game, privacy quests, learn encryption, VPN tutorial, password manager guide, privacy RPG">
+  <title>Privacy Guardian - Interactive Dialogue Adventure | The Shield IT</title>
+  <meta name="title" content="Privacy Guardian - Interactive Dialogue Adventure | The Shield IT">
+  <meta name="description" content="Free interactive privacy game where you make real decisions about digital security. Talk with a Privacy Guardian character and level up your security skills through scenario-based choices.">
+  <meta name="keywords" content="privacy game, cybersecurity training, privacy education, digital security game, interactive dialogue, learn encryption, security scenarios, privacy adventure">
   <meta name="author" content="Brandon Shields, The Shield IT">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://theshieldit.com/privacy-rpg.html">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://theshieldit.com/privacy-rpg.html">
-  <meta property="og:title" content="Privacy Guardian RPG - Level Up Your Digital Privacy">
-  <meta property="og:description" content="Free privacy training game with 20+ real-world quests. Learn encryption, VPNs, and more through interactive gameplay.">
+  <meta property="og:title" content="Privacy Guardian - Interactive Dialogue Adventure">
+  <meta property="og:description" content="Make real privacy decisions in this interactive game. Talk with a Privacy Guardian and level up your security skills.">
   <meta property="og:image" content="https://theshieldit.com/og-rpg-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="The Shield IT">
-  
+
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://theshieldit.com/privacy-rpg.html">
-  <meta name="twitter:title" content="Privacy Guardian RPG - Level Up Your Digital Privacy">
-  <meta name="twitter:description" content="Free privacy training game with 20+ real-world quests. Learn through play.">
+  <meta name="twitter:title" content="Privacy Guardian - Interactive Dialogue Adventure">
+  <meta name="twitter:description" content="Make real privacy decisions in this interactive game.">
   <meta name="twitter:image" content="https://theshieldit.com/og-rpg-image.jpg">
-  
+
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Privacy Guardian RPG",
+    "name": "Privacy Guardian",
     "url": "https://theshieldit.com/privacy-rpg.html",
-    "description": "Gamified privacy education tool with character progression and real-world security quests",
+    "description": "Interactive dialogue-based privacy education game with character progression and scenario-based choices",
     "applicationCategory": "EducationalApplication",
     "browserRequirements": "Requires JavaScript",
     "offers": {
@@ -46,16 +46,16 @@
       "priceCurrency": "USD"
     },
     "featureList": [
-      "Character progression system",
-      "20+ privacy quests",
-      "Track multiple privacy stats",
-      "Actionable security improvements",
-      "Learn encryption, VPNs, password management"
+      "Interactive character dialogue",
+      "Scenario-based privacy choices",
+      "Skill point progression system",
+      "Multiple story paths",
+      "Real-world security decisions"
     ],
     "educationalLevel": "Beginner to Advanced"
   }
   </script>
-  
+
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -96,7 +96,7 @@
       height: 100%;
       z-index: 0;
       opacity: 0.4;
-      background: 
+      background:
         radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
@@ -122,7 +122,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.5rem 0 3rem;
+      padding: 1.5rem 0 2rem;
       animation: fadeInDown 0.8s ease-out;
     }
 
@@ -167,297 +167,262 @@
       background: rgba(59, 130, 246, 0.1);
     }
 
-    .hero {
-      text-align: center;
-      margin-bottom: 3rem;
-      animation: fadeInUp 1s ease-out;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 800;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.2;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--text-gray);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .character-card {
+    .stats-bar {
+      position: sticky;
+      top: 1rem;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2.5rem;
+      border-radius: 16px;
+      padding: 1.25rem;
       backdrop-filter: blur(10px);
-      margin-bottom: 3rem;
-      transition: all 0.3s ease;
-      animation: fadeInUp 1s ease-out 0.2s both;
+      margin-bottom: 2rem;
+      z-index: 10;
+      animation: fadeInUp 0.8s ease-out;
     }
 
-    .character-header {
+    .stats-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
-    .character-info h2 {
-      font-size: 1.75rem;
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .player-name {
+      font-size: 1.25rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .character-level {
+    .player-level {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-pill:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .stat-pill-name {
+      font-size: 0.8rem;
+      color: var(--text-gray);
+      text-transform: capitalize;
+    }
+
+    .stat-pill-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-left: auto;
+    }
+
+    .game-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .character-scene {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      backdrop-filter: blur(10px);
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .character-avatar {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .character-avatar svg {
+      width: 100px;
+      height: 100px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    .character-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .character-title {
       color: var(--text-gray);
       font-size: 1rem;
+      margin-bottom: 2rem;
     }
 
-    .xp-info {
-      text-align: right;
+    .dialogue-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 1s ease-out 0.2s both;
     }
 
-    .xp-label {
-      font-size: 0.9rem;
-      color: var(--text-gray);
-      margin-bottom: 0.25rem;
+    .dialogue-text {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      min-height: 80px;
     }
 
-    .xp-numbers {
-      font-size: 1.25rem;
-      font-weight: 700;
+    .choices-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .xp-bar-container {
-      width: 100%;
-      height: 12px;
-      background: var(--border);
+    .choice-button {
+      background: rgba(15, 23, 42, 0.5);
+      border: 2px solid var(--border);
       border-radius: 12px;
+      padding: 1.25rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.5;
+      position: relative;
       overflow: hidden;
-      margin-bottom: 2.5rem;
-      position: relative;
     }
 
-    .xp-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      transition: width 0.5s ease;
-      position: relative;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-    }
-
-    .xp-bar::before {
+    .choice-button::before {
       content: '';
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      animation: shimmer 2s infinite;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      transition: left 0.5s ease;
     }
 
-    @keyframes shimmer {
-      to { left: 100%; }
+    .choice-button:hover::before {
+      left: 100%;
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.25rem;
+    .choice-button:hover {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.1);
+      transform: translateX(8px);
     }
 
-    .stat-item {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      transition: all 0.3s ease;
+    .choice-button:active {
+      transform: translateX(8px) scale(0.98);
     }
 
-    .stat-item:hover {
-      border-color: rgba(59, 130, 246, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .stat-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .stat-name {
-      font-size: 0.9rem;
+    .choice-reward {
+      display: inline-block;
+      margin-left: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 6px;
+      font-size: 0.85rem;
       font-weight: 600;
-      text-transform: capitalize;
-      color: var(--text-gray);
+      color: var(--accent);
     }
 
-    .stat-value {
-      font-size: 1.75rem;
+    .scenario-complete {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .scenario-complete h2 {
+      font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      margin-bottom: 1rem;
     }
 
-    .stat-bar {
-      width: 100%;
-      height: 6px;
-      background: var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .stat-bar-fill {
-      height: 100%;
-      border-radius: 6px;
-      transition: width 0.5s ease;
-    }
-
-    .stat-bar-fill.encryption { background: linear-gradient(90deg, #3b82f6, #2563eb); }
-    .stat-bar-fill.tracking { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
-    .stat-bar-fill.minimization { background: linear-gradient(90deg, #22c55e, #16a34a); }
-    .stat-bar-fill.authentication { background: linear-gradient(90deg, #ef4444, #dc2626); }
-    .stat-bar-fill.awareness { background: linear-gradient(90deg, #eab308, #ca8a04); }
-
-    .quests-section {
-      margin-bottom: 3rem;
-    }
-
-    .difficulty-section {
-      margin-bottom: 2.5rem;
-      animation: fadeInUp 1s ease-out both;
-    }
-
-    .difficulty-section:nth-child(1) { animation-delay: 0.4s; }
-    .difficulty-section:nth-child(2) { animation-delay: 0.5s; }
-    .difficulty-section:nth-child(3) { animation-delay: 0.6s; }
-
-    .difficulty-header {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .difficulty-header.easy { color: #22c55e; }
-    .difficulty-header.medium { color: #eab308; }
-    .difficulty-header.hard { color: #ef4444; }
-
-    .quests-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .quest-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.75rem;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .quest-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(59, 130, 246, 0.5);
-      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.1);
-    }
-
-    .quest-card.completed {
-      border-color: var(--success);
-      background: rgba(34, 197, 94, 0.05);
-      opacity: 0.7;
-    }
-
-    .quest-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-
-    .quest-title-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex: 1;
-    }
-
-    .quest-title {
+    .scenario-complete p {
+      color: var(--text-gray);
       font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-light);
-      line-height: 1.3;
+      margin-bottom: 2rem;
     }
 
-    .quest-xp {
-      font-size: 0.9rem;
-      color: var(--text-gray);
-      white-space: nowrap;
-      padding: 0.25rem 0.75rem;
-      background: rgba(59, 130, 246, 0.1);
-      border-radius: 8px;
-      font-weight: 600;
-    }
-
-    .quest-description {
-      font-size: 0.95rem;
-      color: var(--text-gray);
-      line-height: 1.5;
-      margin-bottom: 1.25rem;
-      flex-grow: 1;
-    }
-
-    .quest-button {
-      width: 100%;
-      padding: 0.875rem;
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .quest-button.incomplete {
+    .next-scenario-button {
+      padding: 1rem 2rem;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .quest-button.incomplete:hover {
+    .next-scenario-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-    }
-
-    .quest-button.completed {
-      background: var(--success);
-      color: white;
-      cursor: not-allowed;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
     }
 
     .level-up-notification {
@@ -534,26 +499,35 @@
         align-items: flex-start;
       }
 
-      .character-card {
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      }
+
+      .character-scene {
         padding: 1.75rem;
       }
 
-      .character-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
+      .character-avatar {
+        width: 140px;
+        height: 140px;
       }
 
-      .xp-info {
-        text-align: left;
+      .character-avatar svg {
+        width: 80px;
+        height: 80px;
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      .dialogue-box {
+        padding: 1.5rem;
       }
 
-      .quests-grid {
-        grid-template-columns: 1fr;
+      .dialogue-text {
+        font-size: 1rem;
+      }
+
+      .choice-button {
+        padding: 1rem;
+        font-size: 0.95rem;
       }
     }
   </style>
@@ -561,7 +535,7 @@
 <body>
   <div class="bg-animation"></div>
   <div id="root"></div>
-  
+
   <script type="text/babel">
     const { useState, useEffect } = React;
 
@@ -607,24 +581,16 @@
       </svg>
     );
 
-    const CheckCircle = ({ size = 20 }) => (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polyline points="9 12 11 14 15 10"></polyline>
-      </svg>
-    );
-
-    const ChevronRight = ({ size = 16 }) => (
+    const ChevronRight = ({ size = 20 }) => (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
     );
 
-    const PrivacyRPG = () => {
-      const [character, setCharacter] = useState({
-        name: "Privacy Guardian",
+    const PrivacyGuardian = () => {
+      const [player, setPlayer] = useState({
+        name: "Privacy Novice",
         level: 1,
-        xp: 0,
         stats: {
           encryption: 0,
           tracking: 0,
@@ -634,35 +600,221 @@
         }
       });
 
-      const [completedQuests, setCompletedQuests] = useState(new Set());
+      const [currentScenario, setCurrentScenario] = useState(0);
       const [showLevelUp, setShowLevelUp] = useState(false);
+      const [scenarioComplete, setScenarioComplete] = useState(false);
 
-      const quests = [
-        // Easy Quests
-        { id: 'enc1', stat: 'encryption', difficulty: 'easy', xp: 10, title: 'Enable device encryption', description: 'Turn on full disk encryption on your computer or phone' },
-        { id: 'enc2', stat: 'encryption', difficulty: 'easy', xp: 15, title: 'Install a password manager', description: 'Set up Bitwarden, 1Password, or KeePass' },
-        { id: 'trk1', stat: 'tracking', difficulty: 'easy', xp: 10, title: 'Install an ad blocker', description: 'Add uBlock Origin or similar to your browser' },
-        { id: 'trk2', stat: 'tracking', difficulty: 'easy', xp: 15, title: 'Switch to privacy browser', description: 'Use Firefox, Brave, or Librewolf as default' },
-        { id: 'min1', stat: 'minimization', difficulty: 'easy', xp: 10, title: 'Delete 5 old accounts', description: 'Close unused social media or web accounts' },
-        { id: 'auth1', stat: 'authentication', difficulty: 'easy', xp: 15, title: 'Enable 2FA on email', description: 'Turn on two-factor authentication for primary email' },
-        { id: 'awr1', stat: 'awareness', difficulty: 'easy', xp: 10, title: 'Learn about threat modeling', description: 'Read about personal threat models and identify yours' },
-        { id: 'awr2', stat: 'awareness', difficulty: 'easy', xp: 15, title: 'Review privacy policies', description: 'Actually read the privacy policy of 3 services you use' },
-        
-        // Medium Quests
-        { id: 'enc3', stat: 'encryption', difficulty: 'medium', xp: 25, title: 'Use encrypted messaging', description: 'Switch to Signal or another E2E encrypted messenger' },
-        { id: 'trk3', stat: 'tracking', difficulty: 'medium', xp: 25, title: 'Configure DNS privacy', description: 'Switch to encrypted DNS (DoH/DoT)' },
-        { id: 'min2', stat: 'minimization', difficulty: 'medium', xp: 20, title: 'Review app permissions', description: 'Audit and restrict unnecessary mobile app permissions' },
-        { id: 'min3', stat: 'minimization', difficulty: 'medium', xp: 25, title: 'Clear old data', description: 'Delete old emails, files, and unused cloud storage' },
-        { id: 'auth2', stat: 'authentication', difficulty: 'medium', xp: 20, title: 'Enable 2FA everywhere', description: 'Activate 2FA on all important accounts' },
-        { id: 'auth3', stat: 'authentication', difficulty: 'medium', xp: 30, title: 'Use TOTP authenticator', description: 'Switch from SMS to app-based 2FA (Aegis, Authy)' },
-        { id: 'awr3', stat: 'awareness', difficulty: 'medium', xp: 25, title: 'Understand metadata', description: 'Learn what metadata is and how it can reveal information' },
-        
-        // Hard Quests
-        { id: 'enc4', stat: 'encryption', difficulty: 'hard', xp: 40, title: 'Encrypt your backups', description: 'Set up encrypted cloud or local backup solution' },
-        { id: 'trk4', stat: 'tracking', difficulty: 'hard', xp: 40, title: 'Set up a VPN', description: 'Configure and use a trustworthy VPN service' },
-        { id: 'min4', stat: 'minimization', difficulty: 'hard', xp: 35, title: 'Opt out of data brokers', description: 'Submit removal requests to major data brokers' },
-        { id: 'auth4', stat: 'authentication', difficulty: 'hard', xp: 45, title: 'Get a hardware security key', description: 'Purchase and configure a YubiKey or similar' },
-        { id: 'awr4', stat: 'awareness', difficulty: 'hard', xp: 35, title: 'Study encryption basics', description: 'Learn the difference between encryption types (symmetric, asymmetric, etc.)' }
+      const scenarios = [
+        {
+          id: 1,
+          dialogue: "Welcome, traveler! I am Cipher, the Privacy Guardian. I've been protecting digital realms for centuries. Tell me, a friend just sent you a link to download a 'free' VPN app they found. What do you do?",
+          choices: [
+            {
+              text: "Download it immediately - free is always better!",
+              rewards: { awareness: 5 },
+              feedback: "Hmm, not quite. Free VPNs often sell your data or inject ads. Remember: if you're not paying for the product, you ARE the product. But you learned something valuable!"
+            },
+            {
+              text: "Research the VPN provider first - check reviews, privacy policy, and their business model",
+              rewards: { awareness: 25, tracking: 15 },
+              feedback: "Excellent choice! You understand that trust must be earned. Always verify before installing security tools. Your awareness grows stronger!"
+            },
+            {
+              text: "Decline politely and explain the risks of unknown VPNs to your friend",
+              rewards: { awareness: 30, tracking: 20 },
+              feedback: "Outstanding! Not only do you protect yourself, but you also educate others. This is the way of a true Privacy Guardian!"
+            }
+          ]
+        },
+        {
+          id: 2,
+          dialogue: "You're setting up a new email account. The service asks for your phone number 'for security purposes.' How do you respond?",
+          choices: [
+            {
+              text: "Provide my real phone number - they said it's for security",
+              rewards: { minimization: 5 },
+              feedback: "Understandable, but risky. Your phone number can be used to track you across services and link your identity. Consider the alternative next time!"
+            },
+            {
+              text: "Look for the 'skip' option or use a temporary number service",
+              rewards: { minimization: 25, awareness: 15 },
+              feedback: "Smart thinking! You minimize data collection while still accessing the service. Your data minimization skills are growing!"
+            },
+            {
+              text: "Choose a different email provider that doesn't require phone verification",
+              rewards: { minimization: 30, awareness: 20 },
+              feedback: "Perfect! You vote with your feet by choosing privacy-respecting alternatives. This sends a powerful message to companies!"
+            }
+          ]
+        },
+        {
+          id: 3,
+          dialogue: "A notification pops up: 'Update available for your password manager.' The update includes a new cloud sync feature. What's your move?",
+          choices: [
+            {
+              text: "Enable cloud sync immediately - convenience is key!",
+              rewards: { encryption: 5 },
+              feedback: "Convenience is tempting, but hold on! Always review what data is synced and how it's encrypted. Cloud sync can be secure, but verify first!"
+            },
+            {
+              text: "Read the update notes to understand the encryption and security details",
+              rewards: { encryption: 25, awareness: 15 },
+              feedback: "Wise approach! Understanding how your sensitive data is protected is crucial. Knowledge is your best defense!"
+            },
+            {
+              text: "Keep local-only storage and decline cloud sync to maintain full control",
+              rewards: { encryption: 30, minimization: 20 },
+              feedback: "Excellent security-first mindset! Keeping sensitive data local eliminates cloud-related risks. You understand the principle of least exposure!"
+            }
+          ]
+        },
+        {
+          id: 4,
+          dialogue: "You're shopping online and the checkout asks you to create an account. 'Save time on future purchases!' they say. How do you proceed?",
+          choices: [
+            {
+              text: "Create an account with my usual email and password",
+              rewards: { minimization: 5 },
+              feedback: "This creates yet another data profile about you. Each account is a potential breach point. Consider other options!"
+            },
+            {
+              text: "Use 'Guest checkout' to avoid creating an unnecessary account",
+              rewards: { minimization: 25, awareness: 15 },
+              feedback: "Great decision! Guest checkout minimizes your data footprint. You only share what's necessary for the transaction!"
+            },
+            {
+              text: "Guest checkout + email alias + virtual credit card for maximum privacy",
+              rewards: { minimization: 35, encryption: 20, awareness: 15 },
+              feedback: "Masterful! You've combined multiple privacy techniques: data minimization, compartmentalization, and payment privacy. Impressive!"
+            }
+          ]
+        },
+        {
+          id: 5,
+          dialogue: "Your workplace asks you to install a 'productivity monitoring' app on your personal phone for remote work. What's your response?",
+          choices: [
+            {
+              text: "Install it - I need this job and have nothing to hide",
+              rewards: { awareness: 5 },
+              feedback: "Privacy isn't about hiding - it's about control. Mixing work surveillance with personal life has serious implications. Let's explore better options!"
+            },
+            {
+              text: "Request a company device for work-related monitoring instead",
+              rewards: { minimization: 25, awareness: 20 },
+              feedback: "Smart boundary setting! Keeping work and personal devices separate protects your private life while meeting employer needs!"
+            },
+            {
+              text: "Negotiate for alternative solutions like project tracking software",
+              rewards: { minimization: 30, awareness: 25 },
+              feedback: "Brilliant! You're proposing a solution that respects privacy while addressing legitimate business needs. Leadership thinking!"
+            }
+          ]
+        },
+        {
+          id: 6,
+          dialogue: "A website shows a cookie banner: '300 partners want to access your data.' What's your play?",
+          choices: [
+            {
+              text: "Click 'Accept All' to make the banner go away",
+              rewards: { tracking: 5 },
+              feedback: "That's what they want you to do! But you just gave 300 companies permission to track you. There's a better way!"
+            },
+            {
+              text: "Click 'Reject All' or 'Necessary Only' to minimize tracking",
+              rewards: { tracking: 25, awareness: 15 },
+              feedback: "Excellent! You're asserting your right to privacy. These consent banners are designed to trick you, but you saw through it!"
+            },
+            {
+              text: "Leave the site and find an alternative that respects privacy",
+              rewards: { tracking: 30, awareness: 20 },
+              feedback: "Powerful statement! By leaving, you signal that privacy matters. Your choice influences how the web evolves!"
+            }
+          ]
+        },
+        {
+          id: 7,
+          dialogue: "Time to secure your most important accounts! You need to enable two-factor authentication. Which method do you choose?",
+          choices: [
+            {
+              text: "SMS codes - it's what the site recommends",
+              rewards: { authentication: 10 },
+              feedback: "SMS is better than nothing, but it's vulnerable to SIM swapping attacks. There are stronger options available!"
+            },
+            {
+              text: "Authenticator app like Aegis or Authy for TOTP codes",
+              rewards: { authentication: 30, encryption: 15 },
+              feedback: "Great choice! App-based 2FA is much more secure than SMS and works offline. Your accounts are well protected!"
+            },
+            {
+              text: "Hardware security key like YubiKey for phishing-resistant authentication",
+              rewards: { authentication: 40, encryption: 20 },
+              feedback: "Ultimate security! Hardware keys provide the strongest protection against phishing and account takeover. You're becoming a true guardian!"
+            }
+          ]
+        },
+        {
+          id: 8,
+          dialogue: "You notice your smart TV has a camera and microphone. The manual mentions 'viewing analytics' and 'voice features.' Your decision?",
+          choices: [
+            {
+              text: "Keep it enabled - I bought these features, might as well use them",
+              rewards: { awareness: 5 },
+              feedback: "Those features come at a privacy cost. Your viewing habits and conversations may be analyzed. Consider the trade-offs!"
+            },
+            {
+              text: "Disable cameras/mics in settings and opt out of data collection",
+              rewards: { tracking: 25, minimization: 15 },
+              feedback: "Smart move! You're taking control of the surveillance in your home. Always configure privacy settings on new devices!"
+            },
+            {
+              text: "Physically cover camera + network-level blocking of telemetry domains",
+              rewards: { tracking: 35, minimization: 20, awareness: 15 },
+              feedback: "Advanced defense! You're combining physical security with network controls. This defense-in-depth approach is exceptional!"
+            }
+          ]
+        },
+        {
+          id: 9,
+          dialogue: "You're about to post vacation photos on social media. Your friends and location are visible in the pictures. How do you handle this?",
+          choices: [
+            {
+              text: "Post everything publicly - I want everyone to see my amazing trip!",
+              rewards: { awareness: 5 },
+              feedback: "Hold on! You're broadcasting that your home is empty and revealing your location patterns. This can attract unwanted attention!"
+            },
+            {
+              text: "Wait until I'm home, then post with friends' permission and no metadata",
+              rewards: { minimization: 25, awareness: 20 },
+              feedback: "Thoughtful approach! You protect yourself, respect friends' privacy, and remove location metadata. Good situational awareness!"
+            },
+            {
+              text: "Share privately with close friends only, or skip social media entirely",
+              rewards: { minimization: 30, awareness: 25 },
+              feedback: "Wise restraint! You enjoy the moment without oversharing. The best memories don't need to be broadcast to the world!"
+            }
+          ]
+        },
+        {
+          id: 10,
+          dialogue: "Final challenge! You're choosing a messaging app to communicate with family about sensitive topics. What's your choice?",
+          choices: [
+            {
+              text: "Stick with SMS or standard messaging - everyone already has it",
+              rewards: { encryption: 5 },
+              feedback: "SMS is like sending postcards - anyone can read them! For sensitive topics, you need end-to-end encryption!"
+            },
+            {
+              text: "Use Signal or another E2E encrypted messenger with minimal metadata",
+              rewards: { encryption: 40, tracking: 25 },
+              feedback: "Perfect choice! Signal provides military-grade encryption while minimizing metadata. Your conversations are truly private!"
+            },
+            {
+              text: "Signal + disappearing messages + warn family about privacy best practices",
+              rewards: { encryption: 45, tracking: 30, awareness: 20 },
+              feedback: "Masterful! You're using multiple layers of protection AND educating your family. You've truly become a Privacy Guardian!"
+            }
+          ]
+        }
       ];
 
       const statIcons = {
@@ -673,62 +825,74 @@
         awareness: Brain
       };
 
-      const xpToLevel = (level) => level * 50;
-
       useEffect(() => {
-        const saved = localStorage.getItem('privacyRPG');
+        const saved = localStorage.getItem('privacyGuardian');
         if (saved) {
           const data = JSON.parse(saved);
-          setCharacter(data.character);
-          setCompletedQuests(new Set(data.completedQuests));
+          setPlayer(data.player);
+          setCurrentScenario(data.currentScenario || 0);
         }
       }, []);
 
-      const saveProgress = (newChar, newCompleted) => {
-        localStorage.setItem('privacyRPG', JSON.stringify({
-          character: newChar,
-          completedQuests: Array.from(newCompleted)
+      const saveProgress = (newPlayer, newScenario) => {
+        localStorage.setItem('privacyGuardian', JSON.stringify({
+          player: newPlayer,
+          currentScenario: newScenario
         }));
       };
 
-      const completeQuest = (quest) => {
-        if (completedQuests.has(quest.id)) return;
+      const getTotalStats = (stats) => {
+        return Object.values(stats).reduce((a, b) => a + b, 0);
+      };
 
-        const newCompleted = new Set(completedQuests);
-        newCompleted.add(quest.id);
+      const calculateLevel = (totalStats) => {
+        return Math.floor(totalStats / 50) + 1;
+      };
 
-        const newXP = character.xp + quest.xp;
-        const newStats = { ...character.stats };
-        newStats[quest.stat] += quest.xp;
+      const makeChoice = (choice) => {
+        const newStats = { ...player.stats };
+        Object.entries(choice.rewards).forEach(([stat, value]) => {
+          newStats[stat] += value;
+        });
 
-        let newLevel = character.level;
-        let remainingXP = newXP;
+        const oldLevel = player.level;
+        const newLevel = calculateLevel(getTotalStats(newStats));
 
-        while (remainingXP >= xpToLevel(newLevel)) {
-          remainingXP -= xpToLevel(newLevel);
-          newLevel++;
+        const newPlayer = {
+          ...player,
+          stats: newStats,
+          level: newLevel,
+          name: newLevel >= 10 ? "Master Guardian" :
+                newLevel >= 7 ? "Advanced Guardian" :
+                newLevel >= 4 ? "Privacy Guardian" :
+                "Privacy Novice"
+        };
+
+        setPlayer(newPlayer);
+        setScenarioComplete(true);
+
+        if (newLevel > oldLevel) {
           setShowLevelUp(true);
           setTimeout(() => setShowLevelUp(false), 2000);
         }
 
-        const newChar = {
-          ...character,
-          level: newLevel,
-          xp: remainingXP,
-          stats: newStats
-        };
+        saveProgress(newPlayer, currentScenario);
+      };
 
-        setCharacter(newChar);
-        setCompletedQuests(newCompleted);
-        saveProgress(newChar, newCompleted);
+      const nextScenario = () => {
+        if (currentScenario < scenarios.length - 1) {
+          const newScenario = currentScenario + 1;
+          setCurrentScenario(newScenario);
+          setScenarioComplete(false);
+          saveProgress(player, newScenario);
+        }
       };
 
       const resetProgress = () => {
         if (confirm('Reset all progress? This cannot be undone.')) {
           const fresh = {
-            name: "Privacy Guardian",
+            name: "Privacy Novice",
             level: 1,
-            xp: 0,
             stats: {
               encryption: 0,
               tracking: 0,
@@ -737,17 +901,14 @@
               awareness: 0
             }
           };
-          setCharacter(fresh);
-          setCompletedQuests(new Set());
-          localStorage.removeItem('privacyRPG');
+          setPlayer(fresh);
+          setCurrentScenario(0);
+          setScenarioComplete(false);
+          localStorage.removeItem('privacyGuardian');
         }
       };
 
-      const questsByDifficulty = {
-        'easy': quests.filter(q => q.difficulty === 'easy'),
-        'medium': quests.filter(q => q.difficulty === 'medium'),
-        'hard': quests.filter(q => q.difficulty === 'hard')
-      };
+      const scenario = scenarios[currentScenario];
 
       return (
         <div className="container">
@@ -764,105 +925,90 @@
             </a>
           </header>
 
-          <div className="hero">
-            <h1>Privacy Guardian RPG</h1>
-            <p>Level up your digital privacy skills through practical quests. Track your progress and become a privacy expert.</p>
-          </div>
-
           {showLevelUp && (
             <div className="level-up-notification">
               🎉 LEVEL UP! 🎉
             </div>
           )}
 
-          <div className="character-card">
-            <div className="character-header">
-              <div className="character-info">
-                <h2>{character.name}</h2>
-                <div className="character-level">Level {character.level}</div>
-              </div>
-              <div className="xp-info">
-                <div className="xp-label">Experience</div>
-                <div className="xp-numbers">{character.xp} / {xpToLevel(character.level)} XP</div>
+          <div className="stats-bar">
+            <div className="stats-header">
+              <div className="player-info">
+                <span className="player-name">{player.name}</span>
+                <span className="player-level">Level {player.level}</span>
               </div>
             </div>
-
-            <div className="xp-bar-container">
-              <div 
-                className="xp-bar"
-                style={{ width: `${(character.xp / xpToLevel(character.level)) * 100}%` }}
-              />
-            </div>
-
             <div className="stats-grid">
-              {Object.entries(character.stats).map(([stat, value]) => {
+              {Object.entries(player.stats).map(([stat, value]) => {
                 const Icon = statIcons[stat];
                 return (
-                  <div key={stat} className="stat-item">
-                    <div className="stat-header">
-                      <Icon size={18} />
-                      <span className="stat-name">{stat}</span>
-                    </div>
-                    <div className="stat-value">{value}</div>
-                    <div className="stat-bar">
-                      <div 
-                        className={`stat-bar-fill ${stat}`}
-                        style={{ width: `${Math.min((value / 200) * 100, 100)}%` }}
-                      />
-                    </div>
+                  <div key={stat} className="stat-pill">
+                    <Icon size={16} />
+                    <span className="stat-pill-name">{stat}</span>
+                    <span className="stat-pill-value">{value}</span>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div className="quests-section">
-            {['easy', 'medium', 'hard'].map((difficulty, index) => (
-              <div key={difficulty} className="difficulty-section">
-                <h3 className={`difficulty-header ${difficulty}`}>
-                  {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Quests
-                </h3>
-                <div className="quests-grid">
-                  {questsByDifficulty[difficulty].map(quest => {
-                    const isCompleted = completedQuests.has(quest.id);
-                    const Icon = statIcons[quest.stat];
-                    
-                    return (
-                      <div 
-                        key={quest.id}
-                        className={`quest-card ${isCompleted ? 'completed' : ''}`}
-                      >
-                        <div className="quest-header">
-                          <div className="quest-title-wrapper">
-                            <Icon size={18} />
-                            <h4 className="quest-title">{quest.title}</h4>
-                          </div>
-                          <span className="quest-xp">+{quest.xp} XP</span>
-                        </div>
-                        <p className="quest-description">{quest.description}</p>
-                        <button
-                          onClick={() => completeQuest(quest)}
-                          disabled={isCompleted}
-                          className={`quest-button ${isCompleted ? 'completed' : 'incomplete'}`}
-                        >
-                          {isCompleted ? (
-                            <>
-                              <CheckCircle size={18} />
-                              Completed
-                            </>
-                          ) : (
-                            <>
-                              Mark Complete
-                              <ChevronRight />
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
+          <div className="game-container">
+            <div className="character-scene">
+              <div className="character-avatar">
+                <Shield size={100} />
               </div>
-            ))}
+              <div className="character-name">Cipher</div>
+              <div className="character-title">Privacy Guardian Mentor</div>
+            </div>
+
+            <div className="dialogue-box">
+              {!scenarioComplete ? (
+                <>
+                  <div className="dialogue-text">{scenario.dialogue}</div>
+                  <div className="choices-container">
+                    {scenario.choices.map((choice, index) => (
+                      <button
+                        key={index}
+                        className="choice-button"
+                        onClick={() => makeChoice(choice)}
+                      >
+                        {choice.text}
+                        <span className="choice-reward">
+                          {Object.entries(choice.rewards).map(([stat, val]) =>
+                            `+${val} ${stat}`
+                          ).join(', ')}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="scenario-complete">
+                  <h2>Cipher responds:</h2>
+                  <p>{scenario.choices.find(c => c.text)?.feedback || "Well done!"}</p>
+                  {currentScenario < scenarios.length - 1 ? (
+                    <button
+                      className="next-scenario-button"
+                      onClick={nextScenario}
+                    >
+                      Continue Journey
+                      <ChevronRight />
+                    </button>
+                  ) : (
+                    <>
+                      <h2 style={{marginTop: '2rem'}}>🎉 Journey Complete! 🎉</h2>
+                      <p>You've completed all scenarios and proven yourself as a true Privacy Guardian. Your skills will serve you well in protecting your digital life!</p>
+                      <button
+                        className="next-scenario-button"
+                        onClick={resetProgress}
+                      >
+                        Start New Journey
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="reset-button">
@@ -875,7 +1021,7 @@
     };
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<PrivacyRPG />);
+    root.render(<PrivacyGuardian />);
   </script>
 </body>
 </html>
