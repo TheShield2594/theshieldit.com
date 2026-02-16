@@ -42,17 +42,6 @@ export const TOOLS: Tool[] = [
     icon: "activity",
   },
   {
-    title: "DNS Lookup Tester",
-    description:
-      "Query DNS records for any domain. Supports A, AAAA, MX, NS, TXT, CNAME, and SOA lookups.",
-    href: "/dns-tester.html",
-    tags: "dns lookup tester records domain mx ns txt cname soa networking",
-    category: "security",
-    tagLabel: "Networking",
-    iconColor: "text-accent bg-accent/10",
-    icon: "globe",
-  },
-  {
     title: "Email Header Analyzer",
     description:
       "Identify phishing attempts by analyzing email headers, authentication, and delivery paths.",
@@ -183,17 +172,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Assessment",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "lock-keyhole",
-  },
-  {
-    title: "WHOIS Lookup",
-    description:
-      "Look up domain registration details, registrar, nameservers, and expiration dates.",
-    href: "/whois-lookup.html",
-    tags: "whois lookup domain registration registrar nameserver expiry",
-    category: "security",
-    tagLabel: "Investigation",
-    iconColor: "text-primary bg-primary/10",
-    icon: "search",
   },
   {
     title: "Website Checker",
