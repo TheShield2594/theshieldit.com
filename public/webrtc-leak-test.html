@@ -350,6 +350,9 @@
                 return;
             }
 
+            let resultResolved = false;
+            let timeoutId = null;
+
             const pc = new RTCPeerConnection({
                 iceServers: [
                     { urls: 'stun:stun.l.google.com:19302' },
@@ -362,38 +365,46 @@
             pc.createOffer().then(offer => pc.setLocalDescription(offer));
 
             pc.onicecandidate = (ice) => {
+                if (resultResolved) return;
+
                 if (!ice || !ice.candidate || !ice.candidate.candidate) {
                     // All candidates gathered
-                    setTimeout(() => {
-                        displayResults(false, null);
-                    }, 1000);
+                    if (!resultResolved) {
+                        resultResolved = true;
+                        clearTimeout(timeoutId);
+                        pc.close();
+                        setTimeout(() => {
+                            displayResults(false, null);
+                        }, 1000);
+                    }
                     return;
                 }
 
                 const candidate = ice.candidate.candidate;
-                const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/;
-                const match = ipRegex.exec(candidate);
+                // Extract IP from candidate - handles both IPv4 and compressed IPv6
+                const parts = candidate.split(' ');
+                const ip = parts[4]; // IP is at position 4 in candidate string
 
-                if (match && match[1]) {
-                    const ip = match[1];
-
-                    // Avoid duplicates
-                    if (!ips.some(item => item.ip === ip)) {
-                        const ipInfo = {
-                            ip: ip,
-                            type: getIPType(ip, candidate),
-                            candidate: candidate
-                        };
-                        ips.push(ipInfo);
-                    }
+                if (ip && !ips.some(item => item.ip === ip)) {
+                    const ipInfo = {
+                        ip: ip,
+                        type: getIPType(ip, candidate),
+                        candidate: candidate
+                    };
+                    ips.push(ipInfo);
                 }
             };
 
             // Timeout after 3 seconds
-            setTimeout(() => {
-                pc.close();
-                if (ips.length === 0) {
-                    displayResults(true, 'WebRTC is disabled or blocked. No IP addresses detected.');
+            timeoutId = setTimeout(() => {
+                if (!resultResolved) {
+                    resultResolved = true;
+                    pc.close();
+                    if (ips.length === 0) {
+                        displayResults(true, 'WebRTC is disabled or blocked. No IP addresses detected.');
+                    } else {
+                        displayResults(false, null);
+                    }
                 }
             }, 3000);
         }
@@ -401,7 +412,24 @@
         function getIPType(ip, candidate) {
             // Check if IPv6
             if (ip.includes(':')) {
-                return 'ipv6';
+                // Check for link-local (fe80::/10)
+                if (ip.toLowerCase().startsWith('fe80:')) {
+                    return 'local';
+                }
+                // Check for unique local addresses (fc00::/7)
+                if (ip.toLowerCase().startsWith('fc') || ip.toLowerCase().startsWith('fd')) {
+                    return 'local';
+                }
+                // Check for loopback (::1)
+                if (ip === '::1') {
+                    return 'local';
+                }
+                // Check for multicast (ff00::/8)
+                if (ip.toLowerCase().startsWith('ff')) {
+                    return 'local';
+                }
+                // Otherwise it's likely a global unicast IPv6 address
+                return 'public';
             }
 
             // Check if local/private IP
