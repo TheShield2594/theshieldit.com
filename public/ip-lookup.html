@@ -295,15 +295,21 @@
                 displayResults(data);
                 resultsDiv.style.display = 'block';
             } catch (error) {
-                resultsDiv.innerHTML = `
-                    <div class="error-message">
-                        ⚠️ Error: ${error.message || 'Unable to lookup IP address. Please try again.'}
-                    </div>
-                `;
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = '⚠️ Error: ' + (error.message || 'Unable to lookup IP address. Please try again.');
+                resultsDiv.innerHTML = '';
+                resultsDiv.appendChild(errorDiv);
                 resultsDiv.style.display = 'block';
             } finally {
                 loadingDiv.style.display = 'none';
             }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         function isValidIP(ip) {
@@ -321,6 +327,24 @@
         }
 
         function displayResults(data) {
+            // Escape all data values to prevent XSS
+            const safe = {
+                ip: escapeHtml(String(data.ip || 'N/A')),
+                city: escapeHtml(String(data.city || 'N/A')),
+                region: escapeHtml(String(data.region || 'N/A')),
+                country_name: escapeHtml(String(data.country_name || 'N/A')),
+                country_code: data.country_code ? escapeHtml(String(data.country_code)) : '',
+                postal: escapeHtml(String(data.postal || 'N/A')),
+                latitude: escapeHtml(String(data.latitude || 'N/A')),
+                longitude: escapeHtml(String(data.longitude || 'N/A')),
+                org: escapeHtml(String(data.org || 'N/A')),
+                asn: escapeHtml(String(data.asn || 'N/A')),
+                timezone: escapeHtml(String(data.timezone || 'N/A')),
+                currency: escapeHtml(String(data.currency || 'N/A')),
+                currency_name: data.currency_name ? escapeHtml(String(data.currency_name)) : '',
+                languages: data.languages ? escapeHtml(String(data.languages)) : '',
+                country_calling_code: data.country_calling_code ? escapeHtml(String(data.country_calling_code)) : 'N/A'
+            };
             const resultsDiv = document.getElementById('results');
 
             const html = `
@@ -329,27 +353,27 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">IP Address</div>
-                            <div class="info-value">${data.ip || 'N/A'}</div>
+                            <div class="info-value">${safe.ip}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">City</div>
-                            <div class="info-value">${data.city || 'N/A'}</div>
+                            <div class="info-value">${safe.city}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Region</div>
-                            <div class="info-value">${data.region || 'N/A'}</div>
+                            <div class="info-value">${safe.region}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Country</div>
-                            <div class="info-value">${data.country_name || 'N/A'} ${data.country_code ? '(' + data.country_code + ')' : ''}</div>
+                            <div class="info-value">${safe.country_name} ${safe.country_code ? '(' + safe.country_code + ')' : ''}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Postal Code</div>
-                            <div class="info-value">${data.postal || 'N/A'}</div>
+                            <div class="info-value">${safe.postal}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Coordinates</div>
-                            <div class="info-value">${data.latitude}, ${data.longitude}</div>
+                            <div class="info-value">${safe.latitude}, ${safe.longitude}</div>
                         </div>
                     </div>
                 </div>
@@ -359,34 +383,34 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">ISP</div>
-                            <div class="info-value">${data.org || 'N/A'}</div>
+                            <div class="info-value">${safe.org}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">ASN</div>
-                            <div class="info-value">${data.asn || 'N/A'}</div>
+                            <div class="info-value">${safe.asn}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Timezone</div>
-                            <div class="info-value">${data.timezone || 'N/A'}</div>
+                            <div class="info-value">${safe.timezone}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Currency</div>
-                            <div class="info-value">${data.currency || 'N/A'} ${data.currency_name ? '(' + data.currency_name + ')' : ''}</div>
+                            <div class="info-value">${safe.currency} ${safe.currency_name ? '(' + safe.currency_name + ')' : ''}</div>
                         </div>
                     </div>
                 </div>
 
-                ${data.languages ? `
+                ${safe.languages ? `
                 <div>
                     <h3 style="color: #3b82f6; margin-bottom: 15px;">🗣️ Additional Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">Languages</div>
-                            <div class="info-value">${data.languages || 'N/A'}</div>
+                            <div class="info-value">${safe.languages}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Calling Code</div>
-                            <div class="info-value">+${data.country_calling_code || 'N/A'}</div>
+                            <div class="info-value">+${safe.country_calling_code}</div>
                         </div>
                     </div>
                 </div>

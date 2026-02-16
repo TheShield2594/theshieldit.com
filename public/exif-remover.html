@@ -306,7 +306,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js@2.3.0/exif.min.js" integrity="sha384-EzjUKXT1TrjEeHGZfJCd2PgFJOVwOhKJGGLg4xHvDAJEbKqHLLPlLhzGR2kVvlmF" crossorigin="anonymous"></script>
     <script>
         let originalImage = null;
         let cleanImage = null;
@@ -399,6 +399,12 @@
             metadataSection.innerHTML = metadataHTML;
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function createMetadataItem(label, value) {
             let displayValue = value;
 
@@ -411,10 +417,14 @@
                 }
             }
 
+            // Escape HTML to prevent XSS
+            const safeLabel = escapeHtml(String(label));
+            const safeValue = escapeHtml(String(displayValue));
+
             return `
                 <div class="metadata-item">
-                    <div class="metadata-label">${label}</div>
-                    <div class="metadata-value">${displayValue}</div>
+                    <div class="metadata-label">${safeLabel}</div>
+                    <div class="metadata-value">${safeValue}</div>
                 </div>
             `;
         }

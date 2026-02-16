@@ -391,32 +391,26 @@
         }
 
         async function detectDNSServers() {
-            // This is a simulation. Real implementation would use DNS queries
-            // to detect actual DNS servers being used
+            // NOTE: This is a SIMULATED demonstration only
+            // Real DNS leak detection requires server-side infrastructure
+            // with unique subdomain tracking to see which resolvers query them
 
-            // Simulated DNS servers for demonstration
             const servers = [];
 
-            // Check if using common public DNS
+            // Illustrative example - not authoritative
             const dnsCheck = await fetch('https://1.1.1.1/cdn-cgi/trace').then(r => r.text()).catch(() => null);
 
             if (dnsCheck) {
-                // Cloudflare DNS detected
                 servers.push({
-                    ip: '1.1.1.1',
-                    provider: 'Cloudflare',
-                    location: 'Global CDN',
-                    isVPN: true,
-                    isSafe: true
+                    ip: '1.1.1.1 (Example)',
+                    provider: 'Example Public DNS',
+                    location: 'Simulated - Not Real Data'
                 });
             } else {
-                // Simulating ISP DNS (this is just for demo)
                 servers.push({
-                    ip: '192.168.1.1',
-                    provider: 'Local ISP',
-                    location: userLocation,
-                    isVPN: false,
-                    isSafe: false
+                    ip: '192.168.1.1 (Example)',
+                    provider: 'Example ISP DNS',
+                    location: 'Simulated - Not Real Data'
                 });
             }
 
@@ -424,8 +418,8 @@
         }
 
         function checkForLeaks(servers) {
-            // Check if any DNS server is from ISP (not VPN)
-            return servers.some(server => !server.isVPN);
+            // Simulated check - not authoritative
+            return servers.some(server => server.provider && server.provider.includes('ISP'));
         }
 
         function displayResults(servers, hasLeak) {
@@ -439,13 +433,13 @@
             if (hasLeak) {
                 statusCard.className = 'status-card danger';
                 statusIcon.textContent = '⚠️';
-                statusTitle.textContent = 'DNS Leak Detected!';
-                statusDesc.textContent = 'Your DNS requests are being sent to your ISP. Your browsing activity may be visible to your Internet Service Provider.';
+                statusTitle.textContent = 'Simulated Leak Example';
+                statusDesc.textContent = 'NOTE: This is a simulated demonstration only. For real DNS leak testing, use dedicated services with server-side resolver tracking.';
             } else {
                 statusCard.className = 'status-card safe';
-                statusIcon.textContent = '✅';
-                statusTitle.textContent = 'No DNS Leaks Detected';
-                statusDesc.textContent = 'Your DNS requests are being handled securely. Your VPN is properly configured!';
+                statusIcon.textContent = 'ℹ️';
+                statusTitle.textContent = 'Simulated Safe Example';
+                statusDesc.textContent = 'NOTE: This is a simulated demonstration only. For real DNS leak testing, use dedicated services with server-side resolver tracking.';
             }
 
             // Display DNS servers
@@ -453,27 +447,54 @@
 
             servers.forEach(server => {
                 const serverDiv = document.createElement('div');
-                serverDiv.className = 'dns-server' + (server.isSafe ? '' : ' leak');
+                serverDiv.className = 'dns-server';
 
-                serverDiv.innerHTML = `
-                    <div class="dns-ip">${server.ip}</div>
-                    <div class="dns-info">
-                        <div class="dns-detail">
-                            <div class="dns-detail-label">Provider</div>
-                            <div class="dns-detail-value">${server.provider}</div>
-                        </div>
-                        <div class="dns-detail">
-                            <div class="dns-detail-label">Location</div>
-                            <div class="dns-detail-value">${server.location}</div>
-                        </div>
-                        <div class="dns-detail">
-                            <div class="dns-detail-label">Status</div>
-                            <div class="dns-detail-value" style="color: ${server.isSafe ? '#22c55e' : '#ef4444'}">
-                                ${server.isSafe ? '✓ Safe' : '✗ Potential Leak'}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                const ipDiv = document.createElement('div');
+                ipDiv.className = 'dns-ip';
+                ipDiv.textContent = server.ip || 'Unknown';
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'dns-info';
+
+                const providerDetail = document.createElement('div');
+                providerDetail.className = 'dns-detail';
+                const providerLabel = document.createElement('div');
+                providerLabel.className = 'dns-detail-label';
+                providerLabel.textContent = 'Provider';
+                const providerValue = document.createElement('div');
+                providerValue.className = 'dns-detail-value';
+                providerValue.textContent = server.provider || 'Unknown';
+                providerDetail.appendChild(providerLabel);
+                providerDetail.appendChild(providerValue);
+
+                const locationDetail = document.createElement('div');
+                locationDetail.className = 'dns-detail';
+                const locationLabel = document.createElement('div');
+                locationLabel.className = 'dns-detail-label';
+                locationLabel.textContent = 'Location';
+                const locationValue = document.createElement('div');
+                locationValue.className = 'dns-detail-value';
+                locationValue.textContent = server.location || 'Unknown';
+                locationDetail.appendChild(locationLabel);
+                locationDetail.appendChild(locationValue);
+
+                const statusDetail = document.createElement('div');
+                statusDetail.className = 'dns-detail';
+                const statusLabel = document.createElement('div');
+                statusLabel.className = 'dns-detail-label';
+                statusLabel.textContent = 'Status';
+                const statusValue = document.createElement('div');
+                statusValue.className = 'dns-detail-value';
+                statusValue.textContent = 'Simulated';
+                statusDetail.appendChild(statusLabel);
+                statusDetail.appendChild(statusValue);
+
+                infoDiv.appendChild(providerDetail);
+                infoDiv.appendChild(locationDetail);
+                infoDiv.appendChild(statusDetail);
+
+                serverDiv.appendChild(ipDiv);
+                serverDiv.appendChild(infoDiv);
 
                 dnsServersDiv.appendChild(serverDiv);
             });
