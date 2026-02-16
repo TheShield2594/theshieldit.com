@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Key Pair Generator | The Shield IT</title>
+    <meta name="description" content="Generate RSA key pairs for encryption and digital signatures. Create public and private keys with customizable key sizes.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            margin-top: 10px;
+        }
+
+        .key-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .key-section h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .key-display {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            color: #94a3b8;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .warning-box {
+            background: rgba(239, 158, 11, 0.1);
+            border: 2px solid rgba(239, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .warning-box h4 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔐 RSA Key Pair Generator</h1>
+            <p class="subtitle">Generate RSA public/private key pairs for encryption and signatures</p>
+        </header>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="keySize">Key Size (bits)</label>
+                <select id="keySize">
+                    <option value="2048" selected>2048 bits (Recommended)</option>
+                    <option value="4096">4096 bits (More Secure)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="keyName">Key Name (optional)</label>
+                <input type="text" id="keyName" placeholder="e.g., My Email Key, Server Key...">
+            </div>
+
+            <button onclick="generateKeys()" id="generateBtn">🔑 Generate Key Pair</button>
+
+            <div class="warning-box">
+                <h4>⚠️ Security Warning</h4>
+                <p style="color: #cbd5e1; margin-top: 10px;">
+                    <strong>Never share your private key!</strong> The private key must be kept completely secret.
+                    Only share the public key. Store your private key securely, ideally encrypted with a password.
+                </p>
+            </div>
+        </div>
+
+        <div id="keysSection" style="display: none;">
+            <div class="card key-section">
+                <h3>
+                    🔓 Public Key
+                    <span style="font-size: 0.85rem; color: #94a3b8; font-weight: normal;">Safe to share</span>
+                </h3>
+                <div class="key-display" id="publicKeyDisplay"></div>
+                <div class="button-group">
+                    <button class="secondary" onclick="copyPublicKey()">📋 Copy</button>
+                    <button class="secondary" onclick="downloadPublicKey()">⬇️ Download</button>
+                </div>
+            </div>
+
+            <div class="card key-section">
+                <h3>
+                    🔒 Private Key
+                    <span style="font-size: 0.85rem; color: #ef4444; font-weight: normal;">Keep secret!</span>
+                </h3>
+                <div class="key-display" id="privateKeyDisplay"></div>
+                <div class="button-group">
+                    <button class="secondary" onclick="copyPrivateKey()">📋 Copy</button>
+                    <button class="secondary" onclick="downloadPrivateKey()">⬇️ Download</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔐 About RSA Encryption</h3>
+            <ul>
+                <li><strong>Public Key:</strong> Used to encrypt messages or verify signatures. Safe to share publicly.</li>
+                <li><strong>Private Key:</strong> Used to decrypt messages or create signatures. Must be kept secret.</li>
+                <li><strong>2048-bit:</strong> Standard security level, suitable for most purposes</li>
+                <li><strong>4096-bit:</strong> Higher security, slower performance but more future-proof</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">💡 Common Uses</h3>
+            <ul>
+                <li><strong>Email Encryption:</strong> PGP/GPG email encryption</li>
+                <li><strong>Digital Signatures:</strong> Prove message authenticity and integrity</li>
+                <li><strong>SSH Authentication:</strong> Secure shell access to servers</li>
+                <li><strong>Code Signing:</strong> Sign software packages and updates</li>
+                <li><strong>SSL/TLS Certificates:</strong> Secure website connections (HTTPS)</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">⚠️ Important Notes</h3>
+            <ul>
+                <li>All key generation happens locally in your browser using Web Crypto API</li>
+                <li>Your keys never leave your device or get sent to any server</li>
+                <li>Make sure to backup your private key securely</li>
+                <li>Consider encrypting your private key with a strong password before storage</li>
+                <li>If you lose your private key, any encrypted data becomes unrecoverable</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        let publicKeyPem = '';
+        let privateKeyPem = '';
+        let keyName = '';
+
+        async function generateKeys() {
+            const keySize = parseInt(document.getElementById('keySize').value);
+            keyName = document.getElementById('keyName').value || 'my_key';
+            const generateBtn = document.getElementById('generateBtn');
+
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating... This may take a moment...';
+
+            try {
+                // Generate RSA key pair
+                const keyPair = await window.crypto.subtle.generateKey(
+                    {
+                        name: 'RSA-OAEP',
+                        modulusLength: keySize,
+                        publicExponent: new Uint8Array([1, 0, 1]),
+                        hash: 'SHA-256',
+                    },
+                    true,
+                    ['encrypt', 'decrypt']
+                );
+
+                // Export public key
+                const exportedPublicKey = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+                publicKeyPem = formatPemKey(exportedPublicKey, 'PUBLIC');
+
+                // Export private key
+                const exportedPrivateKey = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+                privateKeyPem = formatPemKey(exportedPrivateKey, 'PRIVATE');
+
+                // Display keys
+                document.getElementById('publicKeyDisplay').textContent = publicKeyPem;
+                document.getElementById('privateKeyDisplay').textContent = privateKeyPem;
+                document.getElementById('keysSection').style.display = 'block';
+
+                // Scroll to results
+                document.getElementById('keysSection').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                alert('Error generating keys: ' + error.message);
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = '🔑 Generate Key Pair';
+            }
+        }
+
+        function formatPemKey(keyData, type) {
+            const b64 = arrayBufferToBase64(keyData);
+            const formatted = b64.match(/.{1,64}/g).join('\n');
+            return `-----BEGIN ${type} KEY-----\n${formatted}\n-----END ${type} KEY-----`;
+        }
+
+        function arrayBufferToBase64(buffer) {
+            const binary = String.fromCharCode.apply(null, new Uint8Array(buffer));
+            return window.btoa(binary);
+        }
+
+        function copyPublicKey() {
+            navigator.clipboard.writeText(publicKeyPem).then(() => {
+                showToast();
+            });
+        }
+
+        function copyPrivateKey() {
+            navigator.clipboard.writeText(privateKeyPem).then(() => {
+                showToast();
+            });
+        }
+
+        function downloadPublicKey() {
+            downloadFile(publicKeyPem, `${keyName}_public.pem`);
+        }
+
+        function downloadPrivateKey() {
+            downloadFile(privateKeyPem, `${keyName}_private.pem`);
+        }
+
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

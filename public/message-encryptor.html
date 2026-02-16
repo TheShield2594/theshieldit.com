@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Encryptor | The Shield IT</title>
+    <meta name="description" content="Encrypt and decrypt messages securely using AES-256 encryption. Protect your sensitive text with password-based encryption.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        input[type="password"], input[type="text"], textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .result-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .result-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            color: #3b82f6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .tab.active {
+                border-left-color: #3b82f6;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔐 Message Encryptor</h1>
+            <p class="subtitle">Secure your messages with AES-256 encryption</p>
+        </header>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('encrypt')">🔒 Encrypt</button>
+                <button class="tab" onclick="switchTab('decrypt')">🔓 Decrypt</button>
+            </div>
+
+            <!-- Encrypt Tab -->
+            <div id="encryptTab" class="tab-content active">
+                <div class="input-group">
+                    <label for="encryptPassword">Encryption Password</label>
+                    <input type="password" id="encryptPassword" placeholder="Enter a strong password">
+                </div>
+
+                <div class="input-group">
+                    <label for="plaintext">Message to Encrypt</label>
+                    <textarea id="plaintext" placeholder="Enter your message here..."></textarea>
+                </div>
+
+                <button onclick="encryptMessage()">🔒 Encrypt Message</button>
+
+                <div id="encryptResult" class="result-section" style="display: none;">
+                    <div class="result-label">Encrypted Message (Base64):</div>
+                    <div class="result-text" id="encryptedText"></div>
+                    <div class="button-group">
+                        <button class="secondary" onclick="copyEncrypted()">📋 Copy Encrypted</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decrypt Tab -->
+            <div id="decryptTab" class="tab-content">
+                <div class="input-group">
+                    <label for="decryptPassword">Decryption Password</label>
+                    <input type="password" id="decryptPassword" placeholder="Enter the password used to encrypt">
+                </div>
+
+                <div class="input-group">
+                    <label for="ciphertext">Encrypted Message (Base64)</label>
+                    <textarea id="ciphertext" placeholder="Paste the encrypted message here..."></textarea>
+                </div>
+
+                <button onclick="decryptMessage()">🔓 Decrypt Message</button>
+
+                <div id="decryptResult" class="result-section" style="display: none;">
+                    <div class="result-label">Decrypted Message:</div>
+                    <div class="result-text" id="decryptedText"></div>
+                    <div class="button-group">
+                        <button class="secondary" onclick="copyDecrypted()">📋 Copy Decrypted</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔐 How This Works</h3>
+            <ul>
+                <li><strong>AES-256 Encryption:</strong> Military-grade encryption standard used worldwide</li>
+                <li><strong>Client-Side Only:</strong> All encryption happens in your browser - nothing is sent to any server</li>
+                <li><strong>Password-Based:</strong> Your password is used to generate the encryption key</li>
+                <li><strong>Base64 Encoding:</strong> Encrypted data is encoded for easy copying and sharing</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">⚠️ Important Security Notes</h3>
+            <ul>
+                <li>Use a strong, unique password for encryption</li>
+                <li>Share the password separately from the encrypted message (never together!)</li>
+                <li>This tool is for encrypting text messages, not files</li>
+                <li>For maximum security, use established tools like PGP for sensitive communications</li>
+                <li>Both sender and receiver need the same password to decrypt</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">💡 Best Practices</h3>
+            <ul>
+                <li>Generate a random password using our Password Generator tool</li>
+                <li>Share passwords using a secure channel (Signal, encrypted email, etc.)</li>
+                <li>Never reuse encryption passwords</li>
+                <li>Store important passwords in a password manager</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (tab === 'encrypt') {
+                document.getElementById('encryptTab').classList.add('active');
+            } else {
+                document.getElementById('decryptTab').classList.add('active');
+            }
+        }
+
+        function encryptMessage() {
+            const password = document.getElementById('encryptPassword').value;
+            const plaintext = document.getElementById('plaintext').value;
+
+            if (!password) {
+                alert('Please enter a password');
+                return;
+            }
+
+            if (!plaintext) {
+                alert('Please enter a message to encrypt');
+                return;
+            }
+
+            if (password.length < 8) {
+                alert('Password should be at least 8 characters long for better security');
+                return;
+            }
+
+            try {
+                // Encrypt using AES
+                const encrypted = CryptoJS.AES.encrypt(plaintext, password).toString();
+
+                document.getElementById('encryptedText').textContent = encrypted;
+                document.getElementById('encryptResult').style.display = 'block';
+            } catch (error) {
+                alert('Encryption failed: ' + error.message);
+            }
+        }
+
+        function decryptMessage() {
+            const password = document.getElementById('decryptPassword').value;
+            const ciphertext = document.getElementById('ciphertext').value;
+
+            if (!password) {
+                alert('Please enter a password');
+                return;
+            }
+
+            if (!ciphertext) {
+                alert('Please enter an encrypted message');
+                return;
+            }
+
+            try {
+                // Decrypt using AES
+                const decrypted = CryptoJS.AES.decrypt(ciphertext, password);
+                const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+
+                if (!plaintext) {
+                    alert('Decryption failed. Incorrect password or corrupted data.');
+                    return;
+                }
+
+                document.getElementById('decryptedText').textContent = plaintext;
+                document.getElementById('decryptResult').style.display = 'block';
+            } catch (error) {
+                alert('Decryption failed: ' + error.message);
+            }
+        }
+
+        function copyEncrypted() {
+            const text = document.getElementById('encryptedText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            });
+        }
+
+        function copyDecrypted() {
+            const text = document.getElementById('decryptedText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

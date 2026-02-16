@@ -86,6 +86,17 @@ export const TOOLS: Tool[] = [
     icon: "image",
   },
   {
+    title: "Hash Generator & Verifier",
+    description:
+      "Generate and verify cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512). Check file integrity and verify checksums.",
+    href: "/hash-generator.html",
+    tags: "hash generator md5 sha1 sha256 sha512 checksum integrity verifier",
+    category: "developer",
+    tagLabel: "Crypto",
+    iconColor: "text-primary bg-primary/10",
+    icon: "hash",
+  },
+  {
     title: "IP Address Lookup",
     description:
       "Look up detailed information about any IP address including location, ISP, and network details.",
@@ -106,6 +117,17 @@ export const TOOLS: Tool[] = [
     tagLabel: "Security",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "link",
+  },
+  {
+    title: "Message Encryptor",
+    description:
+      "Encrypt and decrypt messages securely using AES-256 encryption. Protect your sensitive text with password-based encryption.",
+    href: "/message-encryptor.html",
+    tags: "message encrypt decrypt aes encryption secure password crypto",
+    category: "security",
+    tagLabel: "Crypto",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "lock",
   },
   {
     title: "Password Generator",
@@ -172,6 +194,17 @@ export const TOOLS: Tool[] = [
     tagLabel: "Generator",
     iconColor: "text-primary bg-primary/10",
     icon: "qr-code",
+  },
+  {
+    title: "RSA Key Pair Generator",
+    description:
+      "Generate RSA key pairs for encryption and digital signatures. Create public and private keys with customizable key sizes.",
+    href: "/rsa-key-generator.html",
+    tags: "rsa key pair generator public private encryption signature crypto pgp",
+    category: "security",
+    tagLabel: "Crypto",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "key-square",
   },
   {
     title: "Security Trivia Challenge",
