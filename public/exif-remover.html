@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXIF Metadata Remover | The Shield IT</title>
+    <meta name="description" content="Remove EXIF metadata from your photos to protect your privacy. Strip location, camera, and other sensitive data from images.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .upload-area {
+            border: 3px dashed rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            padding: 60px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .preview-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metadata-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metadata-section h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .metadata-item {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .metadata-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .metadata-value {
+            color: #cbd5e1;
+            word-break: break-all;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .warning-box h4 {
+            color: #ef4444;
+            margin-bottom: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .upload-area {
+                padding: 40px 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>📸 EXIF Metadata Remover</h1>
+            <p class="subtitle">Remove sensitive metadata from your photos</p>
+        </header>
+
+        <div class="card">
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📤</div>
+                <div class="upload-text">Click to upload or drag and drop</div>
+                <div class="upload-hint">Supports: JPG, PNG, GIF (max 10MB)</div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFile(this.files[0])">
+
+            <div id="previewSection" class="preview-section">
+                <img id="imagePreview" class="image-preview" alt="Image preview">
+
+                <div class="metadata-section" id="metadataSection"></div>
+
+                <div class="action-buttons">
+                    <button onclick="removeMetadata()">🗑️ Remove All Metadata</button>
+                    <button class="secondary" onclick="downloadClean()">⬇️ Download Clean Image</button>
+                    <button class="danger" onclick="reset()">🔄 Start Over</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔐 What is EXIF Metadata?</h3>
+            <p style="margin-bottom: 15px; color: #cbd5e1;">
+                EXIF (Exchangeable Image File Format) data is metadata embedded in photos that can include:
+            </p>
+            <ul>
+                <li><strong>GPS Coordinates:</strong> Exact location where the photo was taken</li>
+                <li><strong>Date & Time:</strong> When the photo was captured</li>
+                <li><strong>Camera Info:</strong> Make, model, and settings</li>
+                <li><strong>Software:</strong> Editing tools used</li>
+                <li><strong>Author/Copyright:</strong> Creator information</li>
+            </ul>
+            <h3 style="margin-top: 20px;">⚠️ Privacy Risks</h3>
+            <ul>
+                <li>Sharing photos with GPS data can reveal your home address</li>
+                <li>Timestamps can reveal your daily routines and patterns</li>
+                <li>Camera serial numbers can link multiple photos to you</li>
+                <li>This metadata is often preserved when posting to social media</li>
+            </ul>
+            <h3 style="margin-top: 20px;">✅ How This Tool Works</h3>
+            <ul>
+                <li>All processing happens locally in your browser - your images never leave your device</li>
+                <li>We read the EXIF data and display it for your review</li>
+                <li>Then create a clean copy of your image without any metadata</li>
+                <li>You can download the cleaned image safely</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <script>
+        let originalImage = null;
+        let cleanImage = null;
+
+        // Drag and drop handlers
+        const uploadArea = document.getElementById('uploadArea');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size must be less than 10MB');
+                return;
+            }
+
+            originalImage = file;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('imagePreview');
+                img.src = e.target.result;
+
+                // Extract EXIF data
+                EXIF.getData(img, function() {
+                    displayMetadata(this);
+                });
+
+                document.getElementById('previewSection').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayMetadata(img) {
+            const metadataSection = document.getElementById('metadataSection');
+            const allTags = EXIF.getAllTags(img);
+
+            let hasMetadata = false;
+            let metadataHTML = '<h3>📋 Detected Metadata</h3>';
+
+            if (Object.keys(allTags).length === 0) {
+                metadataHTML += '<p style="color: #22c55e;">✅ No EXIF metadata detected in this image!</p>';
+            } else {
+                hasMetadata = true;
+                metadataHTML += '<div class="warning-box"><h4>⚠️ Sensitive Data Found!</h4><p>This image contains metadata that may reveal private information. Review below:</p></div>';
+                metadataHTML += '<div class="metadata-grid">';
+
+                // Priority tags to show
+                const importantTags = ['GPSLatitude', 'GPSLongitude', 'DateTime', 'DateTimeOriginal', 'Make', 'Model', 'Software', 'Artist', 'Copyright'];
+
+                // Show important tags first
+                importantTags.forEach(tag => {
+                    if (allTags[tag]) {
+                        metadataHTML += createMetadataItem(tag, allTags[tag]);
+                    }
+                });
+
+                // Show other tags
+                Object.keys(allTags).forEach(tag => {
+                    if (!importantTags.includes(tag) && allTags[tag]) {
+                        metadataHTML += createMetadataItem(tag, allTags[tag]);
+                    }
+                });
+
+                metadataHTML += '</div>';
+            }
+
+            metadataSection.innerHTML = metadataHTML;
+        }
+
+        function createMetadataItem(label, value) {
+            let displayValue = value;
+
+            // Format special values
+            if (typeof value === 'object') {
+                if (value.numerator && value.denominator) {
+                    displayValue = value.numerator + '/' + value.denominator;
+                } else {
+                    displayValue = JSON.stringify(value);
+                }
+            }
+
+            return `
+                <div class="metadata-item">
+                    <div class="metadata-label">${label}</div>
+                    <div class="metadata-value">${displayValue}</div>
+                </div>
+            `;
+        }
+
+        async function removeMetadata() {
+            if (!originalImage) return;
+
+            const img = document.getElementById('imagePreview');
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            // Convert to blob without EXIF
+            canvas.toBlob((blob) => {
+                cleanImage = blob;
+                alert('✅ Metadata removed successfully! You can now download the clean image.');
+            }, originalImage.type, 0.95);
+        }
+
+        function downloadClean() {
+            if (!cleanImage) {
+                alert('Please remove metadata first!');
+                return;
+            }
+
+            const url = URL.createObjectURL(cleanImage);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cleaned_' + (originalImage.name || 'image.jpg');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function reset() {
+            originalImage = null;
+            cleanImage = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+        }
+    </script>
+</body>
+</html>

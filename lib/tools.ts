@@ -20,6 +20,17 @@ export const CATEGORIES: { value: string; label: string }[] = [
 
 export const TOOLS: Tool[] = [
   {
+    title: "Browser Fingerprint Test",
+    description:
+      "Test how unique your browser is and see what information websites can collect about you. Check your digital fingerprint.",
+    href: "/browser-fingerprint.html",
+    tags: "browser fingerprint privacy tracking canvas webgl uniqueness",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "fingerprint",
+  },
+  {
     title: "Data Breach Timeline",
     description:
       "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
@@ -42,6 +53,17 @@ export const TOOLS: Tool[] = [
     icon: "wrench",
   },
   {
+    title: "DNS Leak Test",
+    description:
+      "Check if your VPN is leaking DNS requests. Verify that your DNS queries are being protected from your ISP.",
+    href: "/dns-leak-test.html",
+    tags: "dns leak test vpn privacy security isp dns-over-https",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "shield-alert",
+  },
+  {
     title: "Email Header Analyzer",
     description:
       "Identify phishing attempts by analyzing email headers, authentication, and delivery paths.",
@@ -51,6 +73,50 @@ export const TOOLS: Tool[] = [
     tagLabel: "Security",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "mail",
+  },
+  {
+    title: "EXIF Metadata Remover",
+    description:
+      "Remove sensitive metadata from photos including GPS location, camera info, and timestamps. Protect your privacy before sharing images.",
+    href: "/exif-remover.html",
+    tags: "exif metadata remover photo privacy gps location camera data",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "image",
+  },
+  {
+    title: "IP Address Lookup",
+    description:
+      "Look up detailed information about any IP address including location, ISP, and network details.",
+    href: "/ip-lookup.html",
+    tags: "ip address lookup geolocation isp network whois information",
+    category: "security",
+    tagLabel: "Analysis",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "map-pin",
+  },
+  {
+    title: "Link Safety Checker",
+    description:
+      "Analyze URLs for phishing, malware, and suspicious patterns before clicking. Check if a link is safe.",
+    href: "/link-safety-checker.html",
+    tags: "link url safety checker phishing malware suspicious typosquatting",
+    category: "security",
+    tagLabel: "Security",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "link",
+  },
+  {
+    title: "Password Generator",
+    description:
+      "Generate strong, secure passwords with customizable options. Create random passwords with uppercase, lowercase, numbers, and symbols.",
+    href: "/password-generator.html",
+    tags: "password generator random strong secure create",
+    category: "security",
+    tagLabel: "Security",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "key",
   },
   {
     title: "Password Strength Tester",
@@ -108,6 +174,28 @@ export const TOOLS: Tool[] = [
     icon: "qr-code",
   },
   {
+    title: "Security Trivia Challenge",
+    description:
+      "Test your cybersecurity knowledge with our interactive trivia game. Learn about privacy, security, and best practices.",
+    href: "/security-trivia.html",
+    tags: "security trivia quiz game challenge test knowledge cybersecurity",
+    category: "education",
+    tagLabel: "Game",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "trophy",
+  },
+  {
+    title: "Subnet Calculator",
+    description:
+      "Calculate subnet masks, network addresses, broadcast addresses, and host ranges for IPv4 networks.",
+    href: "/subnet-calculator.html",
+    tags: "subnet calculator network cidr ip address mask networking",
+    category: "developer",
+    tagLabel: "Calculator",
+    iconColor: "text-primary bg-primary/10",
+    icon: "network",
+  },
+  {
     title: "Vendor Lock-In Score",
     description:
       "Score your vendor lock-in risk across 9 dimensions. Track services and plan your exit strategy.",
@@ -117,6 +205,17 @@ export const TOOLS: Tool[] = [
     tagLabel: "Assessment",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "lock-keyhole",
+  },
+  {
+    title: "WebRTC Leak Test",
+    description:
+      "Test if WebRTC is leaking your real IP address. Check if your VPN can be bypassed by WebRTC.",
+    href: "/webrtc-leak-test.html",
+    tags: "webrtc leak test vpn privacy ip address real local",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "wifi",
   },
   {
     title: "Website Security Analyzer",
