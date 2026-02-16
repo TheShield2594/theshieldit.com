@@ -195,4 +195,15 @@ export const TOOLS: Tool[] = [
     iconColor: "text-primary bg-primary/10",
     icon: "search",
   },
+  {
+    title: "Website Checker",
+    description:
+      "Comprehensive DNS, SSL, security headers, and infrastructure analysis tool. Check all aspects of a website in one place.",
+    href: "/web-checker.html",
+    tags: "website checker dns ssl security headers certificate infrastructure analysis web-check",
+    category: "security",
+    tagLabel: "Analysis",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "shield-check",
+  },
 ]

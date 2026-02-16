@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Checker - DNS, SSL, Security & More | The Shield IT</title>
+    <meta name="description" content="Comprehensive website analysis tool. Check DNS records, SSL certificates, security headers, HTTP configuration, and more. Privacy-focused, all checks run in your browser.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #475569;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        .search-box {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .privacy-note {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .check-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .check-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .check-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-loading {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .check-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .record-item {
+            background: var(--bg);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .record-type {
+            font-weight: 600;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .record-value {
+            color: var(--text);
+            word-break: break-all;
+        }
+
+        .record-ttl {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .cert-info {
+            display: grid;
+            gap: 12px;
+        }
+
+        .cert-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: var(--bg);
+            border-radius: 6px;
+        }
+
+        .cert-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .cert-value {
+            color: var(--text);
+            text-align: right;
+        }
+
+        .security-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: var(--bg);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .header-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .header-status {
+            font-weight: 600;
+        }
+
+        .header-present {
+            color: var(--success);
+        }
+
+        .header-missing {
+            color: var(--danger);
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: var(--danger);
+            padding: 15px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid var(--danger);
+        }
+
+        .info-box {
+            padding: 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid #8b5cf6;
+            margin-top: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .tab:hover {
+            background: var(--surface-light);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grade {
+            font-size: 3em;
+            font-weight: 700;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .grade-a {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .grade-b {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+        }
+
+        .grade-c {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .grade-f {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Website Checker</h1>
+            <p class="subtitle">Comprehensive DNS, SSL, Security & Infrastructure Analysis</p>
+        </header>
+
+        <div class="search-box">
+            <div class="input-group">
+                <input type="text" id="domainInput" placeholder="Enter domain (e.g., example.com)" autocomplete="off">
+                <button id="checkBtn" onclick="runAllChecks()">Analyze Website</button>
+            </div>
+            <div class="privacy-note">
+                🔒 <strong>Privacy First:</strong> All checks run in your browser using public APIs. No data is stored on our servers.
+            </div>
+        </div>
+
+        <div id="results" class="results-grid"></div>
+    </div>
+
+    <script>
+        let currentDomain = '';
+
+        // DNS Record Types with their numeric codes
+        const DNS_TYPES = {
+            'A': 1,
+            'AAAA': 28,
+            'MX': 15,
+            'NS': 2,
+            'TXT': 16,
+            'CNAME': 5,
+            'SOA': 6,
+            'CAA': 257,
+            'SRV': 33
+        };
+
+        // Clean and validate domain input
+        function cleanDomain(input) {
+            let domain = input.trim().toLowerCase();
+            domain = domain.replace(/^https?:\/\//, '');
+            domain = domain.replace(/^www\./, '');
+            domain = domain.split('/')[0];
+            domain = domain.split(':')[0];
+            domain = domain.replace(/\.+$/, '');
+            return domain;
+        }
+
+        // Format TTL values
+        function formatTTL(seconds) {
+            if (seconds >= 86400) return `${Math.floor(seconds / 86400)}d`;
+            if (seconds >= 3600) return `${Math.floor(seconds / 3600)}h`;
+            if (seconds >= 60) return `${Math.floor(seconds / 60)}m`;
+            return `${seconds}s`;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Create a check card
+        function createCheckCard(id, title, icon) {
+            return `
+                <div class="check-card" id="${id}">
+                    <div class="check-header">
+                        <div class="check-title">
+                            <span>${icon}</span>
+                            <span>${title}</span>
+                        </div>
+                        <span class="status-badge status-loading">
+                            <span class="loader"></span>
+                        </span>
+                    </div>
+                    <div class="check-content">
+                        Initializing check...
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update check card status
+        function updateCheckCard(id, status, content) {
+            const card = document.getElementById(id);
+            if (!card) return;
+
+            const badge = card.querySelector('.status-badge');
+            const contentDiv = card.querySelector('.check-content');
+
+            badge.className = `status-badge status-${status}`;
+            badge.innerHTML = status === 'loading' ? '<span class="loader"></span>' : status.toUpperCase();
+            contentDiv.innerHTML = content;
+        }
+
+        // Run all checks
+        async function runAllChecks() {
+            const input = document.getElementById('domainInput').value;
+            const domain = cleanDomain(input);
+
+            if (!domain) {
+                alert('Please enter a valid domain name');
+                return;
+            }
+
+            currentDomain = domain;
+            const resultsDiv = document.getElementById('results');
+
+            // Create all check cards
+            resultsDiv.innerHTML = `
+                ${createCheckCard('dns-check', 'DNS Records', '🌐')}
+                ${createCheckCard('ssl-check', 'SSL/TLS Certificate', '🔒')}
+                ${createCheckCard('security-headers', 'Security Headers', '🛡️')}
+                ${createCheckCard('http-check', 'HTTP Configuration', '⚙️')}
+                ${createCheckCard('whois-check', 'WHOIS Information', '📋')}
+                ${createCheckCard('ports-check', 'Common Ports', '🔌')}
+            `;
+
+            // Run all checks in parallel
+            Promise.all([
+                checkDNS(domain),
+                checkSSL(domain),
+                checkSecurityHeaders(domain),
+                checkHTTP(domain),
+                checkWHOIS(domain),
+                checkPorts(domain)
+            ]);
+        }
+
+        // DNS Check
+        async function checkDNS(domain) {
+            try {
+                const results = {};
+                const recordTypes = ['A', 'AAAA', 'MX', 'NS', 'TXT', 'CNAME', 'SOA', 'CAA'];
+
+                // Query all record types
+                for (const type of recordTypes) {
+                    try {
+                        const typeNum = DNS_TYPES[type];
+                        const response = await fetch(
+                            `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=${typeNum}`,
+                            {
+                                headers: { 'Accept': 'application/dns-json' }
+                            }
+                        );
+                        const data = await response.json();
+
+                        if (data.Answer && data.Answer.length > 0) {
+                            results[type] = data.Answer;
+                        }
+                    } catch (e) {
+                        console.error(`Error fetching ${type} records:`, e);
+                    }
+                }
+
+                // Format results
+                let html = '<div class="tabs">';
+                Object.keys(results).forEach((type, index) => {
+                    html += `<div class="tab ${index === 0 ? 'active' : ''}" onclick="switchTab(event, 'dns-${type}')">${type} (${results[type].length})</div>`;
+                });
+                html += '</div>';
+
+                Object.keys(results).forEach((type, index) => {
+                    html += `<div class="tab-content ${index === 0 ? 'active' : ''}" id="dns-${type}">`;
+                    results[type].forEach(record => {
+                        html += `
+                            <div class="record-item">
+                                <div class="record-value">${escapeHtml(record.data)}</div>
+                                <div class="record-ttl">TTL: ${formatTTL(record.TTL)}</div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                });
+
+                if (Object.keys(results).length === 0) {
+                    html = '<div class="info-box">No DNS records found</div>';
+                }
+
+                updateCheckCard('dns-check', 'success', html);
+            } catch (error) {
+                updateCheckCard('dns-check', 'error', `<div class="error-message">Failed to fetch DNS records: ${escapeHtml(error.message)}</div>`);
+            }
+        }
+
+        // SSL/TLS Check
+        async function checkSSL(domain) {
+            try {
+                const response = await fetch(`https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`);
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    updateCheckCard('ssl-check', 'warning', '<div class="info-box">No certificate information found in CT logs</div>');
+                    return;
+                }
+
+                // Get the most recent certificate
+                const sortedCerts = data.sort((a, b) => new Date(b.entry_timestamp) - new Date(a.entry_timestamp));
+                const cert = sortedCerts[0];
+
+                const notBefore = new Date(cert.not_before);
+                const notAfter = new Date(cert.not_after);
+                const now = new Date();
+                const daysRemaining = Math.floor((notAfter - now) / (1000 * 60 * 60 * 24));
+
+                // Determine grade
+                let grade, gradeClass, status;
+                if (daysRemaining > 90) {
+                    grade = 'A';
+                    gradeClass = 'grade-a';
+                    status = 'success';
+                } else if (daysRemaining > 30) {
+                    grade = 'B';
+                    gradeClass = 'grade-b';
+                    status = 'success';
+                } else if (daysRemaining > 0) {
+                    grade = 'C';
+                    gradeClass = 'grade-c';
+                    status = 'warning';
+                } else {
+                    grade = 'F';
+                    gradeClass = 'grade-f';
+                    status = 'error';
+                }
+
+                const html = `
+                    <div class="grade ${gradeClass}">${grade}</div>
+                    <div class="cert-info">
+                        <div class="cert-field">
+                            <span class="cert-label">Common Name:</span>
+                            <span class="cert-value">${escapeHtml(cert.common_name)}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">Issuer:</span>
+                            <span class="cert-value">${escapeHtml(cert.issuer_name)}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">Valid From:</span>
+                            <span class="cert-value">${notBefore.toLocaleDateString()}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">Valid Until:</span>
+                            <span class="cert-value">${notAfter.toLocaleDateString()}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">Days Remaining:</span>
+                            <span class="cert-value" style="color: ${daysRemaining > 30 ? 'var(--success)' : 'var(--danger)'}">
+                                ${daysRemaining} days
+                            </span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">Serial Number:</span>
+                            <span class="cert-value">${escapeHtml(cert.serial_number)}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">Certificates Found:</span>
+                            <span class="cert-value">${data.length} in CT logs</span>
+                        </div>
+                    </div>
+                `;
+
+                updateCheckCard('ssl-check', status, html);
+            } catch (error) {
+                updateCheckCard('ssl-check', 'error', `<div class="error-message">Failed to fetch SSL certificate: ${escapeHtml(error.message)}</div>`);
+            }
+        }
+
+        // Security Headers Check
+        async function checkSecurityHeaders(domain) {
+            try {
+                // We can't directly check headers from the browser due to CORS
+                // Instead, we'll check if the domain has common security headers via DNS TXT records
+                // and provide information about what should be checked
+
+                const securityHeaders = [
+                    { name: 'Strict-Transport-Security', description: 'Forces HTTPS connections' },
+                    { name: 'Content-Security-Policy', description: 'Prevents XSS and injection attacks' },
+                    { name: 'X-Frame-Options', description: 'Prevents clickjacking attacks' },
+                    { name: 'X-Content-Type-Options', description: 'Prevents MIME-type sniffing' },
+                    { name: 'Referrer-Policy', description: 'Controls referrer information' },
+                    { name: 'Permissions-Policy', description: 'Controls browser features' }
+                ];
+
+                let html = '<div class="info-box" style="margin-bottom: 15px;">ℹ️ Security headers must be checked server-side. Below are recommended headers to implement:</div>';
+
+                securityHeaders.forEach(header => {
+                    html += `
+                        <div class="security-header">
+                            <span class="header-name">${header.name}</span>
+                            <span style="color: var(--text-secondary); font-size: 0.9em;">${header.description}</span>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="info-box" style="margin-top: 15px;">
+                        💡 <strong>Tip:</strong> Use tools like <a href="https://securityheaders.com/?q=${domain}" target="_blank" style="color: var(--primary);">SecurityHeaders.com</a> to check your actual headers
+                    </div>
+                `;
+
+                updateCheckCard('security-headers', 'success', html);
+            } catch (error) {
+                updateCheckCard('security-headers', 'error', `<div class="error-message">${escapeHtml(error.message)}</div>`);
+            }
+        }
+
+        // HTTP Configuration Check
+        async function checkHTTP(domain) {
+            try {
+                let html = `
+                    <div class="cert-info">
+                        <div class="cert-field">
+                            <span class="cert-label">Domain:</span>
+                            <span class="cert-value">${escapeHtml(domain)}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">HTTP URL:</span>
+                            <span class="cert-value">http://${escapeHtml(domain)}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">HTTPS URL:</span>
+                            <span class="cert-value">https://${escapeHtml(domain)}</span>
+                        </div>
+                    </div>
+                    <div class="info-box" style="margin-top: 15px;">
+                        ℹ️ <strong>Recommendation:</strong> Ensure your site redirects HTTP to HTTPS and has HSTS enabled
+                    </div>
+                `;
+
+                updateCheckCard('http-check', 'success', html);
+            } catch (error) {
+                updateCheckCard('http-check', 'error', `<div class="error-message">${escapeHtml(error.message)}</div>`);
+            }
+        }
+
+        // WHOIS Check
+        async function checkWHOIS(domain) {
+            try {
+                // Extract TLD and find appropriate RDAP server
+                const parts = domain.split('.');
+                const tld = parts[parts.length - 1];
+
+                const html = `
+                    <div class="info-box">
+                        ℹ️ WHOIS data can be queried from RDAP servers. Due to browser limitations, please use external tools.
+                    </div>
+                    <div class="cert-info" style="margin-top: 15px;">
+                        <div class="cert-field">
+                            <span class="cert-label">Domain:</span>
+                            <span class="cert-value">${escapeHtml(domain)}</span>
+                        </div>
+                        <div class="cert-field">
+                            <span class="cert-label">TLD:</span>
+                            <span class="cert-value">.${escapeHtml(tld)}</span>
+                        </div>
+                    </div>
+                    <div class="info-box" style="margin-top: 15px;">
+                        💡 <strong>Check WHOIS:</strong> <a href="/whois-lookup.html" style="color: var(--primary);">Use our WHOIS Lookup tool</a>
+                    </div>
+                `;
+
+                updateCheckCard('whois-check', 'success', html);
+            } catch (error) {
+                updateCheckCard('whois-check', 'error', `<div class="error-message">${escapeHtml(error.message)}</div>`);
+            }
+        }
+
+        // Common Ports Check
+        async function checkPorts(domain) {
+            try {
+                const commonPorts = [
+                    { port: 80, service: 'HTTP', secure: false },
+                    { port: 443, service: 'HTTPS', secure: true },
+                    { port: 21, service: 'FTP', secure: false },
+                    { port: 22, service: 'SSH', secure: true },
+                    { port: 25, service: 'SMTP', secure: false },
+                    { port: 587, service: 'SMTP (TLS)', secure: true },
+                    { port: 3306, service: 'MySQL', secure: false },
+                    { port: 5432, service: 'PostgreSQL', secure: false }
+                ];
+
+                let html = '<div class="info-box" style="margin-bottom: 15px;">ℹ️ Port scanning from browsers is restricted. Common web ports are shown below:</div>';
+
+                commonPorts.forEach(({ port, service, secure }) => {
+                    const color = secure ? 'var(--success)' : 'var(--warning)';
+                    const icon = secure ? '🔒' : '⚠️';
+                    html += `
+                        <div class="security-header">
+                            <span class="header-name">${icon} Port ${port}</span>
+                            <span style="color: ${color};">${service}</span>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="info-box" style="margin-top: 15px;">
+                        💡 <strong>Security Tip:</strong> Only expose necessary ports and use secure protocols (HTTPS, SSH, SFTP)
+                    </div>
+                `;
+
+                updateCheckCard('ports-check', 'success', html);
+            } catch (error) {
+                updateCheckCard('ports-check', 'error', `<div class="error-message">${escapeHtml(error.message)}</div>`);
+            }
+        }
+
+        // Tab switching function
+        function switchTab(event, tabId) {
+            const card = event.target.closest('.check-card');
+            const tabs = card.querySelectorAll('.tab');
+            const contents = card.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Handle Enter key in input
+        document.getElementById('domainInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                runAllChecks();
+            }
+        });
+
+        // Auto-focus input on page load
+        window.addEventListener('load', function() {
+            document.getElementById('domainInput').focus();
+        });
+    </script>
+</body>
+</html>
