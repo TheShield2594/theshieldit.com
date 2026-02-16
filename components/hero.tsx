@@ -1,7 +1,7 @@
 import { Shield, Zap, Lock, Globe } from "lucide-react"
 
 const STATS = [
-  { icon: Zap, label: "Free tools", value: "16" },
+  { icon: Zap, label: "Free tools", value: "10" },
   { icon: Lock, label: "No sign-up", value: "100%" },
   { icon: Globe, label: "In-browser", value: "All" },
 ]
