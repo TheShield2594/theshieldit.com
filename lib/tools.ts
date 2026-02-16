@@ -108,17 +108,6 @@ export const TOOLS: Tool[] = [
     icon: "qr-code",
   },
   {
-    title: "SSL/TLS Certificate Checker",
-    description:
-      "Check certificate details, expiration, issuer, and security grade for any website.",
-    href: "/ssl-checker.html",
-    tags: "ssl tls certificate checker https security expiry grade",
-    category: "security",
-    tagLabel: "Security",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "lock",
-  },
-  {
     title: "Vendor Lock-In Score",
     description:
       "Score your vendor lock-in risk across 9 dimensions. Track services and plan your exit strategy.",
@@ -130,11 +119,11 @@ export const TOOLS: Tool[] = [
     icon: "lock-keyhole",
   },
   {
-    title: "Website Checker",
+    title: "Website Security Analyzer",
     description:
-      "Comprehensive DNS, SSL, security headers, and infrastructure analysis tool. Check all aspects of a website in one place.",
+      "Comprehensive website security analysis. Check DNS records, SSL/TLS certificates, security headers, and infrastructure all in one place.",
     href: "/web-checker.html",
-    tags: "website checker dns ssl security headers certificate infrastructure analysis web-check",
+    tags: "website checker dns ssl tls certificate security headers https infrastructure analysis web-check expiry grade",
     category: "security",
     tagLabel: "Analysis",
     iconColor: "text-chart-5 bg-chart-5/10",
