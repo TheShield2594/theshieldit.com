@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Swiss Army Knife - All-in-One Dev Tools | The Shield IT</title>
+  <meta name="description" content="All-in-one developer toolkit. Base64 encoding, JSON formatting, hash generation, regex testing, and text diff in one place.">
+  <meta name="keywords" content="developer tools, base64, json formatter, hash generator, regex tester, text diff, developer toolkit">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/dev-tools.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/dev-tools.html">
+  <meta property="og:title" content="Developer Swiss Army Knife">
+  <meta property="og:description" content="All-in-one developer toolkit with 5 essential tools in one place.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+      --match-bg: rgba(59,130,246,0.25); --match-border: rgba(59,130,246,0.6);
+      --add-bg: rgba(34,197,94,0.1); --add-border: rgba(34,197,94,0.3); --add-text: #4ade80;
+      --del-bg: rgba(239,68,68,0.1); --del-border: rgba(239,68,68,0.3); --del-text: #f87171;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; animation: fadeInDown 0.8s ease-out; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
+      font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
+    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; animation: fadeInUp 0.8s ease-out; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
+
+    /* Main tabs */
+    .main-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; animation: fadeInUp 0.8s ease-out 0.15s both; }
+    .main-tab { padding: 0.75rem 1.5rem; background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-gray); cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; font-family: inherit;
+      display: flex; align-items: center; gap: 0.5rem; }
+    .main-tab:hover { border-color: var(--primary); color: var(--text-light); transform: translateY(-1px); }
+    .main-tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-color: transparent; color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .tab-icon { width: 18px; height: 18px; }
+
+    /* Tool panels */
+    .tool-section { display: none; animation: fadeInUp 0.4s ease-out; }
+    .tool-section.active { display: block; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 2rem; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+
+    /* Common elements */
+    textarea, input[type="text"] {
+      width: 100%; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.85rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; transition: border-color 0.2s ease; line-height: 1.5;
+    }
+    textarea { min-height: 150px; resize: vertical; }
+    textarea:focus, input:focus { border-color: var(--primary); }
+    textarea::placeholder, input::placeholder { color: var(--text-gray); }
+    .action-btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .action-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .action-btn.secondary { background: rgba(30,41,59,0.5); border: 1px solid var(--border); color: var(--text-gray); }
+    .action-btn.secondary:hover { border-color: var(--primary); color: var(--text-light); box-shadow: none; }
+    .btn-row { display: flex; gap: 0.75rem; margin: 1rem 0; flex-wrap: wrap; }
+    .editor-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+    .editor-label span { font-size: 0.85rem; font-weight: 500; color: var(--text-gray); }
+    .char-count { font-size: 0.75rem; color: var(--text-gray); }
+    .privacy-note { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem 1rem;
+      background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2); border-radius: 8px;
+      font-size: 0.8rem; color: var(--text-gray); line-height: 1.5; }
+    .privacy-note svg { flex-shrink: 0; margin-top: 1px; color: var(--accent); }
+    .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    /* Base64 specific */
+    .options-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem; }
+    .option-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-gray); cursor: pointer; }
+    .option-check input { accent-color: var(--primary); }
+
+    /* JSON specific */
+    .status-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .status-badge { padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .status-badge.valid { background: rgba(34,197,94,0.15); color: var(--green); }
+    .status-badge.invalid { background: rgba(239,68,68,0.15); color: var(--red); }
+    .status-badge.empty { background: rgba(148,163,184,0.1); color: var(--text-gray); }
+    .status-info { font-size: 0.8rem; color: var(--text-gray); }
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .editor-col label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-gray); margin-bottom: 0.4rem; }
+    .indent-select { padding: 0.5rem 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.85rem; font-family: inherit; outline: none; }
+    .error-detail { padding: 0.75rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 8px; color: var(--red); font-size: 0.85rem; margin-top: 0.75rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; display: none; }
+    .json-stats { display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .stat-item { font-size: 0.8rem; color: var(--text-gray); }
+    .stat-item strong { color: var(--text-light); }
+
+    /* Hash specific */
+    .tab-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .tab-btn { padding: 0.5rem 1rem; background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text-gray); cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease; font-family: inherit; }
+    .tab-btn:hover { border-color: var(--primary); color: var(--text-light); }
+    .tab-btn.active { background: rgba(59,130,246,0.15); border-color: var(--primary); color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .drop-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 2.5rem; text-align: center; cursor: pointer;
+      transition: all 0.3s ease; color: var(--text-gray); }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--primary); background: rgba(59,130,246,0.05); }
+    .drop-zone svg { display: block; margin: 0 auto 0.75rem; opacity: 0.5; }
+    .drop-zone input { display: none; }
+    .file-name { margin-top: 0.75rem; font-size: 0.85rem; color: var(--primary); font-weight: 500; }
+    .hash-results { display: flex; flex-direction: column; gap: 0.75rem; }
+    .hash-row { background: rgba(15,23,42,0.4); border-radius: 8px; padding: 0.75rem; }
+    .hash-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 0.25rem; }
+    .hash-value { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.8rem; word-break: break-all; display: flex; align-items: flex-start; gap: 0.5rem; }
+    .hash-value code { flex: 1; }
+    .copy-btn { padding: 0.25rem 0.5rem; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 4px; color: var(--primary); cursor: pointer; font-size: 0.7rem; flex-shrink: 0; font-family: inherit;
+      transition: all 0.2s ease; }
+    .copy-btn:hover { background: rgba(59,130,246,0.2); }
+    .verify-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .verify-row { display: flex; gap: 0.75rem; align-items: flex-end; }
+    .verify-row .form-group { flex: 1; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-gray); margin-bottom: 0.4rem; }
+    .form-group input { width: 100%; padding: 0.6rem 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.85rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; outline: none; }
+    .verify-btn { padding: 0.6rem 1.25rem; background: rgba(30,41,59,0.5); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-gray); cursor: pointer; font-size: 0.85rem; font-family: inherit;
+      transition: all 0.2s ease; white-space: nowrap; }
+    .verify-btn:hover { border-color: var(--primary); color: var(--text-light); }
+    .verify-result { margin-top: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; display: none; }
+    .verify-result.match { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: var(--green); display: block; }
+    .verify-result.no-match { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--red); display: block; }
+
+    /* Regex specific */
+    .regex-input-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .regex-slash { font-size: 1.5rem; color: var(--text-gray); font-weight: 300; }
+    .regex-input { flex: 1; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--primary); font-size: 1rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; transition: border-color 0.2s ease; font-weight: 500; }
+    .flags-input { width: 60px; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--accent); font-size: 1rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      outline: none; text-align: center; }
+    .highlight-area { min-height: 150px; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.85rem; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      line-height: 1.6; white-space: pre-wrap; word-break: break-all; margin-top: 0.75rem; }
+    .match-hl { background: var(--match-bg); border-bottom: 2px solid var(--match-border); padding: 0.1rem 0; }
+    .match-info { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+    .match-stat { font-size: 0.8rem; color: var(--text-gray); }
+    .match-stat strong { color: var(--text-light); }
+    .matches-list { margin-top: 1rem; }
+    .match-item { padding: 0.5rem 0.75rem; background: rgba(15,23,42,0.4); border-radius: 8px; margin-bottom: 0.5rem;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.8rem; }
+    .match-num { font-size: 0.7rem; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .match-full { color: var(--text-light); margin: 0.25rem 0; word-break: break-all; }
+    .match-groups { color: var(--text-gray); font-size: 0.75rem; }
+    .match-groups span { color: var(--secondary); }
+    .match-pos { color: var(--text-gray); font-size: 0.7rem; }
+    .ref-toggle { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; background: rgba(30,41,59,0.5);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text-gray); cursor: pointer; font-size: 0.8rem;
+      font-family: inherit; transition: all 0.2s ease; margin-top: 1rem; }
+    .ref-toggle:hover { border-color: var(--primary); color: var(--text-light); }
+    .ref-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.75rem; }
+    .ref-grid.open { display: grid; }
+    .ref-item { padding: 0.4rem 0.6rem; background: rgba(15,23,42,0.4); border-radius: 6px; }
+    .ref-pattern { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      color: var(--primary); font-size: 0.8rem; font-weight: 600; }
+    .ref-desc { font-size: 0.7rem; color: var(--text-gray); }
+
+    /* Diff specific */
+    .diff-stats { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .stat-badge.additions { background: var(--add-bg); color: var(--add-text); }
+    .stat-badge.deletions { background: var(--del-bg); color: var(--del-text); }
+    .stat-badge.unchanged { background: rgba(148,163,184,0.1); color: var(--text-gray); }
+    .diff-output { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.8rem; line-height: 1.7; }
+    .diff-line { display: flex; border-bottom: 1px solid rgba(30,41,59,0.3); }
+    .diff-line:last-child { border-bottom: none; }
+    .line-num { width: 40px; text-align: right; padding: 0.15rem 0.5rem; color: var(--text-gray); font-size: 0.75rem;
+      user-select: none; flex-shrink: 0; border-right: 1px solid var(--border); }
+    .line-prefix { width: 20px; text-align: center; padding: 0.15rem 0; font-weight: 700; flex-shrink: 0; user-select: none; }
+    .line-content { padding: 0.15rem 0.5rem; white-space: pre-wrap; word-break: break-all; flex: 1; min-width: 0; }
+    .diff-line.add { background: var(--add-bg); }
+    .diff-line.add .line-prefix { color: var(--add-text); }
+    .diff-line.add .line-content { color: var(--add-text); }
+    .diff-line.del { background: var(--del-bg); }
+    .diff-line.del .line-prefix { color: var(--del-text); }
+    .diff-line.del .line-content { color: var(--del-text); }
+    .diff-line.ctx .line-prefix { color: var(--text-gray); }
+    .diff-placeholder { color: var(--text-gray); text-align: center; padding: 2rem; }
+    .diff-placeholder svg { display: block; margin: 0 auto 1rem; opacity: 0.3; }
+
+    footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.85rem; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; }
+      header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .main-tabs { justify-content: flex-start; }
+      .editor-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <div class="shield-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        The Shield IT
+      </a>
+      <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        All Tools
+      </a>
+    </header>
+    <main>
+      <h1>Developer Swiss Army Knife</h1>
+      <p class="subtitle">5 essential developer tools in one place</p>
+
+      <!-- Main navigation tabs -->
+      <div class="main-tabs">
+        <button class="main-tab active" data-tool="base64">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          Base64
+        </button>
+        <button class="main-tab" data-tool="json">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
+          JSON
+        </button>
+        <button class="main-tab" data-tool="hash">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+          Hash
+        </button>
+        <button class="main-tab" data-tool="regex">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          Regex
+        </button>
+        <button class="main-tab" data-tool="diff">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          Diff
+        </button>
+      </div>
+
+      <!-- Base64 Tool -->
+      <div class="tool-section active" id="base64-tool">
+        <div class="tool-panel">
+          <div class="editor-label">
+            <span>Input</span>
+            <span class="char-count" id="base64InputCount">0 characters</span>
+          </div>
+          <textarea id="base64Input" placeholder="Enter text to encode or Base64 to decode..."></textarea>
+
+          <div class="options-row">
+            <label class="option-check"><input type="checkbox" id="base64UrlSafe"> URL-safe encoding</label>
+            <label class="option-check"><input type="checkbox" id="base64LiveMode" checked> Live mode</label>
+          </div>
+
+          <div class="btn-row">
+            <button class="action-btn" id="base64EncodeBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+              Encode
+            </button>
+            <button class="action-btn" id="base64DecodeBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 18 2 12 8 6"></polyline><polyline points="16 6 22 12 16 18"></polyline></svg>
+              Decode
+            </button>
+            <button class="action-btn secondary" id="base64SwapBtn">Swap</button>
+            <button class="action-btn secondary" id="base64CopyBtn">Copy Output</button>
+          </div>
+
+          <div class="editor-label">
+            <span>Output</span>
+            <span class="char-count" id="base64OutputCount">0 characters</span>
+          </div>
+          <textarea id="base64Output" placeholder="Result will appear here..." readonly></textarea>
+          <div class="error-msg" id="base64Error"></div>
+
+          <div class="privacy-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>All encoding/decoding happens in your browser. No data is sent anywhere.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- JSON Tool -->
+      <div class="tool-section" id="json-tool">
+        <div class="tool-panel">
+          <div class="status-bar">
+            <span class="status-badge empty" id="jsonStatus">Empty</span>
+            <span class="status-info" id="jsonStatusInfo">Paste JSON to validate</span>
+            <div style="flex:1;"></div>
+            <span>Indent:</span>
+            <select class="indent-select" id="jsonIndent">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tab</option>
+            </select>
+          </div>
+
+          <div class="editor-grid">
+            <div class="editor-col">
+              <label>Input</label>
+              <textarea id="jsonInput" placeholder='Paste your JSON here...&#10;&#10;Example:&#10;{"name":"John","age":30}'></textarea>
+            </div>
+            <div class="editor-col">
+              <label>Output</label>
+              <textarea id="jsonOutput" placeholder="Formatted JSON will appear here..." readonly></textarea>
+            </div>
+          </div>
+
+          <div class="error-detail" id="jsonError"></div>
+
+          <div class="btn-row">
+            <button class="action-btn" id="jsonFormatBtn">Beautify</button>
+            <button class="action-btn" id="jsonMinifyBtn">Minify</button>
+            <button class="action-btn secondary" id="jsonCopyBtn">Copy Output</button>
+            <button class="action-btn secondary" id="jsonClearBtn">Clear</button>
+            <button class="action-btn secondary" id="jsonSampleBtn">Load Sample</button>
+          </div>
+
+          <div class="json-stats" id="jsonStats"></div>
+        </div>
+      </div>
+
+      <!-- Hash Tool -->
+      <div class="tool-section" id="hash-tool">
+        <div class="tool-panel">
+          <div class="tab-row">
+            <button class="tab-btn active" data-tab="text">Text Input</button>
+            <button class="tab-btn" data-tab="file">File Input</button>
+          </div>
+
+          <div class="tab-content active" id="hashTextTab">
+            <textarea id="hashTextInput" placeholder="Enter text to hash..."></textarea>
+          </div>
+          <div class="tab-content" id="hashFileTab">
+            <div class="drop-zone" id="hashDropZone">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <div>Drop a file here or click to browse</div>
+              <input type="file" id="hashFileInput">
+              <div class="file-name" id="hashFileName"></div>
+            </div>
+          </div>
+
+          <button class="action-btn" id="hashGenerateBtn" style="width: 100%; margin-top: 1rem;">Generate Hashes</button>
+
+          <div class="privacy-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>All hashing is done locally in your browser using the Web Crypto API. No data leaves your device.</span>
+          </div>
+        </div>
+
+        <div class="tool-panel" id="hashResultsPanel" style="display:none;">
+          <div class="panel-title">Hash Results</div>
+          <div class="hash-results" id="hashResults"></div>
+
+          <div class="verify-section">
+            <div class="panel-title">Verify Hash</div>
+            <div class="verify-row">
+              <div class="form-group">
+                <label for="hashVerifyInput">Paste a hash to compare</label>
+                <input type="text" id="hashVerifyInput" placeholder="Paste expected hash here...">
+              </div>
+              <button class="verify-btn" id="hashVerifyBtn">Verify</button>
+            </div>
+            <div class="verify-result" id="hashVerifyResult"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regex Tool -->
+      <div class="tool-section" id="regex-tool">
+        <div class="tool-panel">
+          <div class="panel-title">Pattern</div>
+          <div class="regex-input-row">
+            <span class="regex-slash">/</span>
+            <input type="text" class="regex-input" id="regexPattern" placeholder="Enter regex pattern...">
+            <span class="regex-slash">/</span>
+            <input type="text" class="flags-input" id="regexFlags" placeholder="gim" value="g">
+          </div>
+          <div class="error-msg" id="regexError" style="display:none;"></div>
+
+          <label class="editor-label"><span>Test String</span></label>
+          <textarea id="regexTestString" placeholder="Enter text to test against...&#10;&#10;Example: The quick brown fox jumps over the lazy dog."></textarea>
+
+          <div class="highlight-area" id="regexHighlight"></div>
+
+          <div class="match-info" id="regexMatchInfo"></div>
+
+          <div class="matches-list" id="regexMatchesList"></div>
+
+          <button class="ref-toggle" id="regexRefToggle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Quick Reference
+          </button>
+          <div class="ref-grid" id="regexRefGrid">
+            <div class="ref-item"><div class="ref-pattern">.</div><div class="ref-desc">Any character except newline</div></div>
+            <div class="ref-item"><div class="ref-pattern">\\d</div><div class="ref-desc">Digit [0-9]</div></div>
+            <div class="ref-item"><div class="ref-pattern">\\w</div><div class="ref-desc">Word char [a-zA-Z0-9_]</div></div>
+            <div class="ref-item"><div class="ref-pattern">\\s</div><div class="ref-desc">Whitespace</div></div>
+            <div class="ref-item"><div class="ref-pattern">\\b</div><div class="ref-desc">Word boundary</div></div>
+            <div class="ref-item"><div class="ref-pattern">^</div><div class="ref-desc">Start of string/line</div></div>
+            <div class="ref-item"><div class="ref-pattern">$</div><div class="ref-desc">End of string/line</div></div>
+            <div class="ref-item"><div class="ref-pattern">*</div><div class="ref-desc">0 or more</div></div>
+            <div class="ref-item"><div class="ref-pattern">+</div><div class="ref-desc">1 or more</div></div>
+            <div class="ref-item"><div class="ref-pattern">?</div><div class="ref-desc">0 or 1 (optional)</div></div>
+            <div class="ref-item"><div class="ref-pattern">{n,m}</div><div class="ref-desc">Between n and m times</div></div>
+            <div class="ref-item"><div class="ref-pattern">[abc]</div><div class="ref-desc">Character class</div></div>
+            <div class="ref-item"><div class="ref-pattern">[^abc]</div><div class="ref-desc">Negated class</div></div>
+            <div class="ref-item"><div class="ref-pattern">(abc)</div><div class="ref-desc">Capture group</div></div>
+            <div class="ref-item"><div class="ref-pattern">(?:abc)</div><div class="ref-desc">Non-capture group</div></div>
+            <div class="ref-item"><div class="ref-pattern">a|b</div><div class="ref-desc">Alternation (or)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diff Tool -->
+      <div class="tool-section" id="diff-tool">
+        <div class="tool-panel">
+          <div class="editor-grid">
+            <div class="editor-col">
+              <label for="diffTextA">Original</label>
+              <textarea id="diffTextA" placeholder="Paste original text here..."></textarea>
+            </div>
+            <div class="editor-col">
+              <label for="diffTextB">Modified</label>
+              <textarea id="diffTextB" placeholder="Paste modified text here..."></textarea>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="action-btn" id="diffCompareBtn">Compare</button>
+            <button class="action-btn secondary" id="diffSwapBtn">Swap</button>
+            <button class="action-btn secondary" id="diffClearBtn">Clear</button>
+          </div>
+        </div>
+        <div class="tool-panel">
+          <div class="panel-title">Diff Output</div>
+          <div id="diffOutput">
+            <div class="diff-placeholder">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              Enter text in both fields and click Compare
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+    <footer><p>&copy; 2025 The Shield IT &middot; All processing happens locally</p></footer>
+  </div>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Main tab switching
+    var mainTabs = document.querySelectorAll('.main-tab');
+    var toolSections = document.querySelectorAll('.tool-section');
+
+    mainTabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var toolName = tab.getAttribute('data-tool');
+
+        mainTabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+
+        toolSections.forEach(function(section) {
+          section.classList.remove('active');
+        });
+        document.getElementById(toolName + '-tool').classList.add('active');
+      });
+    });
+
+    // ==================== BASE64 TOOL ====================
+    (function() {
+      var inputArea = document.getElementById('base64Input');
+      var outputArea = document.getElementById('base64Output');
+      var encodeBtn = document.getElementById('base64EncodeBtn');
+      var decodeBtn = document.getElementById('base64DecodeBtn');
+      var swapBtn = document.getElementById('base64SwapBtn');
+      var copyBtn = document.getElementById('base64CopyBtn');
+      var urlSafe = document.getElementById('base64UrlSafe');
+      var liveMode = document.getElementById('base64LiveMode');
+      var errorMsg = document.getElementById('base64Error');
+      var inputCount = document.getElementById('base64InputCount');
+      var outputCount = document.getElementById('base64OutputCount');
+      var lastAction = 'encode';
+
+      function updateCounts() {
+        inputCount.textContent = inputArea.value.length + ' characters';
+        outputCount.textContent = outputArea.value.length + ' characters';
+      }
+
+      function encode() {
+        lastAction = 'encode';
+        errorMsg.style.display = 'none';
+        try {
+          var text = inputArea.value;
+          var encoded = btoa(unescape(encodeURIComponent(text)));
+          if (urlSafe.checked) {
+            encoded = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+          }
+          outputArea.value = encoded;
+        } catch(e) {
+          errorMsg.textContent = 'Encoding error: ' + e.message;
+          errorMsg.style.display = 'block';
+          outputArea.value = '';
+        }
+        updateCounts();
+      }
+
+      function decode() {
+        lastAction = 'decode';
+        errorMsg.style.display = 'none';
+        try {
+          var text = inputArea.value.trim();
+          if (urlSafe.checked) {
+            text = text.replace(/-/g, '+').replace(/_/g, '/');
+            while (text.length % 4) text += '=';
+          }
+          var decoded = decodeURIComponent(escape(atob(text)));
+          outputArea.value = decoded;
+        } catch(e) {
+          errorMsg.textContent = 'Decoding error: Invalid Base64 input.';
+          errorMsg.style.display = 'block';
+          outputArea.value = '';
+        }
+        updateCounts();
+      }
+
+      encodeBtn.addEventListener('click', encode);
+      decodeBtn.addEventListener('click', decode);
+
+      swapBtn.addEventListener('click', function() {
+        var tmp = inputArea.value;
+        inputArea.value = outputArea.value;
+        outputArea.value = tmp;
+        updateCounts();
+      });
+
+      copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(outputArea.value);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function() { copyBtn.textContent = 'Copy Output'; }, 1500);
+      });
+
+      inputArea.addEventListener('input', function() {
+        updateCounts();
+        if (liveMode.checked) {
+          if (lastAction === 'decode') decode(); else encode();
+        }
+      });
+
+      urlSafe.addEventListener('change', function() {
+        if (liveMode.checked) {
+          if (lastAction === 'decode') decode(); else encode();
+        }
+      });
+
+      updateCounts();
+    })();
+
+    // ==================== JSON TOOL ====================
+    (function() {
+      var inputArea = document.getElementById('jsonInput');
+      var outputArea = document.getElementById('jsonOutput');
+      var formatBtn = document.getElementById('jsonFormatBtn');
+      var minifyBtn = document.getElementById('jsonMinifyBtn');
+      var copyBtn = document.getElementById('jsonCopyBtn');
+      var clearBtn = document.getElementById('jsonClearBtn');
+      var sampleBtn = document.getElementById('jsonSampleBtn');
+      var statusBadge = document.getElementById('jsonStatus');
+      var statusInfo = document.getElementById('jsonStatusInfo');
+      var errorDetail = document.getElementById('jsonError');
+      var indentSelect = document.getElementById('jsonIndent');
+      var jsonStats = document.getElementById('jsonStats');
+
+      var sampleJSON = {
+        "name": "The Shield IT",
+        "description": "Free online IT and privacy tools",
+        "version": "2.0.0",
+        "tools": [
+          { "name": "Developer Swiss Army Knife", "category": "developer", "browser_only": true },
+          { "name": "Password Strength Tester", "category": "security", "browser_only": true }
+        ],
+        "features": {
+          "no_tracking": true,
+          "open_source": true,
+          "no_signup": true
+        }
+      };
+
+      sampleBtn.addEventListener('click', function() {
+        inputArea.value = JSON.stringify(sampleJSON);
+        validate();
+      });
+
+      clearBtn.addEventListener('click', function() {
+        inputArea.value = '';
+        outputArea.value = '';
+        statusBadge.className = 'status-badge empty';
+        statusBadge.textContent = 'Empty';
+        statusInfo.textContent = 'Paste JSON to validate';
+        errorDetail.style.display = 'none';
+        jsonStats.innerHTML = '';
+      });
+
+      copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(outputArea.value);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function() { copyBtn.textContent = 'Copy Output'; }, 1500);
+      });
+
+      function getIndent() {
+        var val = indentSelect.value;
+        return val === 'tab' ? '\t' : parseInt(val);
+      }
+
+      function countNodes(obj) {
+        var keys = 0, values = 0, arrays = 0, objects = 0;
+        function walk(node) {
+          if (Array.isArray(node)) {
+            arrays++;
+            node.forEach(walk);
+          } else if (node && typeof node === 'object') {
+            objects++;
+            var k = Object.keys(node);
+            keys += k.length;
+            k.forEach(function(key) { walk(node[key]); });
+          } else {
+            values++;
+          }
+        }
+        walk(obj);
+        return { keys: keys, values: values, arrays: arrays, objects: objects };
+      }
+
+      function validate() {
+        var raw = inputArea.value.trim();
+        if (!raw) {
+          statusBadge.className = 'status-badge empty';
+          statusBadge.textContent = 'Empty';
+          statusInfo.textContent = 'Paste JSON to validate';
+          errorDetail.style.display = 'none';
+          jsonStats.innerHTML = '';
+          return null;
+        }
+        try {
+          var parsed = JSON.parse(raw);
+          statusBadge.className = 'status-badge valid';
+          statusBadge.textContent = 'Valid';
+          statusInfo.textContent = 'JSON is valid';
+          errorDetail.style.display = 'none';
+
+          var stats = countNodes(parsed);
+          jsonStats.innerHTML =
+            '<span class="stat-item"><strong>' + stats.keys + '</strong> keys</span>' +
+            '<span class="stat-item"><strong>' + stats.values + '</strong> values</span>' +
+            '<span class="stat-item"><strong>' + stats.objects + '</strong> objects</span>' +
+            '<span class="stat-item"><strong>' + stats.arrays + '</strong> arrays</span>' +
+            '<span class="stat-item"><strong>' + raw.length + '</strong> chars</span>';
+
+          return parsed;
+        } catch(e) {
+          statusBadge.className = 'status-badge invalid';
+          statusBadge.textContent = 'Invalid';
+          statusInfo.textContent = 'JSON has errors';
+          errorDetail.textContent = e.message;
+          errorDetail.style.display = 'block';
+          jsonStats.innerHTML = '';
+          return null;
+        }
+      }
+
+      formatBtn.addEventListener('click', function() {
+        var parsed = validate();
+        if (parsed !== null) {
+          outputArea.value = JSON.stringify(parsed, null, getIndent());
+        }
+      });
+
+      minifyBtn.addEventListener('click', function() {
+        var parsed = validate();
+        if (parsed !== null) {
+          outputArea.value = JSON.stringify(parsed);
+        }
+      });
+
+      inputArea.addEventListener('input', function() { validate(); });
+    })();
+
+    // ==================== HASH TOOL ====================
+    (function() {
+      var textInput = document.getElementById('hashTextInput');
+      var fileInput = document.getElementById('hashFileInput');
+      var dropZone = document.getElementById('hashDropZone');
+      var fileName = document.getElementById('hashFileName');
+      var generateBtn = document.getElementById('hashGenerateBtn');
+      var hashResults = document.getElementById('hashResults');
+      var resultsPanel = document.getElementById('hashResultsPanel');
+      var verifyInput = document.getElementById('hashVerifyInput');
+      var verifyBtn = document.getElementById('hashVerifyBtn');
+      var verifyResult = document.getElementById('hashVerifyResult');
+      var tabBtns = document.querySelectorAll('#hash-tool .tab-btn');
+      var activeTab = 'text';
+      var currentFile = null;
+      var generatedHashes = {};
+
+      tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          tabBtns.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          activeTab = btn.getAttribute('data-tab');
+          document.getElementById('hashTextTab').classList.toggle('active', activeTab === 'text');
+          document.getElementById('hashFileTab').classList.toggle('active', activeTab === 'file');
+        });
+      });
+
+      dropZone.addEventListener('click', function() { fileInput.click(); });
+      dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('drag-over'); });
+      dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('drag-over'); });
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault(); dropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) { currentFile = e.dataTransfer.files[0]; fileName.textContent = currentFile.name + ' (' + formatSize(currentFile.size) + ')'; }
+      });
+      fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) { currentFile = fileInput.files[0]; fileName.textContent = currentFile.name + ' (' + formatSize(currentFile.size) + ')'; }
+      });
+
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+      }
+
+      function bufToHex(buf) {
+        return Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+      }
+
+      // MD5 implementation (Web Crypto doesn't support MD5)
+      function md5(buffer) {
+        var bytes = new Uint8Array(buffer);
+        function md5cycle(x, k) {
+          var a = x[0], b = x[1], c = x[2], d = x[3];
+          a = ff(a, b, c, d, k[0], 7, -680876936); d = ff(d, a, b, c, k[1], 12, -389564586);
+          c = ff(c, d, a, b, k[2], 17, 606105819); b = ff(b, c, d, a, k[3], 22, -1044525330);
+          a = ff(a, b, c, d, k[4], 7, -176418897); d = ff(d, a, b, c, k[5], 12, 1200080426);
+          c = ff(c, d, a, b, k[6], 17, -1473231341); b = ff(b, c, d, a, k[7], 22, -45705983);
+          a = ff(a, b, c, d, k[8], 7, 1770035416); d = ff(d, a, b, c, k[9], 12, -1958414417);
+          c = ff(c, d, a, b, k[10], 17, -42063); b = ff(b, c, d, a, k[11], 22, -1990404162);
+          a = ff(a, b, c, d, k[12], 7, 1804603682); d = ff(d, a, b, c, k[13], 12, -40341101);
+          c = ff(c, d, a, b, k[14], 17, -1502002290); b = ff(b, c, d, a, k[15], 22, 1236535329);
+          a = gg(a, b, c, d, k[1], 5, -165796510); d = gg(d, a, b, c, k[6], 9, -1069501632);
+          c = gg(c, d, a, b, k[11], 14, 643717713); b = gg(b, c, d, a, k[0], 20, -373897302);
+          a = gg(a, b, c, d, k[5], 5, -701558691); d = gg(d, a, b, c, k[10], 9, 38016083);
+          c = gg(c, d, a, b, k[15], 14, -660478335); b = gg(b, c, d, a, k[4], 20, -405537848);
+          a = gg(a, b, c, d, k[9], 5, 568446438); d = gg(d, a, b, c, k[14], 9, -1019803690);
+          c = gg(c, d, a, b, k[3], 14, -187363961); b = gg(b, c, d, a, k[8], 20, 1163531501);
+          a = gg(a, b, c, d, k[13], 5, -1444681467); d = gg(d, a, b, c, k[2], 9, -51403784);
+          c = gg(c, d, a, b, k[7], 14, 1735328473); b = gg(b, c, d, a, k[12], 20, -1926607734);
+          a = hh(a, b, c, d, k[5], 4, -378558); d = hh(d, a, b, c, k[8], 11, -2022574463);
+          c = hh(c, d, a, b, k[11], 16, 1839030562); b = hh(b, c, d, a, k[14], 23, -35309556);
+          a = hh(a, b, c, d, k[1], 4, -1530992060); d = hh(d, a, b, c, k[4], 11, 1272893353);
+          c = hh(c, d, a, b, k[7], 16, -155497632); b = hh(b, c, d, a, k[10], 23, -1094730640);
+          a = hh(a, b, c, d, k[13], 4, 681279174); d = hh(d, a, b, c, k[0], 11, -358537222);
+          c = hh(c, d, a, b, k[3], 16, -722521979); b = hh(b, c, d, a, k[6], 23, 76029189);
+          a = hh(a, b, c, d, k[9], 4, -640364487); d = hh(d, a, b, c, k[12], 11, -421815835);
+          c = hh(c, d, a, b, k[15], 16, 530742520); b = hh(b, c, d, a, k[2], 23, -995338651);
+          a = ii(a, b, c, d, k[0], 6, -198630844); d = ii(d, a, b, c, k[7], 10, 1126891415);
+          c = ii(c, d, a, b, k[14], 15, -1416354905); b = ii(b, c, d, a, k[5], 21, -57434055);
+          a = ii(a, b, c, d, k[12], 6, 1700485571); d = ii(d, a, b, c, k[3], 10, -1894986606);
+          c = ii(c, d, a, b, k[10], 15, -1051523); b = ii(b, c, d, a, k[1], 21, -2054922799);
+          a = ii(a, b, c, d, k[8], 6, 1873313359); d = ii(d, a, b, c, k[15], 10, -30611744);
+          c = ii(c, d, a, b, k[6], 15, -1560198380); b = ii(b, c, d, a, k[13], 21, 1309151649);
+          a = ii(a, b, c, d, k[4], 6, -145523070); d = ii(d, a, b, c, k[11], 10, -1120210379);
+          c = ii(c, d, a, b, k[2], 15, 718787259); b = ii(b, c, d, a, k[9], 21, -343485551);
+          x[0] = add32(a, x[0]); x[1] = add32(b, x[1]); x[2] = add32(c, x[2]); x[3] = add32(d, x[3]);
+        }
+        function cmn(q, a, b, x, s, t) { a = add32(add32(a, q), add32(x, t)); return add32((a << s) | (a >>> (32 - s)), b); }
+        function ff(a, b, c, d, x, s, t) { return cmn((b & c) | ((~b) & d), a, b, x, s, t); }
+        function gg(a, b, c, d, x, s, t) { return cmn((b & d) | (c & (~d)), a, b, x, s, t); }
+        function hh(a, b, c, d, x, s, t) { return cmn(b ^ c ^ d, a, b, x, s, t); }
+        function ii(a, b, c, d, x, s, t) { return cmn(c ^ (b | (~d)), a, b, x, s, t); }
+        function add32(a, b) { return (a + b) & 0xFFFFFFFF; }
+
+        var n = bytes.length;
+        var state = [1732584193, -271733879, -1732584194, 271733878];
+        var tail = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        var i, j;
+
+        for (i = 64; i <= n; i += 64) {
+          var block = [];
+          for (j = 0; j < 16; j++) {
+            block[j] = bytes[i - 64 + j * 4] | (bytes[i - 64 + j * 4 + 1] << 8) | (bytes[i - 64 + j * 4 + 2] << 16) | (bytes[i - 64 + j * 4 + 3] << 24);
+          }
+          md5cycle(state, block);
+        }
+
+        for (j = 0; j < 16; j++) tail[j] = 0;
+        var rem = n % 64;
+        for (j = 0; j < rem; j++) {
+          tail[j >> 2] |= bytes[n - rem + j] << ((j % 4) << 3);
+        }
+        tail[j >> 2] |= 0x80 << ((j % 4) << 3);
+        if (j > 55) { md5cycle(state, tail); for (j = 0; j < 16; j++) tail[j] = 0; }
+        tail[14] = n * 8;
+        tail[15] = 0;
+        md5cycle(state, tail);
+
+        var hex = '';
+        for (i = 0; i < 4; i++) {
+          for (j = 0; j < 4; j++) {
+            hex += ((state[i] >> (j * 8)) & 0xFF).toString(16).padStart(2, '0');
+          }
+        }
+        return hex;
+      }
+
+      async function generateHashes(data) {
+        var algos = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
+        var results = {};
+
+        results['MD5'] = md5(data);
+
+        for (var i = 0; i < algos.length; i++) {
+          var hash = await crypto.subtle.digest(algos[i], data);
+          results[algos[i]] = bufToHex(hash);
+        }
+        return results;
+      }
+
+      generateBtn.addEventListener('click', async function() {
+        var data;
+        if (activeTab === 'text') {
+          var text = textInput.value;
+          if (!text) { alert('Please enter some text to hash.'); return; }
+          data = new TextEncoder().encode(text).buffer;
+        } else {
+          if (!currentFile) { alert('Please select a file to hash.'); return; }
+          data = await currentFile.arrayBuffer();
+        }
+
+        generateBtn.textContent = 'Generating...';
+        generateBtn.disabled = true;
+
+        try {
+          generatedHashes = await generateHashes(data);
+          var html = '';
+          var algos = ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
+          algos.forEach(function(algo) {
+            html += '<div class="hash-row"><div class="hash-label">' + algo + '</div>' +
+              '<div class="hash-value"><code>' + generatedHashes[algo] + '</code>' +
+              '<button class="copy-btn" data-hash="' + generatedHashes[algo] + '">Copy</button></div></div>';
+          });
+          hashResults.innerHTML = html;
+          resultsPanel.style.display = 'block';
+
+          hashResults.querySelectorAll('.copy-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              navigator.clipboard.writeText(btn.getAttribute('data-hash'));
+              btn.textContent = 'Copied!';
+              setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+            });
+          });
+        } catch(e) {
+          alert('Error generating hashes: ' + e.message);
+        } finally {
+          generateBtn.textContent = 'Generate Hashes';
+          generateBtn.disabled = false;
+        }
+      });
+
+      verifyBtn.addEventListener('click', function() {
+        var expected = verifyInput.value.trim().toLowerCase();
+        if (!expected) return;
+        var matched = false;
+        Object.keys(generatedHashes).forEach(function(algo) {
+          if (generatedHashes[algo].toLowerCase() === expected) matched = true;
+        });
+        verifyResult.className = 'verify-result ' + (matched ? 'match' : 'no-match');
+        verifyResult.textContent = matched ? 'Hash matches! File integrity verified.' : 'No match found. The hash does not match any generated hash.';
+      });
+    })();
+
+    // ==================== REGEX TOOL ====================
+    (function() {
+      var regexInput = document.getElementById('regexPattern');
+      var flagsInput = document.getElementById('regexFlags');
+      var testString = document.getElementById('regexTestString');
+      var highlightArea = document.getElementById('regexHighlight');
+      var matchInfo = document.getElementById('regexMatchInfo');
+      var matchesList = document.getElementById('regexMatchesList');
+      var errorMsg = document.getElementById('regexError');
+      var refToggle = document.getElementById('regexRefToggle');
+      var refGrid = document.getElementById('regexRefGrid');
+
+      refToggle.addEventListener('click', function() { refGrid.classList.toggle('open'); });
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function runTest() {
+        var pattern = regexInput.value;
+        var flags = flagsInput.value;
+        var text = testString.value;
+
+        errorMsg.style.display = 'none';
+        highlightArea.innerHTML = escapeHtml(text);
+        matchInfo.innerHTML = '';
+        matchesList.innerHTML = '';
+
+        if (!pattern || !text) return;
+
+        var regex;
+        try {
+          regex = new RegExp(pattern, flags);
+        } catch(e) {
+          errorMsg.textContent = e.message;
+          errorMsg.style.display = 'block';
+          return;
+        }
+
+        var matches = [];
+        var isGlobal = flags.indexOf('g') !== -1;
+
+        if (isGlobal) {
+          var m;
+          var safety = 0;
+          while ((m = regex.exec(text)) !== null && safety < 10000) {
+            matches.push({ index: m.index, length: m[0].length, full: m[0], groups: Array.from(m).slice(1) });
+            if (m[0].length === 0) { regex.lastIndex++; }
+            safety++;
+          }
+        } else {
+          var m = regex.exec(text);
+          if (m) {
+            matches.push({ index: m.index, length: m[0].length, full: m[0], groups: Array.from(m).slice(1) });
+          }
+        }
+
+        matchInfo.innerHTML =
+          '<span class="match-stat"><strong>' + matches.length + '</strong> match' + (matches.length !== 1 ? 'es' : '') + '</span>';
+
+        if (matches.length === 0) {
+          highlightArea.innerHTML = escapeHtml(text);
+          return;
+        }
+
+        var html = '';
+        var pos = 0;
+        matches.forEach(function(match) {
+          if (match.index > pos) {
+            html += escapeHtml(text.substring(pos, match.index));
+          }
+          html += '<span class="match-hl">' + escapeHtml(text.substring(match.index, match.index + match.length)) + '</span>';
+          pos = match.index + match.length;
+        });
+        if (pos < text.length) {
+          html += escapeHtml(text.substring(pos));
+        }
+        highlightArea.innerHTML = html;
+
+        var detailHtml = '';
+        matches.forEach(function(match, i) {
+          detailHtml += '<div class="match-item">';
+          detailHtml += '<div class="match-num">Match ' + (i + 1) + '</div>';
+          detailHtml += '<div class="match-full">' + escapeHtml(match.full) + '</div>';
+          detailHtml += '<div class="match-pos">Index: ' + match.index + ', Length: ' + match.length + '</div>';
+          if (match.groups.length > 0 && match.groups.some(function(g) { return g !== undefined; })) {
+            detailHtml += '<div class="match-groups">';
+            match.groups.forEach(function(g, gi) {
+              if (g !== undefined) {
+                detailHtml += 'Group ' + (gi + 1) + ': <span>' + escapeHtml(g) + '</span> ';
+              }
+            });
+            detailHtml += '</div>';
+          }
+          detailHtml += '</div>';
+        });
+        matchesList.innerHTML = detailHtml;
+      }
+
+      regexInput.addEventListener('input', runTest);
+      flagsInput.addEventListener('input', runTest);
+      testString.addEventListener('input', runTest);
+    })();
+
+    // ==================== DIFF TOOL ====================
+    (function() {
+      var textA = document.getElementById('diffTextA');
+      var textB = document.getElementById('diffTextB');
+      var compareBtn = document.getElementById('diffCompareBtn');
+      var swapBtn = document.getElementById('diffSwapBtn');
+      var clearBtn = document.getElementById('diffClearBtn');
+      var diffOutput = document.getElementById('diffOutput');
+
+      swapBtn.addEventListener('click', function() {
+        var tmp = textA.value; textA.value = textB.value; textB.value = tmp;
+      });
+      clearBtn.addEventListener('click', function() {
+        textA.value = ''; textB.value = '';
+        diffOutput.innerHTML = '<div class="diff-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>Enter text in both fields and click Compare</div>';
+      });
+
+      function diff(a, b) {
+        var linesA = a.split('\n');
+        var linesB = b.split('\n');
+        var m = linesA.length, n = linesB.length;
+
+        var dp = [];
+        for (var i = 0; i <= m; i++) {
+          dp[i] = [];
+          for (var j = 0; j <= n; j++) {
+            if (i === 0 || j === 0) dp[i][j] = 0;
+            else if (linesA[i-1] === linesB[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
+            else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+          }
+        }
+
+        var result = [];
+        var i = m, j = n;
+        while (i > 0 || j > 0) {
+          if (i > 0 && j > 0 && linesA[i-1] === linesB[j-1]) {
+            result.unshift({ type: 'ctx', lineA: i, lineB: j, text: linesA[i-1] });
+            i--; j--;
+          } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+            result.unshift({ type: 'add', lineB: j, text: linesB[j-1] });
+            j--;
+          } else {
+            result.unshift({ type: 'del', lineA: i, text: linesA[i-1] });
+            i--;
+          }
+        }
+        return result;
+      }
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      compareBtn.addEventListener('click', function() {
+        var a = textA.value;
+        var b = textB.value;
+
+        if (!a && !b) {
+          diffOutput.innerHTML = '<div class="diff-placeholder" style="color:#ef4444;">Please enter text in both fields.</div>';
+          return;
+        }
+
+        var result = diff(a, b);
+        var adds = 0, dels = 0, unchanged = 0;
+        result.forEach(function(r) {
+          if (r.type === 'add') adds++;
+          else if (r.type === 'del') dels++;
+          else unchanged++;
+        });
+
+        var html = '<div class="diff-stats">';
+        html += '<span class="stat-badge additions">+ ' + adds + ' additions</span>';
+        html += '<span class="stat-badge deletions">- ' + dels + ' deletions</span>';
+        html += '<span class="stat-badge unchanged">' + unchanged + ' unchanged</span>';
+        html += '</div><div class="diff-output">';
+
+        var lineNumA = 0, lineNumB = 0;
+        result.forEach(function(r) {
+          var numA = '', numB = '';
+          if (r.type === 'ctx') { lineNumA++; lineNumB++; numA = lineNumA; numB = lineNumB; }
+          else if (r.type === 'del') { lineNumA++; numA = lineNumA; }
+          else { lineNumB++; numB = lineNumB; }
+          var prefix = r.type === 'add' ? '+' : r.type === 'del' ? '-' : ' ';
+          html += '<div class="diff-line ' + r.type + '">' +
+            '<div class="line-num">' + numA + '</div>' +
+            '<div class="line-num">' + numB + '</div>' +
+            '<div class="line-prefix">' + prefix + '</div>' +
+            '<div class="line-content">' + escapeHtml(r.text) + '</div></div>';
+        });
+
+        html += '</div>';
+        diffOutput.innerHTML = html;
+      });
+    })();
+
+  })();
+  </script>
+</body>
+</html>
