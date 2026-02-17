@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
+import Link from "next/link"
+import { ChevronLeft } from "lucide-react"
 import { TOOLS } from "@/lib/tools"
 import { SiteHeader } from "@/components/site-header"
-
-/** Strip the "/tools/" prefix to get the bare slug. */
-function slugToHtmlPath(slug: string): string {
-  return `/${slug}.html`
-}
+import { SiteFooter } from "@/components/site-footer"
+import { ToolClientContent } from "./client"
 
 function hrefToSlug(href: string): string {
   return href.replace(/^\/tools\//, "")
@@ -24,7 +23,6 @@ export async function generateMetadata({
   const { slug } = await params
   const tool = TOOLS.find((t) => hrefToSlug(t.href) === slug)
   if (!tool) return {}
-
   return {
     title: `${tool.title} — The Shield IT`,
     description: tool.description,
@@ -50,23 +48,33 @@ export default async function ToolPage({
   if (!tool) notFound()
 
   return (
-    /*
-     * The outer wrapper is exactly 100dvh tall with no overflow.
-     * SiteHeader is sticky at the top; the iframe fills the rest.
-     * The tool scrolls internally — no double scrollbars.
-     */
-    <div className="flex h-dvh flex-col overflow-hidden">
+    <div className="flex min-h-dvh flex-col bg-background">
       <SiteHeader />
-      <iframe
-        src={slugToHtmlPath(slug)}
-        title={tool.title}
-        aria-label={tool.description}
-        /*
-         * #060a12 matches the background color used by all HTML tool pages,
-         * preventing a white flash before the iframe's own CSS loads.
-         */
-        className="flex-1 w-full border-0 bg-[#060a12]"
-      />
+
+      {/* Per-tool breadcrumb + title bar */}
+      <div className="border-b border-border/50 bg-card/30 px-4 py-5 sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <Link
+            href="/"
+            className="mb-2 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+            All Tools
+          </Link>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">
+            {tool.title}
+          </h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {tool.description}
+          </p>
+        </div>
+      </div>
+
+      <main className="flex flex-1 flex-col">
+        <ToolClientContent slug={slug} />
+      </main>
+
+      <SiteFooter />
     </div>
   )
 }
