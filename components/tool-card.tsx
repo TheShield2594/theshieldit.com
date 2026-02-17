@@ -1,14 +1,23 @@
 "use client"
 
+import Link from "next/link"
 import {
   Mail, Search, Lock, Globe, KeyRound, FileDiff, Hash, Code,
   Braces, Regex, QrCode, CircleHelp, ShieldCheck, Activity,
   Shield, LockKeyhole, ArrowRight,
+  // Previously missing — added to match all icon strings in lib/tools.ts
+  Fingerprint, FileKey, PenLine, ShieldAlert,
+  Image as ImageIcon, MapPin, Link as LinkIcon, Key,
+  FileSearch, KeySquare, ShieldOff, Wifi, Radar, Wrench,
+  ScanSearch, Network, Clock, Star, History,
+  LayoutGrid, BookOpen, BookMarked, Book, Newspaper,
+  ClipboardList, Trophy, Drama,
 } from "lucide-react"
 import type { Tool } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  // Original entries
   mail: Mail,
   search: Search,
   lock: Lock,
@@ -25,13 +34,41 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   activity: Activity,
   shield: Shield,
   "lock-keyhole": LockKeyhole,
+  // Previously missing
+  fingerprint: Fingerprint,
+  "file-certificate": FileKey,
+  "pen-line": PenLine,
+  "shield-alert": ShieldAlert,
+  image: ImageIcon,
+  "map-pin": MapPin,
+  link: LinkIcon,
+  key: Key,
+  "file-search": FileSearch,
+  "key-square": KeySquare,
+  "shield-off": ShieldOff,
+  wifi: Wifi,
+  radar: Radar,
+  wrench: Wrench,
+  "scan-search": ScanSearch,
+  network: Network,
+  clock: Clock,
+  star: Star,
+  history: History,
+  "layout-grid": LayoutGrid,
+  "book-open": BookOpen,
+  "book-marked": BookMarked,
+  book: Book,
+  newspaper: Newspaper,
+  "clipboard-list": ClipboardList,
+  trophy: Trophy,
+  drama: Drama,
 }
 
 export function ToolCard({ tool, index }: { tool: Tool; index: number }) {
   const Icon = ICON_MAP[tool.icon] || Shield
 
   return (
-    <a
+    <Link
       href={tool.href}
       className={cn(
         "group relative flex flex-col gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-300",
@@ -74,6 +111,6 @@ export function ToolCard({ tool, index }: { tool: Tool; index: number }) {
         <span>Open tool</span>
         <ArrowRight className="h-3.5 w-3.5" />
       </div>
-    </a>
+    </Link>
   )
 }
