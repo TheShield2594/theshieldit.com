@@ -162,49 +162,49 @@ export default function JwtDecoder() {
                   <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.header.alg ?? "Unknown"))}</div>
                 </div>
 
-                {decoded.header.typ && (
+                {decoded.header.typ != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Type</div>
                     <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.header.typ))}</div>
                   </div>
                 )}
 
-                {decoded.payload.iss && (
+                {decoded.payload.iss != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Issuer</div>
                     <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.payload.iss))}</div>
                   </div>
                 )}
 
-                {decoded.payload.sub && (
+                {decoded.payload.sub != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Subject</div>
                     <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.payload.sub))}</div>
                   </div>
                 )}
 
-                {decoded.payload.aud && (
+                {decoded.payload.aud != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Audience</div>
                     <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.payload.aud))}</div>
                   </div>
                 )}
 
-                {decoded.payload.iat && (
+                {decoded.payload.iat != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Issued At</div>
                     <div className="text-sm font-medium text-foreground">{formatTimestamp(decoded.payload.iat)}</div>
                   </div>
                 )}
 
-                {decoded.payload.exp && (
+                {decoded.payload.exp != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Expires At</div>
                     <div className="text-sm font-medium text-foreground">{formatTimestamp(decoded.payload.exp)}</div>
                   </div>
                 )}
 
-                {decoded.payload.nbf && (
+                {decoded.payload.nbf != null && (
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">Not Before</div>
                     <div className="text-sm font-medium text-foreground">{formatTimestamp(decoded.payload.nbf)}</div>
