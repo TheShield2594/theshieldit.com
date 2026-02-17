@@ -523,3 +523,11 @@ export const TOOLS: Tool[] = [
     icon: "lock-keyhole",
   },
 ]
+
+/** Per-category tool counts, precomputed to avoid repeated TOOLS.filter() calls in render. */
+export const CATEGORY_COUNTS: Record<string, number> = Object.fromEntries(
+  CATEGORIES.map((c) => [
+    c.value,
+    c.value === "all" ? TOOLS.length : TOOLS.filter((t) => t.category === c.value).length,
+  ])
+)

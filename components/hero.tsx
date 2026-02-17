@@ -1,7 +1,8 @@
 import { Shield, Zap, Lock, Globe } from "lucide-react"
+import { TOOLS } from "@/lib/tools"
 
 const STATS = [
-  { icon: Zap, label: "Free tools", value: "45" },
+  { icon: Zap, label: "Free tools", value: String(TOOLS.length) },
   { icon: Lock, label: "No sign-up", value: "100%" },
   { icon: Globe, label: "In-browser", value: "All" },
 ]

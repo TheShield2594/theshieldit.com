@@ -38,6 +38,32 @@ const SOCIAL_LINKS = [
   },
 ]
 
+function SocialLinks({
+  linkClassName,
+  tabIndex,
+}: {
+  linkClassName: string
+  tabIndex?: number
+}) {
+  return (
+    <>
+      {SOCIAL_LINKS.map((link) => (
+        <a
+          key={link.label}
+          href={link.href}
+          className={linkClassName}
+          target={link.href.startsWith("mailto") ? undefined : "_blank"}
+          rel={link.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+          aria-label={link.label}
+          tabIndex={tabIndex}
+        >
+          {link.icon}
+        </a>
+      ))}
+    </>
+  )
+}
+
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -60,18 +86,9 @@ export function SiteHeader() {
 
         {/* Desktop social links */}
         <nav className="hidden items-center gap-1 md:flex" aria-label="Social links">
-          {SOCIAL_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              target={link.href.startsWith("mailto") ? undefined : "_blank"}
-              rel={link.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-              aria-label={link.label}
-            >
-              {link.icon}
-            </a>
-          ))}
+          <SocialLinks
+            linkClassName="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          />
         </nav>
 
         {/* Mobile hamburger */}
@@ -94,19 +111,10 @@ export function SiteHeader() {
         aria-hidden={!mobileOpen}
       >
         <nav className="flex items-center justify-center gap-3 px-4" aria-label="Social links">
-          {SOCIAL_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              target={link.href.startsWith("mailto") ? undefined : "_blank"}
-              rel={link.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-              aria-label={link.label}
-              tabIndex={mobileOpen ? 0 : -1}
-            >
-              {link.icon}
-            </a>
-          ))}
+          <SocialLinks
+            linkClassName="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            tabIndex={mobileOpen ? 0 : -1}
+          />
         </nav>
       </div>
     </header>

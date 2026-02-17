@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react"
 import { Search, X, SlidersHorizontal } from "lucide-react"
-import { TOOLS, CATEGORIES } from "@/lib/tools"
+import { TOOLS, CATEGORIES, CATEGORY_COUNTS } from "@/lib/tools"
 import { ToolCard } from "@/components/tool-card"
 import { cn } from "@/lib/utils"
 
@@ -90,9 +90,7 @@ export function ToolsGrid() {
         >
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.value
-            const count = cat.value === "all"
-              ? TOOLS.length
-              : TOOLS.filter((t) => t.category === cat.value).length
+            const count = CATEGORY_COUNTS[cat.value]
 
             return (
               <button
