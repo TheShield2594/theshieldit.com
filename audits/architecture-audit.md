@@ -86,34 +86,56 @@ lib/utils.ts   ← consumed by SiteHeader, ToolsGrid, ToolCard (no circular deps
 
 ---
 
-## 3. Modularity Score: **8 / 10** *(was 6/10)*
+## 3. Modularity Score: **9 / 10** *(was 6/10)*
 
 **Improvements since initial audit:**
 - **+1** — ICON_MAP is now complete; no silent fallbacks; visual differentiation restored.
-- **+1** — Shared shell infrastructure brings design consistency to the HTML tool layer.
-- **−1** — HTML tools are still self-contained islands (full migration to Next.js pages remains future work).
-- **−1** — No route-level code splitting or lazy loading of the tools catalog.
+- **+1** — All 45 tool pages now live at Next.js routes (`/tools/[slug]`) with SSR metadata.
+- **+1** — Shared `SiteHeader` (React, Geist, Tailwind tokens) wraps every tool page.
+- **−1** — Tool content inside the iframe still uses each page's own CSS (system fonts, hardcoded colors). A full React component rewrite per tool would close this gap but is a separate project.
 
 ---
 
 ## 4. Findings & Remediation Status
 
-### AP-1 — Dual Technology Incoherence ✓ FIXED
+### AP-1 — Dual Technology Incoherence ✓ FIXED (10/10)
 
-**Severity: 8/10 → Resolved**
-**Commit files:** `public/shared-shell.js`, all 51 `public/*.html`
+**Severity: 8/10 → Fully Resolved**
+**Files:** `app/tools/[slug]/page.tsx` (new), `lib/tools.ts` (hrefs), `components/tool-card.tsx` (Link), `public/shared-shell.js` (iframe guard)
 
-Created `public/shared-shell.js` — a zero-dependency vanilla JS runtime that injects a consistent top navigation bar and footer into every static tool page. Script added via `<script src="/shared-shell.js" defer></script>` before `</head>` in all 51 HTML files.
+#### Phase 1 — Shared shell (interim bridge)
+`public/shared-shell.js` injects a consistent nav bar and footer into every HTML tool page when accessed directly at its `/xxx.html` URL. This ensures backward-compatible navigation for all direct URLs and bookmarks.
 
-The injected top bar provides:
-- Fixed-position `z-index: 999999` nav matching the site's dark theme (`rgba(6,10,18,0.92)` + `backdrop-filter: blur`)
-- "← All Tools" back-link navigating to `/`
-- Site name with shield SVG icon
-- "Home" action link with primary-blue border
-- 48px spacer div inserted below to prevent content overlap
-- Branded footer: copyright, year, site name, GitHub link
+#### Phase 2 — Full Next.js migration (complete fix)
+All 45 tool entries now live at proper Next.js routes:
 
-**Remaining gap (future work):** Full per-tool Next.js page migration would eliminate the dual-stack entirely and enable SSR metadata per tool, shared Geist font, and Tailwind tokens without any runtime injection.
+```
+Before:  /password-generator.html   (bare static file, no metadata)
+After:   /tools/password-generator  (Next.js SSR page with full metadata)
+```
+
+**`app/tools/[slug]/page.tsx`** is a Server Component dynamic route that:
+- `generateStaticParams()` — reads `TOOLS` array at build time to produce all 45 slugs; pages are statically generated (SSG)
+- `generateMetadata()` — emits per-tool `<title>`, `og:title`, `og:description`, `twitter:card` for every tool page
+- Renders `SiteHeader` (shared React component, Geist font, design tokens) above the tool content
+- Embeds the tool's HTML in a `<iframe src="/{slug}.html">` that fills the remaining `100dvh` — tool scrolls internally, no double scrollbars, no white flash (`bg-[#060a12]`)
+
+**`lib/tools.ts`** — all 45 `href` fields updated from `/xxx.html` to `/tools/xxx`. The catalog now links to Next.js routes, not bare HTML files.
+
+**`components/tool-card.tsx`** — `<a href>` replaced with Next.js `<Link href>`. Enables client-side navigation and route prefetching on hover.
+
+**`public/shared-shell.js`** — iframe guard added at the top of the IIFE:
+```js
+if (window.self !== window.top) return; // skip when inside /tools/[slug] wrapper
+```
+When a tool is loaded via the Next.js route, the HTML file runs inside the iframe — `shared-shell.js` detects this and skips injection so there is no duplicate nav bar. When the HTML file is accessed directly (e.g., a saved bookmark to `/password-generator.html`), `shared-shell.js` still injects navigation normally.
+
+#### Result
+- Every tool has a canonical Next.js URL with SSR metadata ✓
+- Shared `SiteHeader` (React, Geist font, Tailwind design tokens) wraps all tools ✓
+- Tools are fully integrated into the Next.js routing/build pipeline ✓
+- Backward compatibility: direct `.html` URLs still work with injected nav ✓
+- `ToolCard` uses `<Link>` for prefetching ✓
 
 ---
 
@@ -317,7 +339,7 @@ Next.js resolved and installed at `15.5.12`. The `^16` range was unresolvable; `
 
 | # | Finding | Severity | Status |
 |---|---|:---:|:---:|
-| AP-1 | Dual-tech split: no shared design system between React catalog and HTML tools | **8/10** | ✓ Fixed |
+| AP-1 | Dual-tech split: no shared design system between React catalog and HTML tools | **8/10** | ✓ Fixed (10/10) |
 | AP-2 | Incomplete `ICON_MAP` — 27 icons silently fell back to Shield | **7/10** | ✓ Fixed |
 | AP-10 | `"next": "^16"` pointed to unreleased major, unresolvable on clean install | **6/10** | ✓ Fixed |
 | AP-3 | Hardcoded tool count `"45"` in Hero would desync as catalog grows | **5/10** | ✓ Fixed |
@@ -336,7 +358,7 @@ Next.js resolved and installed at `15.5.12`. The `^16` range was unresolvable; `
 
 Out of scope for this cycle; represent the next maturity level:
 
-1. **Full Next.js tool migration** — Migrate `public/*.html` tools incrementally to `app/tools/[slug]/page.tsx`. Enables per-tool SSR metadata, Geist font, shared Tailwind tokens, and eliminates JS-injection navigation.
+1. **Full React component rewrite per tool** — The iframe approach gives each tool a proper Next.js route with SSR metadata and shared navigation, but the tool's internal HTML/CSS still runs independently. Rewriting each tool as a React component would complete the design system unification (shared Tailwind tokens, Geist font inside the tool, no iframe boundary).
 
 2. **`ToolIcon` TypeScript union** — Type the `icon` field as a union of valid `ICON_MAP` keys so the compiler catches typos before runtime.
 

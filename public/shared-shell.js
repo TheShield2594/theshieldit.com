@@ -10,6 +10,13 @@
 (function () {
   "use strict";
 
+  /*
+   * When this page is loaded inside the Next.js tool wrapper at
+   * /tools/[slug], the parent page already provides navigation via
+   * SiteHeader. Skip injection to avoid a double nav bar.
+   */
+  if (window.self !== window.top) return;
+
   var SITE_URL = "/";
   var SITE_NAME = "The Shield IT";
   var NAV_HEIGHT = 48;
