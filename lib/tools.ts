@@ -13,12 +13,14 @@ export interface Tool {
 
 export const CATEGORIES: { value: string; label: string }[] = [
   { value: "all", label: "All Tools" },
+  { value: "security", label: "Security" },
   { value: "developer", label: "Developer" },
   { value: "education", label: "Education" },
-  { value: "security", label: "Security" },
 ]
 
 export const TOOLS: Tool[] = [
+  // ─── Security ────────────────────────────────────────────────────────
+
   {
     title: "Browser Fingerprint Test",
     description:
@@ -29,17 +31,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Privacy",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "fingerprint",
-  },
-  {
-    title: "Browser Privacy Comparison",
-    description:
-      "Compare privacy and security features across popular browsers. Find the most private browser for your needs.",
-    href: "/browser-comparison.html",
-    tags: "browser comparison privacy security features firefox chrome brave safari edge",
-    category: "education",
-    tagLabel: "Comparison",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "layout-grid",
   },
   {
     title: "Certificate Decoder",
@@ -53,26 +44,15 @@ export const TOOLS: Tool[] = [
     icon: "file-certificate",
   },
   {
-    title: "Data Breach Timeline",
+    title: "Digital Signature Verifier",
     description:
-      "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
-    href: "/breach-timeline.html",
-    tags: "data breach timeline history visualization cybersecurity incidents",
-    category: "education",
-    tagLabel: "Timeline",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "activity",
-  },
-  {
-    title: "Developer Swiss Army Knife",
-    description:
-      "All-in-one developer toolkit. Base64 encoding, JSON formatting, hash generation, regex testing, and text diff in one place.",
-    href: "/dev-tools.html",
-    tags: "base64 encoder decoder json formatter validator hash generator md5 sha256 regex tester text diff compare developer tools",
-    category: "developer",
-    tagLabel: "Developer",
+      "Verify digital signatures using RSA-PKCS1, RSA-PSS, and ECDSA algorithms. Client-side verification with the Web Crypto API.",
+    href: "/digital-signature-verifier.html",
+    tags: "digital signature verifier rsa ecdsa pkcs pss sha256 cryptography verify web crypto",
+    category: "security",
+    tagLabel: "Crypto",
     iconColor: "text-primary bg-primary/10",
-    icon: "wrench",
+    icon: "pen-line",
   },
   {
     title: "DNS Leak Test",
@@ -108,17 +88,6 @@ export const TOOLS: Tool[] = [
     icon: "image",
   },
   {
-    title: "Hash Generator & Verifier",
-    description:
-      "Generate and verify cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512). Check file integrity and verify checksums.",
-    href: "/hash-generator.html",
-    tags: "hash generator md5 sha1 sha256 sha512 checksum integrity verifier",
-    category: "developer",
-    tagLabel: "Crypto",
-    iconColor: "text-primary bg-primary/10",
-    icon: "hash",
-  },
-  {
     title: "IP Address Lookup",
     description:
       "Look up detailed information about any IP address including location, ISP, and network details.",
@@ -128,17 +97,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analysis",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "map-pin",
-  },
-  {
-    title: "JWT Decoder & Validator",
-    description:
-      "Decode and validate JSON Web Tokens. Inspect header, payload, signature, and check expiration dates.",
-    href: "/jwt-decoder.html",
-    tags: "jwt json web token decoder validator auth authentication bearer",
-    category: "developer",
-    tagLabel: "Decoder",
-    iconColor: "text-primary bg-primary/10",
-    icon: "key-round",
   },
   {
     title: "Link Safety Checker",
@@ -174,6 +132,17 @@ export const TOOLS: Tool[] = [
     icon: "key",
   },
   {
+    title: "Password Manager Comparison",
+    description:
+      "Compare the top password managers: Bitwarden, 1Password, KeePassXC, Proton Pass, Dashlane, and more on features, security, and pricing.",
+    href: "/password-manager-comparison.html",
+    tags: "password manager comparison bitwarden 1password keepass proton security open source",
+    category: "security",
+    tagLabel: "Comparison",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "key-round",
+  },
+  {
     title: "Password Strength Tester",
     description:
       "Test password strength with real-time entropy calculation and visual indicators.",
@@ -183,83 +152,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Security",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "key-round",
-  },
-  {
-    title: "Phishing Email Quiz",
-    description:
-      "Test your ability to spot phishing emails with 20 realistic scenarios and detailed explanations.",
-    href: "/phishing-quiz.html",
-    tags: "phishing quiz test email scam awareness training spot phishing",
-    category: "education",
-    tagLabel: "Quiz",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "circle-help",
-  },
-  {
-    title: "Privacy Guardian",
-    description:
-      "Interactive dialogue adventure where you make real privacy decisions and level up your security skills through scenario-based choices.",
-    href: "/privacy-rpg.html",
-    tags: "privacy guardian game dialogue adventure security scenarios interactive",
-    category: "education",
-    tagLabel: "Game",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "shield",
-  },
-  {
-    title: "Privacy Score Calculator",
-    description:
-      "Rate your digital privacy habits and get personalized recommendations to improve.",
-    href: "/privacy-score.html",
-    tags: "privacy score calculator assessment digital habits security rating",
-    category: "education",
-    tagLabel: "Assessment",
-    iconColor: "text-accent bg-accent/10",
-    icon: "shield-check",
-  },
-  {
-    title: "QR Code Generator",
-    description:
-      "Generate QR codes from text, URLs, WiFi credentials, and more. Download as PNG or SVG.",
-    href: "/qr-code.html",
-    tags: "qr code generator encode barcode",
-    category: "developer",
-    tagLabel: "Generator",
-    iconColor: "text-primary bg-primary/10",
-    icon: "qr-code",
-  },
-  {
-    title: "RSA Key Pair Generator",
-    description:
-      "Generate RSA key pairs for encryption and digital signatures. Create public and private keys with customizable key sizes.",
-    href: "/rsa-key-generator.html",
-    tags: "rsa key pair generator public private encryption signature crypto pgp",
-    category: "security",
-    tagLabel: "Crypto",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "key-square",
-  },
-  {
-    title: "Security Trivia Challenge",
-    description:
-      "Test your cybersecurity knowledge with our interactive trivia game. Learn about privacy, security, and best practices.",
-    href: "/security-trivia.html",
-    tags: "security trivia quiz game challenge test knowledge cybersecurity",
-    category: "education",
-    tagLabel: "Game",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "trophy",
-  },
-  {
-    title: "Subnet Calculator",
-    description:
-      "Calculate subnet masks, network addresses, broadcast addresses, and host ranges for IPv4 networks.",
-    href: "/subnet-calculator.html",
-    tags: "subnet calculator network cidr ip address mask networking",
-    category: "developer",
-    tagLabel: "Calculator",
-    iconColor: "text-primary bg-primary/10",
-    icon: "network",
   },
   {
     title: "Privacy Policy Analyzer",
@@ -273,6 +165,17 @@ export const TOOLS: Tool[] = [
     icon: "file-search",
   },
   {
+    title: "RSA Key Pair Generator",
+    description:
+      "Generate RSA key pairs for encryption and digital signatures. Create public and private keys with customizable key sizes.",
+    href: "/rsa-key-generator.html",
+    tags: "rsa key pair generator public private encryption signature crypto pgp",
+    category: "security",
+    tagLabel: "Crypto",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "key-square",
+  },
+  {
     title: "Tracker Blocker Test",
     description:
       "Test if your ad blocker or privacy extension is blocking known trackers. Check protection against Google Analytics, Facebook Pixel, and more.",
@@ -284,81 +187,15 @@ export const TOOLS: Tool[] = [
     icon: "shield-off",
   },
   {
-    title: "WiFi Security Analyzer",
+    title: "VPN Comparison Matrix",
     description:
-      "Assess your wireless network security settings. Check WPA3 encryption, router configuration, and get actionable recommendations.",
-    href: "/wifi-security-analyzer.html",
-    tags: "wifi security analyzer wpa3 wpa2 router encryption wireless network security assessment",
+      "Compare leading VPN services on privacy, logging policy, jurisdiction, features, and price. Includes Mullvad, ProtonVPN, NordVPN, and more.",
+    href: "/vpn-comparison.html",
+    tags: "vpn comparison matrix mullvad protonvpn nordvpn wireguard no-logs jurisdiction privacy",
     category: "security",
-    tagLabel: "Analyzer",
+    tagLabel: "Comparison",
     iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "wifi",
-  },
-  {
-    title: "Port Scanner",
-    description:
-      "Scan common ports on localhost to audit locally running services. Useful for developers to discover exposed databases and servers.",
-    href: "/port-scanner.html",
-    tags: "port scanner localhost network scan open ports tcp services security audit developer",
-    category: "developer",
-    tagLabel: "Scanner",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "scan-search",
-  },
-  {
-    title: "Digital Signature Verifier",
-    description:
-      "Verify digital signatures using RSA-PKCS1, RSA-PSS, and ECDSA algorithms. Client-side verification with the Web Crypto API.",
-    href: "/digital-signature-verifier.html",
-    tags: "digital signature verifier rsa ecdsa pkcs pss sha256 cryptography verify web crypto",
-    category: "security",
-    tagLabel: "Crypto",
-    iconColor: "text-primary bg-primary/10",
-    icon: "pen-line",
-  },
-  {
-    title: "URL Encoder / Decoder",
-    description:
-      "Encode and decode URLs and URL components. Supports encodeURI, decodeURI, and encodeURIComponent modes for safe URL handling.",
-    href: "/url-encoder.html",
-    tags: "url encoder decoder encodeURI decodeURI encodeURIComponent percent encoding developer utility",
-    category: "developer",
-    tagLabel: "Encoder",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "link",
-  },
-  {
-    title: "UUID Generator",
-    description:
-      "Generate universally unique identifiers (UUIDs). Supports v1 (timestamp-based) and v4 (random) with batch generation and multiple format options.",
-    href: "/uuid-generator.html",
-    tags: "uuid generator v1 v4 guid unique identifier random batch developer utility",
-    category: "developer",
-    tagLabel: "Generator",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "fingerprint",
-  },
-  {
-    title: "Unix Timestamp Converter",
-    description:
-      "Convert between Unix timestamps and human-readable dates. Supports seconds and milliseconds with multiple output formats including UTC, local, and ISO 8601.",
-    href: "/timestamp-converter.html",
-    tags: "unix timestamp converter epoch date time utc iso 8601 developer utility",
-    category: "developer",
-    tagLabel: "Converter",
-    iconColor: "text-primary bg-primary/10",
-    icon: "clock",
-  },
-  {
-    title: "Vendor Lock-In Score",
-    description:
-      "Score your vendor lock-in risk across 9 dimensions. Track services and plan your exit strategy.",
-    href: "/vendor-lock-in.html",
-    tags: "vendor lock-in score risk assessment cloud saas dependency portability",
-    category: "education",
-    tagLabel: "Assessment",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "lock-keyhole",
+    icon: "shield-check",
   },
   {
     title: "WebRTC Leak Test",
@@ -383,48 +220,164 @@ export const TOOLS: Tool[] = [
     icon: "radar",
   },
   {
-    title: "VPN Comparison Matrix",
+    title: "WiFi Security Analyzer",
     description:
-      "Compare leading VPN services on privacy, logging policy, jurisdiction, features, and price. Includes Mullvad, ProtonVPN, NordVPN, and more.",
-    href: "/vpn-comparison.html",
-    tags: "vpn comparison matrix mullvad protonvpn nordvpn wireguard no-logs jurisdiction privacy",
+      "Assess your wireless network security settings. Check WPA3 encryption, router configuration, and get actionable recommendations.",
+    href: "/wifi-security-analyzer.html",
+    tags: "wifi security analyzer wpa3 wpa2 router encryption wireless network security assessment",
     category: "security",
-    tagLabel: "Comparison",
+    tagLabel: "Analyzer",
     iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "shield-check",
+    icon: "wifi",
+  },
+
+  // ─── Developer ───────────────────────────────────────────────────────
+
+  {
+    title: "Developer Swiss Army Knife",
+    description:
+      "All-in-one developer toolkit. Base64 encoding, JSON formatting, hash generation, regex testing, and text diff in one place.",
+    href: "/dev-tools.html",
+    tags: "base64 encoder decoder json formatter validator hash generator md5 sha256 regex tester text diff compare developer tools",
+    category: "developer",
+    tagLabel: "Developer",
+    iconColor: "text-primary bg-primary/10",
+    icon: "wrench",
   },
   {
-    title: "Password Manager Comparison",
+    title: "Hash Generator & Verifier",
     description:
-      "Compare the top password managers: Bitwarden, 1Password, KeePassXC, Proton Pass, Dashlane, and more on features, security, and pricing.",
-    href: "/password-manager-comparison.html",
-    tags: "password manager comparison bitwarden 1password keepass proton security open source",
-    category: "security",
-    tagLabel: "Comparison",
-    iconColor: "text-chart-2 bg-chart-2/10",
+      "Generate and verify cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512). Check file integrity and verify checksums.",
+    href: "/hash-generator.html",
+    tags: "hash generator md5 sha1 sha256 sha512 checksum integrity verifier",
+    category: "developer",
+    tagLabel: "Crypto",
+    iconColor: "text-primary bg-primary/10",
+    icon: "hash",
+  },
+  {
+    title: "JWT Decoder & Validator",
+    description:
+      "Decode and validate JSON Web Tokens. Inspect header, payload, signature, and check expiration dates.",
+    href: "/jwt-decoder.html",
+    tags: "jwt json web token decoder validator auth authentication bearer",
+    category: "developer",
+    tagLabel: "Decoder",
+    iconColor: "text-primary bg-primary/10",
     icon: "key-round",
   },
   {
-    title: "Social Engineering Escape Room",
+    title: "Port Scanner",
     description:
-      "Interactive escape room with 8 scenarios. Identify and avoid phishing, vishing, pretexting, baiting, and tailgating attacks before it's too late.",
-    href: "/social-engineering-escape-room.html",
-    tags: "social engineering escape room phishing vishing pretexting baiting tailgating interactive game",
-    category: "education",
-    tagLabel: "Game",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "drama",
+      "Scan common ports on localhost to audit locally running services. Useful for developers to discover exposed databases and servers.",
+    href: "/port-scanner.html",
+    tags: "port scanner localhost network scan open ports tcp services security audit developer",
+    category: "developer",
+    tagLabel: "Scanner",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "scan-search",
   },
   {
-    title: "Password Cracking Simulator",
+    title: "QR Code Generator",
     description:
-      "See how long it takes to crack any password using dictionary attacks, GPU brute force, and bcrypt. Educational — nothing is sent to any server.",
-    href: "/password-cracking-simulator.html",
-    tags: "password cracking simulator brute force dictionary gpu strength entropy educational",
+      "Generate QR codes from text, URLs, WiFi credentials, and more. Download as PNG or SVG.",
+    href: "/qr-code.html",
+    tags: "qr code generator encode barcode",
+    category: "developer",
+    tagLabel: "Generator",
+    iconColor: "text-primary bg-primary/10",
+    icon: "qr-code",
+  },
+  {
+    title: "Subnet Calculator",
+    description:
+      "Calculate subnet masks, network addresses, broadcast addresses, and host ranges for IPv4 networks.",
+    href: "/subnet-calculator.html",
+    tags: "subnet calculator network cidr ip address mask networking",
+    category: "developer",
+    tagLabel: "Calculator",
+    iconColor: "text-primary bg-primary/10",
+    icon: "network",
+  },
+  {
+    title: "Unix Timestamp Converter",
+    description:
+      "Convert between Unix timestamps and human-readable dates. Supports seconds and milliseconds with multiple output formats including UTC, local, and ISO 8601.",
+    href: "/timestamp-converter.html",
+    tags: "unix timestamp converter epoch date time utc iso 8601 developer utility",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-primary bg-primary/10",
+    icon: "clock",
+  },
+  {
+    title: "URL Encoder / Decoder",
+    description:
+      "Encode and decode URLs and URL components. Supports encodeURI, decodeURI, and encodeURIComponent modes for safe URL handling.",
+    href: "/url-encoder.html",
+    tags: "url encoder decoder encodeURI decodeURI encodeURIComponent percent encoding developer utility",
+    category: "developer",
+    tagLabel: "Encoder",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "link",
+  },
+  {
+    title: "UUID Generator",
+    description:
+      "Generate universally unique identifiers (UUIDs). Supports v1 (timestamp-based) and v4 (random) with batch generation and multiple format options.",
+    href: "/uuid-generator.html",
+    tags: "uuid generator v1 v4 guid unique identifier random batch developer utility",
+    category: "developer",
+    tagLabel: "Generator",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "fingerprint",
+  },
+  {
+    title: "Favorite Tools",
+    description:
+      "Bookmark your most-used security tools for quick access. Favorites stored locally in your browser — export and import across devices.",
+    href: "/favorites.html",
+    tags: "favorites bookmarks saved tools localStorage quick access",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "star",
+  },
+  {
+    title: "Tool History",
+    description:
+      "View your recently used tools. History stored entirely in your browser's localStorage — nothing is sent to any server.",
+    href: "/tool-history.html",
+    tags: "tool history recent visited localStorage browser privacy",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "history",
+  },
+
+  // ─── Education ───────────────────────────────────────────────────────
+
+  {
+    title: "Browser Privacy Comparison",
+    description:
+      "Compare privacy and security features across popular browsers. Find the most private browser for your needs.",
+    href: "/browser-comparison.html",
+    tags: "browser comparison privacy security features firefox chrome brave safari edge",
     category: "education",
-    tagLabel: "Simulator",
+    tagLabel: "Comparison",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "layout-grid",
+  },
+  {
+    title: "Data Breach Timeline",
+    description:
+      "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
+    href: "/breach-timeline.html",
+    tags: "data breach timeline history visualization cybersecurity incidents",
+    category: "education",
+    tagLabel: "Timeline",
     iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "key",
+    icon: "activity",
   },
   {
     title: "Network Defense Game",
@@ -438,6 +391,28 @@ export const TOOLS: Tool[] = [
     icon: "shield",
   },
   {
+    title: "Password Cracking Simulator",
+    description:
+      "See how long it takes to crack any password using dictionary attacks, GPU brute force, and bcrypt. Educational — nothing is sent to any server.",
+    href: "/password-cracking-simulator.html",
+    tags: "password cracking simulator brute force dictionary gpu strength entropy educational",
+    category: "education",
+    tagLabel: "Simulator",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "key",
+  },
+  {
+    title: "Phishing Email Quiz",
+    description:
+      "Test your ability to spot phishing emails with 20 realistic scenarios and detailed explanations.",
+    href: "/phishing-quiz.html",
+    tags: "phishing quiz test email scam awareness training spot phishing",
+    category: "education",
+    tagLabel: "Quiz",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "circle-help",
+  },
+  {
     title: "Privacy 101 Guide",
     description:
       "Beginner's guide to digital privacy. Learn what data is collected, how to protect it, and which tools matter most — no tech background needed.",
@@ -449,15 +424,26 @@ export const TOOLS: Tool[] = [
     icon: "book-open",
   },
   {
-    title: "Security Basics Guide",
+    title: "Privacy Guardian",
     description:
-      "Understand cybersecurity fundamentals. Learn about common attacks, core security principles, phishing recognition, malware prevention, and backups.",
-    href: "/guide-security-basics.html",
-    tags: "security basics guide beginner phishing malware ransomware updates backup principles",
+      "Interactive dialogue adventure where you make real privacy decisions and level up your security skills through scenario-based choices.",
+    href: "/privacy-rpg.html",
+    tags: "privacy guardian game dialogue adventure security scenarios interactive",
     category: "education",
-    tagLabel: "Guide",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "book",
+    tagLabel: "Game",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "shield",
+  },
+  {
+    title: "Privacy Score Calculator",
+    description:
+      "Rate your digital privacy habits and get personalized recommendations to improve.",
+    href: "/privacy-score.html",
+    tags: "privacy score calculator assessment digital habits security rating",
+    category: "education",
+    tagLabel: "Assessment",
+    iconColor: "text-accent bg-accent/10",
+    icon: "shield-check",
   },
   {
     title: "Security & Privacy Glossary",
@@ -471,15 +457,15 @@ export const TOOLS: Tool[] = [
     icon: "book-marked",
   },
   {
-    title: "Security Cheat Sheets",
+    title: "Security Basics Guide",
     description:
-      "Quick reference cards for security and privacy: password rules, phishing red flags, incident response, backup strategy, and browser hardening.",
-    href: "/cheat-sheets.html",
-    tags: "cheat sheets security privacy reference quick guide passwords phishing backup 2fa",
+      "Understand cybersecurity fundamentals. Learn about common attacks, core security principles, phishing recognition, malware prevention, and backups.",
+    href: "/guide-security-basics.html",
+    tags: "security basics guide beginner phishing malware ransomware updates backup principles",
     category: "education",
-    tagLabel: "Reference",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "clipboard-list",
+    tagLabel: "Guide",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "book",
   },
   {
     title: "Security Blog",
@@ -493,25 +479,47 @@ export const TOOLS: Tool[] = [
     icon: "newspaper",
   },
   {
-    title: "Tool History",
+    title: "Security Cheat Sheets",
     description:
-      "View your recently used tools. History stored entirely in your browser's localStorage — nothing is sent to any server.",
-    href: "/tool-history.html",
-    tags: "tool history recent visited localStorage browser privacy",
-    category: "developer",
-    tagLabel: "Utility",
-    iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "history",
+      "Quick reference cards for security and privacy: password rules, phishing red flags, incident response, backup strategy, and browser hardening.",
+    href: "/cheat-sheets.html",
+    tags: "cheat sheets security privacy reference quick guide passwords phishing backup 2fa",
+    category: "education",
+    tagLabel: "Reference",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "clipboard-list",
   },
   {
-    title: "Favorite Tools",
+    title: "Security Trivia Challenge",
     description:
-      "Bookmark your most-used security tools for quick access. Favorites stored locally in your browser — export and import across devices.",
-    href: "/favorites.html",
-    tags: "favorites bookmarks saved tools localStorage quick access",
-    category: "developer",
-    tagLabel: "Utility",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "star",
+      "Test your cybersecurity knowledge with our interactive trivia game. Learn about privacy, security, and best practices.",
+    href: "/security-trivia.html",
+    tags: "security trivia quiz game challenge test knowledge cybersecurity",
+    category: "education",
+    tagLabel: "Game",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "trophy",
+  },
+  {
+    title: "Social Engineering Escape Room",
+    description:
+      "Interactive escape room with 8 scenarios. Identify and avoid phishing, vishing, pretexting, baiting, and tailgating attacks before it's too late.",
+    href: "/social-engineering-escape-room.html",
+    tags: "social engineering escape room phishing vishing pretexting baiting tailgating interactive game",
+    category: "education",
+    tagLabel: "Game",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "drama",
+  },
+  {
+    title: "Vendor Lock-In Score",
+    description:
+      "Score your vendor lock-in risk across 9 dimensions. Track services and plan your exit strategy.",
+    href: "/vendor-lock-in.html",
+    tags: "vendor lock-in score risk assessment cloud saas dependency portability",
+    category: "education",
+    tagLabel: "Assessment",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "lock-keyhole",
   },
 ]
