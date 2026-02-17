@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL/TLS Certificate Decoder | The Shield IT</title>
+    <meta name="description" content="Decode and analyze SSL/TLS certificates. View certificate details, validity dates, subject information, and extensions.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .cert-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .cert-section h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .cert-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cert-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .cert-label {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .cert-value {
+            color: #e2e8f0;
+            word-break: break-all;
+        }
+
+        .validity-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .validity-badge.valid {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .validity-badge.expired {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .validity-badge.future {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .cert-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .tab.active {
+                border-left-color: #3b82f6;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔐 Certificate Decoder</h1>
+            <p class="subtitle">Decode and analyze SSL/TLS certificates</p>
+        </header>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'paste')">📋 Paste Certificate</button>
+                <button class="tab" onclick="switchTab(event, 'url')">🌐 Check URL</button>
+            </div>
+
+            <div id="pasteTab" class="tab-content active">
+                <div class="input-group">
+                    <label for="certInput">Certificate (PEM format)</label>
+                    <textarea id="certInput" placeholder="-----BEGIN CERTIFICATE-----
+MIIFazCCBFOgAwIBAgISBPKP...
+-----END CERTIFICATE-----"></textarea>
+                </div>
+
+                <button onclick="decodeCertificate()">🔍 Decode Certificate</button>
+            </div>
+
+            <div id="urlTab" class="tab-content">
+                <div class="input-group">
+                    <label for="urlInput">Website URL</label>
+                    <input type="text" id="urlInput" placeholder="https://example.com">
+                </div>
+
+                <button onclick="checkURL()">🔍 Check Certificate</button>
+
+                <div style="background: rgba(239, 158, 11, 0.1); border: 1px solid rgba(239, 158, 11, 0.3); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">
+                        <strong>Note:</strong> Due to browser security restrictions, certificate checking by URL works only for the current domain. For other sites, please paste the certificate in PEM format.
+                    </p>
+                </div>
+            </div>
+
+            <div id="results" style="display: none; margin-top: 30px;"></div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔐 About SSL/TLS Certificates</h3>
+            <ul>
+                <li><strong>Subject:</strong> Who the certificate is issued to (domain name, organization)</li>
+                <li><strong>Issuer:</strong> The Certificate Authority (CA) that issued the certificate</li>
+                <li><strong>Validity Period:</strong> When the certificate starts and expires</li>
+                <li><strong>Public Key:</strong> The cryptographic key used for encryption</li>
+                <li><strong>Signature:</strong> Cryptographic signature proving the certificate is authentic</li>
+                <li><strong>Extensions:</strong> Additional information like Subject Alternative Names (SANs)</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">💡 Common Uses</h3>
+            <ul>
+                <li>Verify certificate validity and expiration dates</li>
+                <li>Check Subject Alternative Names (SANs) for multi-domain certificates</li>
+                <li>Inspect certificate chain and issuer information</li>
+                <li>Troubleshoot SSL/TLS connection issues</li>
+                <li>Audit certificate configurations</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">⚠️ Privacy Note</h3>
+            <ul>
+                <li>All certificate decoding happens locally in your browser</li>
+                <li>No certificate data is sent to any server</li>
+                <li>Your certificates remain completely private</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js" integrity="sha384-K8qlH+IZ0xjHWawrshap7xJHslpNIKHn0TXN1bFxKPvPMC7Kp+pP8S5uKHPPcMPM" crossorigin="anonymous"></script>
+    <script>
+        function switchTab(event, tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+
+            // Clear results
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function decodeCertificate() {
+            const certPem = document.getElementById('certInput').value.trim();
+
+            if (!certPem) {
+                alert('Please enter a certificate in PEM format');
+                return;
+            }
+
+            try {
+                // Parse the certificate
+                const cert = new X509();
+                cert.readCertPEM(certPem);
+
+                displayCertificateInfo(cert);
+            } catch (error) {
+                alert('Error parsing certificate: ' + error.message + '\n\nPlease ensure the certificate is in valid PEM format.');
+                console.error('Certificate parsing error:', error);
+            }
+        }
+
+        function checkURL() {
+            alert('Due to browser security restrictions (CORS), certificate checking by URL is limited.\n\nTo check a certificate:\n1. Visit the website in your browser\n2. Click the padlock icon in the address bar\n3. View certificate details\n4. Copy the certificate in PEM format\n5. Paste it in the "Paste Certificate" tab');
+        }
+
+        function displayCertificateInfo(cert) {
+            const resultsDiv = document.getElementById('results');
+
+            // Get certificate information
+            const subject = cert.getSubjectString();
+            const issuer = cert.getIssuerString();
+            const notBefore = new Date(cert.getNotBefore());
+            const notAfter = new Date(cert.getNotAfter());
+            const now = new Date();
+
+            // Determine validity status
+            let validityStatus, validityClass;
+            if (now < notBefore) {
+                validityStatus = '⏳ Not Yet Valid';
+                validityClass = 'future';
+            } else if (now > notAfter) {
+                validityStatus = '❌ Expired';
+                validityClass = 'expired';
+            } else {
+                validityStatus = '✅ Valid';
+                validityClass = 'valid';
+            }
+
+            // Get public key info
+            const pubKeyObj = cert.getPublicKey();
+            const pubKeyType = pubKeyObj.type || 'Unknown';
+
+            // Get signature algorithm
+            const sigAlg = cert.getSignatureAlgorithmName();
+
+            // Get version
+            const version = cert.version;
+
+            // Get serial number
+            const serial = cert.getSerialNumberHex();
+
+            let html = `
+                <div class="cert-section">
+                    <h3>📋 Basic Information</h3>
+                    <div class="cert-row">
+                        <div class="cert-label">Status</div>
+                        <div class="cert-value">
+                            <span class="validity-badge ${validityClass}">${validityStatus}</span>
+                        </div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Subject</div>
+                        <div class="cert-value">${escapeHtml(subject)}</div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Issuer</div>
+                        <div class="cert-value">${escapeHtml(issuer)}</div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Version</div>
+                        <div class="cert-value">V${version}</div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Serial Number</div>
+                        <div class="cert-value">${escapeHtml(serial)}</div>
+                    </div>
+                </div>
+
+                <div class="cert-section">
+                    <h3>📅 Validity Period</h3>
+                    <div class="cert-row">
+                        <div class="cert-label">Valid From</div>
+                        <div class="cert-value">${escapeHtml(notBefore.toUTCString())}</div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Valid Until</div>
+                        <div class="cert-value">${escapeHtml(notAfter.toUTCString())}</div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Days Until Expiry</div>
+                        <div class="cert-value">${Math.ceil((notAfter - now) / (1000 * 60 * 60 * 24))} days</div>
+                    </div>
+                </div>
+
+                <div class="cert-section">
+                    <h3>🔑 Public Key Information</h3>
+                    <div class="cert-row">
+                        <div class="cert-label">Algorithm</div>
+                        <div class="cert-value">${escapeHtml(pubKeyType.toUpperCase())}</div>
+                    </div>
+                    <div class="cert-row">
+                        <div class="cert-label">Signature Algorithm</div>
+                        <div class="cert-value">${escapeHtml(sigAlg)}</div>
+                    </div>
+                </div>
+            `;
+
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

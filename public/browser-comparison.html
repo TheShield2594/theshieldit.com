@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Privacy Comparison | The Shield IT</title>
+    <meta name="description" content="Compare privacy and security features across popular web browsers. Find the most private browser for your needs.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .comparison-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        thead {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #3b82f6;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        th:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .browser-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .browser-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .feature-cell {
+            text-align: center;
+        }
+
+        .check {
+            color: #22c55e;
+            font-size: 1.2rem;
+        }
+
+        .cross {
+            color: #ef4444;
+            font-size: 1.2rem;
+        }
+
+        .partial {
+            color: #eab308;
+            font-size: 1.2rem;
+        }
+
+        .privacy-score {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .score-excellent {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .score-good {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+        }
+
+        .score-fair {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+        }
+
+        .score-poor {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box p {
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+
+            .browser-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔒 Browser Privacy Comparison</h1>
+            <p class="subtitle">Compare privacy and security features across popular browsers</p>
+        </header>
+
+        <div class="card">
+            <h2 style="color: #3b82f6; margin-bottom: 20px;">Privacy Score Overview</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Browser</th>
+                            <th>Privacy Score</th>
+                            <th>Default Tracker Blocking</th>
+                            <th>Third-Party Cookies</th>
+                            <th>Fingerprinting Protection</th>
+                            <th>Built-in VPN</th>
+                            <th>Open Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🦁</div>
+                                    <strong>Brave</strong>
+                                </div>
+                            </td>
+                            <td><span class="privacy-score score-excellent">Excellent</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🦊</div>
+                                    <strong>Firefox</strong>
+                                </div>
+                            </td>
+                            <td><span class="privacy-score score-excellent">Excellent</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="partial">✗</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🍎</div>
+                                    <strong>Safari</strong>
+                                </div>
+                            </td>
+                            <td><span class="privacy-score score-good">Good</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">⚡</div>
+                                    <strong>DuckDuckGo</strong>
+                                </div>
+                            </td>
+                            <td><span class="privacy-score score-excellent">Excellent</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🌐</div>
+                                    <strong>Microsoft Edge</strong>
+                                </div>
+                            </td>
+                            <td><span class="privacy-score score-fair">Fair</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🎨</div>
+                                    <strong>Google Chrome</strong>
+                                </div>
+                            </td>
+                            <td><span class="privacy-score score-poor">Poor</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                            <td class="feature-cell"><span class="cross">✗</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="check">✓</span>
+                    <span>Full Support</span>
+                </div>
+                <div class="legend-item">
+                    <span class="partial">~</span>
+                    <span>Partial/Optional</span>
+                </div>
+                <div class="legend-item">
+                    <span class="cross">✗</span>
+                    <span>Not Available</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="color: #3b82f6; margin-bottom: 20px;">Advanced Privacy Features</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Browser</th>
+                            <th>DNS-over-HTTPS</th>
+                            <th>HTTPS-Only Mode</th>
+                            <th>Password Manager</th>
+                            <th>Sync Encryption</th>
+                            <th>Telemetry (Default)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🦁</div>
+                                    <strong>Brave</strong>
+                                </div>
+                            </td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span style="color: #22c55e;">Minimal</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🦊</div>
+                                    <strong>Firefox</strong>
+                                </div>
+                            </td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span style="color: #eab308;">Moderate</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🍎</div>
+                                    <strong>Safari</strong>
+                                </div>
+                            </td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span style="color: #eab308;">Moderate</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">⚡</div>
+                                    <strong>DuckDuckGo</strong>
+                                </div>
+                            </td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span style="color: #22c55e;">None</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🌐</div>
+                                    <strong>Microsoft Edge</strong>
+                                </div>
+                            </td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span style="color: #ef4444;">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="browser-header">
+                                    <div class="browser-icon">🎨</div>
+                                    <strong>Google Chrome</strong>
+                                </div>
+                            </td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="partial">~</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span class="check">✓</span></td>
+                            <td class="feature-cell"><span style="color: #ef4444;">High</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔍 How to Choose a Private Browser</h3>
+            <p><strong>For Maximum Privacy:</strong> Brave or Firefox with privacy extensions offer the best protection against tracking and fingerprinting.</p>
+            <p><strong>For Apple Ecosystem:</strong> Safari provides good privacy features and is tightly integrated with macOS and iOS.</p>
+            <p><strong>For Simplicity:</strong> DuckDuckGo browser offers privacy by default with minimal configuration needed.</p>
+            <p><strong>Important Note:</strong> No browser is 100% private. Combine browser privacy features with a VPN, privacy-focused search engines, and careful browsing habits for best results.</p>
+        </div>
+
+        <div class="card info-box">
+            <h3>💡 Privacy Tips</h3>
+            <p><strong>1. Use Multiple Browsers:</strong> Separate work, personal, and shopping activities across different browsers.</p>
+            <p><strong>2. Install Privacy Extensions:</strong> uBlock Origin, Privacy Badger, and HTTPS Everywhere enhance protection.</p>
+            <p><strong>3. Clear Cookies Regularly:</strong> Or use containers to isolate tracking.</p>
+            <p><strong>4. Disable Third-Party Cookies:</strong> Most tracking happens through third-party cookies.</p>
+            <p><strong>5. Review Permissions:</strong> Regularly check what sites have access to camera, location, etc.</p>
+        </div>
+    </div>
+</body>
+</html>

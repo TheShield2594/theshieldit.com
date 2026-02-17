@@ -31,6 +31,28 @@ export const TOOLS: Tool[] = [
     icon: "fingerprint",
   },
   {
+    title: "Browser Privacy Comparison",
+    description:
+      "Compare privacy and security features across popular browsers. Find the most private browser for your needs.",
+    href: "/browser-comparison.html",
+    tags: "browser comparison privacy security features firefox chrome brave safari edge",
+    category: "education",
+    tagLabel: "Comparison",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "layout-grid",
+  },
+  {
+    title: "Certificate Decoder",
+    description:
+      "Decode and analyze SSL/TLS certificates. View certificate details, validity dates, subject information, and extensions.",
+    href: "/certificate-decoder.html",
+    tags: "ssl tls certificate decoder x509 pem validity security",
+    category: "security",
+    tagLabel: "Crypto",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "file-certificate",
+  },
+  {
     title: "Data Breach Timeline",
     description:
       "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
@@ -106,6 +128,17 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analysis",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "map-pin",
+  },
+  {
+    title: "JWT Decoder & Validator",
+    description:
+      "Decode and validate JSON Web Tokens. Inspect header, payload, signature, and check expiration dates.",
+    href: "/jwt-decoder.html",
+    tags: "jwt json web token decoder validator auth authentication bearer",
+    category: "developer",
+    tagLabel: "Decoder",
+    iconColor: "text-primary bg-primary/10",
+    icon: "key-round",
   },
   {
     title: "Link Safety Checker",
