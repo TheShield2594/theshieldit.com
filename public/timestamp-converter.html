@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Timestamp Converter | The Shield IT</title>
+    <meta name="description" content="Convert Unix timestamps to human-readable dates and vice versa. Support for seconds and milliseconds.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .current-time {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .current-time h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            margin-bottom: 10px;
+        }
+
+        .time-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .converter-section {
+            margin-bottom: 30px;
+        }
+
+        .converter-section h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .result-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            color: #3b82f6;
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .format-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .format-label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .format-value {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .time-display {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>⏰ Unix Timestamp Converter</h1>
+            <p class="subtitle">Convert between Unix timestamps and human-readable dates</p>
+        </header>
+
+        <div class="card">
+            <div class="current-time">
+                <h3>Current Time</h3>
+                <div class="time-label">Unix Timestamp (seconds)</div>
+                <div class="time-display" id="currentTimestamp">0</div>
+                <div class="time-label">Unix Timestamp (milliseconds)</div>
+                <div class="time-display" id="currentTimestampMs">0</div>
+                <div class="time-label" style="margin-top: 15px;">Human Readable</div>
+                <div class="time-display" id="currentHuman">-</div>
+            </div>
+
+            <div class="converter-section">
+                <h3>🔢 Timestamp to Date</h3>
+                <div class="input-group">
+                    <label for="timestampInput">Unix Timestamp</label>
+                    <input type="text" id="timestampInput" placeholder="1609459200" oninput="convertTimestamp()">
+                </div>
+
+                <div id="timestampResults" style="display: none;">
+                    <div class="grid">
+                        <div class="format-box">
+                            <div class="format-label">UTC</div>
+                            <div class="format-value" id="utcTime">-</div>
+                        </div>
+                        <div class="format-box">
+                            <div class="format-label">Local Time</div>
+                            <div class="format-value" id="localTime">-</div>
+                        </div>
+                        <div class="format-box">
+                            <div class="format-label">ISO 8601</div>
+                            <div class="format-value" id="isoTime">-</div>
+                        </div>
+                        <div class="format-box">
+                            <div class="format-label">Relative</div>
+                            <div class="format-value" id="relativeTime">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="converter-section">
+                <h3>📅 Date to Timestamp</h3>
+                <div class="input-group">
+                    <label for="dateInput">Date (YYYY-MM-DD HH:MM:SS)</label>
+                    <input type="datetime-local" id="dateInput" onchange="convertDate()">
+                </div>
+
+                <div id="dateResults" style="display: none;">
+                    <div class="result-box">
+                        <div class="format-label">Unix Timestamp (seconds)</div>
+                        <div class="format-value" id="resultTimestamp">-</div>
+                    </div>
+                    <div class="result-box" style="margin-top: 10px;">
+                        <div class="format-label">Unix Timestamp (milliseconds)</div>
+                        <div class="format-value" id="resultTimestampMs">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>📖 About Unix Timestamps</h3>
+            <ul>
+                <li><strong>Unix Timestamp:</strong> Number of seconds (or milliseconds) since January 1, 1970, 00:00:00 UTC (Unix Epoch)</li>
+                <li><strong>Seconds:</strong> Standard Unix timestamp (10 digits) - most common format</li>
+                <li><strong>Milliseconds:</strong> JavaScript/Java format (13 digits) - includes milliseconds</li>
+                <li><strong>UTC:</strong> Coordinated Universal Time - standard time reference</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">💡 Common Uses</h3>
+            <ul>
+                <li>Database timestamps (MySQL, PostgreSQL, MongoDB)</li>
+                <li>API responses and requests</li>
+                <li>Log file analysis</li>
+                <li>Cache expiration times</li>
+                <li>Session management</li>
+                <li>Event scheduling</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function updateCurrentTime() {
+            const now = new Date();
+            const timestampSeconds = Math.floor(now.getTime() / 1000);
+            const timestampMs = now.getTime();
+
+            document.getElementById('currentTimestamp').textContent = timestampSeconds;
+            document.getElementById('currentTimestampMs').textContent = timestampMs;
+            document.getElementById('currentHuman').textContent = now.toUTCString();
+        }
+
+        function convertTimestamp() {
+            const input = document.getElementById('timestampInput').value.trim();
+            const resultsDiv = document.getElementById('timestampResults');
+
+            if (!input) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            const timestamp = parseInt(input);
+            if (isNaN(timestamp)) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            // Detect if it's milliseconds (13 digits) or seconds (10 digits)
+            const date = timestamp > 9999999999 ? new Date(timestamp) : new Date(timestamp * 1000);
+
+            document.getElementById('utcTime').textContent = date.toUTCString();
+            document.getElementById('localTime').textContent = date.toLocaleString();
+            document.getElementById('isoTime').textContent = date.toISOString();
+            document.getElementById('relativeTime').textContent = getRelativeTime(date);
+
+            resultsDiv.style.display = 'block';
+        }
+
+        function convertDate() {
+            const input = document.getElementById('dateInput').value;
+            const resultsDiv = document.getElementById('dateResults');
+
+            if (!input) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            const date = new Date(input);
+            const timestampSeconds = Math.floor(date.getTime() / 1000);
+            const timestampMs = date.getTime();
+
+            document.getElementById('resultTimestamp').textContent = timestampSeconds;
+            document.getElementById('resultTimestampMs').textContent = timestampMs;
+
+            resultsDiv.style.display = 'block';
+        }
+
+        function getRelativeTime(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+            const diffMonth = Math.floor(diffDay / 30);
+            const diffYear = Math.floor(diffDay / 365);
+
+            if (diffMs < 0) {
+                const absDiffSec = Math.abs(diffSec);
+                const absDiffMin = Math.abs(diffMin);
+                const absDiffHour = Math.abs(diffHour);
+                const absDiffDay = Math.abs(diffDay);
+
+                if (absDiffSec < 60) return `in ${absDiffSec} seconds`;
+                if (absDiffMin < 60) return `in ${absDiffMin} minutes`;
+                if (absDiffHour < 24) return `in ${absDiffHour} hours`;
+                return `in ${absDiffDay} days`;
+            }
+
+            if (diffSec < 60) return `${diffSec} seconds ago`;
+            if (diffMin < 60) return `${diffMin} minutes ago`;
+            if (diffHour < 24) return `${diffHour} hours ago`;
+            if (diffDay < 30) return `${diffDay} days ago`;
+            if (diffMonth < 12) return `${diffMonth} months ago`;
+            return `${diffYear} years ago`;
+        }
+
+        // Update current time every second
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+
+        // Set current date in date input
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('dateInput').value = now.toISOString().slice(0, 16);
+        convertDate();
+    </script>
+</body>
+</html>

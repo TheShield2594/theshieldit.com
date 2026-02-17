@@ -262,6 +262,39 @@ export const TOOLS: Tool[] = [
     icon: "network",
   },
   {
+    title: "URL Encoder / Decoder",
+    description:
+      "Encode and decode URLs and URL components. Supports encodeURI, decodeURI, and encodeURIComponent modes for safe URL handling.",
+    href: "/url-encoder.html",
+    tags: "url encoder decoder encodeURI decodeURI encodeURIComponent percent encoding developer utility",
+    category: "developer",
+    tagLabel: "Encoder",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "link",
+  },
+  {
+    title: "UUID Generator",
+    description:
+      "Generate universally unique identifiers (UUIDs). Supports v1 (timestamp-based) and v4 (random) with batch generation and multiple format options.",
+    href: "/uuid-generator.html",
+    tags: "uuid generator v1 v4 guid unique identifier random batch developer utility",
+    category: "developer",
+    tagLabel: "Generator",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "fingerprint",
+  },
+  {
+    title: "Unix Timestamp Converter",
+    description:
+      "Convert between Unix timestamps and human-readable dates. Supports seconds and milliseconds with multiple output formats including UTC, local, and ISO 8601.",
+    href: "/timestamp-converter.html",
+    tags: "unix timestamp converter epoch date time utc iso 8601 developer utility",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-primary bg-primary/10",
+    icon: "clock",
+  },
+  {
     title: "Vendor Lock-In Score",
     description:
       "Score your vendor lock-in risk across 9 dimensions. Track services and plan your exit strategy.",
