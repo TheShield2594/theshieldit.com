@@ -262,6 +262,61 @@ export const TOOLS: Tool[] = [
     icon: "network",
   },
   {
+    title: "Privacy Policy Analyzer",
+    description:
+      "Analyze any privacy policy for red flags, data selling, tracking, retention practices, and user rights. Get an instant risk score.",
+    href: "/privacy-policy-analyzer.html",
+    tags: "privacy policy analyzer gdpr ccpa data selling tracking cookies red flags risk score",
+    category: "security",
+    tagLabel: "Analyzer",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "file-search",
+  },
+  {
+    title: "Tracker Blocker Test",
+    description:
+      "Test if your ad blocker or privacy extension is blocking known trackers. Check protection against Google Analytics, Facebook Pixel, and more.",
+    href: "/tracker-blocker-test.html",
+    tags: "tracker blocker test ad block ublock privacy extension google analytics facebook pixel protection",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "shield-off",
+  },
+  {
+    title: "WiFi Security Analyzer",
+    description:
+      "Assess your wireless network security settings. Check WPA3 encryption, router configuration, and get actionable recommendations.",
+    href: "/wifi-security-analyzer.html",
+    tags: "wifi security analyzer wpa3 wpa2 router encryption wireless network security assessment",
+    category: "security",
+    tagLabel: "Analyzer",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "wifi",
+  },
+  {
+    title: "Port Scanner",
+    description:
+      "Scan common ports on localhost to audit locally running services. Useful for developers to discover exposed databases and servers.",
+    href: "/port-scanner.html",
+    tags: "port scanner localhost network scan open ports tcp services security audit developer",
+    category: "developer",
+    tagLabel: "Scanner",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "scan-search",
+  },
+  {
+    title: "Digital Signature Verifier",
+    description:
+      "Verify digital signatures using RSA-PKCS1, RSA-PSS, and ECDSA algorithms. Client-side verification with the Web Crypto API.",
+    href: "/digital-signature-verifier.html",
+    tags: "digital signature verifier rsa ecdsa pkcs pss sha256 cryptography verify web crypto",
+    category: "security",
+    tagLabel: "Crypto",
+    iconColor: "text-primary bg-primary/10",
+    icon: "pen-line",
+  },
+  {
     title: "URL Encoder / Decoder",
     description:
       "Encode and decode URLs and URL components. Supports encodeURI, decodeURI, and encodeURIComponent modes for safe URL handling.",

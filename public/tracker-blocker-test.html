@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker Blocker Test | The Shield IT</title>
+    <meta name="description" content="Test if your ad blocker or privacy extension is blocking known trackers. Check protection against Google Analytics, Facebook Pixel, and more.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #64748b; text-decoration: none; font-size: 0.9rem;
+            margin-bottom: 30px; transition: color 0.2s;
+        }
+        .back-link:hover { color: #94a3b8; }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #f1f5f9; }
+        .score-bar-wrapper { margin-bottom: 24px; }
+        .score-summary {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .score-text { font-size: 1.1rem; font-weight: 600; }
+        .score-pct { font-size: 2rem; font-weight: 800; }
+        .score-bar-bg {
+            height: 12px; background: rgba(255,255,255,0.1);
+            border-radius: 999px; overflow: hidden;
+        }
+        .score-bar-fill {
+            height: 100%; border-radius: 999px;
+            transition: width 1s ease;
+            background: linear-gradient(90deg, #22c55e, #3b82f6);
+        }
+        .tracker-list { display: flex; flex-direction: column; gap: 10px; }
+        .tracker-item {
+            display: flex; align-items: center; gap: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px; padding: 14px 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.3s;
+        }
+        .tracker-item.blocked { border-color: rgba(34, 197, 94, 0.3); }
+        .tracker-item.loaded { border-color: rgba(239, 68, 68, 0.3); }
+        .tracker-item.testing { border-color: rgba(245, 158, 11, 0.2); }
+        .tracker-status {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .status-blocked { background: rgba(34,197,94,0.15); }
+        .status-loaded { background: rgba(239,68,68,0.15); }
+        .status-testing { background: rgba(245,158,11,0.15); }
+        .status-pending { background: rgba(100,116,139,0.15); }
+        .tracker-info { flex: 1; }
+        .tracker-name { font-weight: 600; font-size: 0.95rem; }
+        .tracker-domain { font-size: 0.78rem; color: #64748b; margin-top: 2px; font-family: monospace; }
+        .tracker-category {
+            font-size: 0.72rem; padding: 2px 8px; border-radius: 20px;
+            font-weight: 600; flex-shrink: 0;
+        }
+        .cat-analytics { background: rgba(59,130,246,0.15); color: #93c5fd; }
+        .cat-social { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+        .cat-advertising { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .cat-fingerprint { background: rgba(245,158,11,0.15); color: #fde68a; }
+        .cat-cdn { background: rgba(20,184,166,0.15); color: #99f6e4; }
+        .tracker-result { font-size: 0.85rem; font-weight: 600; flex-shrink: 0; width: 80px; text-align: right; }
+        .result-blocked { color: #22c55e; }
+        .result-loaded { color: #ef4444; }
+        .result-testing { color: #f59e0b; }
+        .result-pending { color: #64748b; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-primary { background: linear-gradient(135deg, #22c55e, #3b82f6); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .info-note {
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 10px; padding: 14px 18px;
+            font-size: 0.85rem; color: #93c5fd; line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; font-size: 0.82rem; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .grade-display {
+            display: flex; align-items: center; justify-content: center;
+            gap: 24px; padding: 20px; flex-wrap: wrap;
+        }
+        .grade-box {
+            text-align: center; background: rgba(15,23,42,0.5);
+            border-radius: 12px; padding: 16px 24px; min-width: 120px;
+        }
+        .grade-value { font-size: 2rem; font-weight: 800; }
+        .grade-label { font-size: 0.75rem; color: #64748b; margin-top: 4px; }
+        .hidden { display: none; }
+        .spinner {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(245,158,11,0.3);
+            border-top-color: #f59e0b;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Tracker Blocker Test</h1>
+        <p class="subtitle">Check if your browser extensions are blocking known trackers and advertising scripts</p>
+    </header>
+
+    <div class="card">
+        <div class="info-note">
+            This tool attempts to load resources from known tracking domains. If your ad blocker or privacy extension intercepts these requests, they will show as <strong>Blocked</strong>. No actual tracking occurs — only the connection attempt is tested.
+        </div>
+        <div style="text-align:center; margin-bottom:20px;">
+            <button class="btn btn-primary" id="runBtn" onclick="runTests()">Run Tracker Test</button>
+        </div>
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Blocked — your protection is working</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Loaded — tracker not blocked</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div> Pending</div>
+        </div>
+    </div>
+
+    <div class="card hidden" id="scoreCard">
+        <h2>Protection Score</h2>
+        <div class="score-bar-wrapper">
+            <div class="score-summary">
+                <span class="score-text" id="scoreText">Testing...</span>
+                <span class="score-pct" id="scorePct">0%</span>
+            </div>
+            <div class="score-bar-bg">
+                <div class="score-bar-fill" id="scoreBarFill" style="width:0%"></div>
+            </div>
+        </div>
+        <div class="grade-display" id="gradeDisplay"></div>
+    </div>
+
+    <div class="card">
+        <h2>Tracker Tests</h2>
+        <div class="tracker-list" id="trackerList"></div>
+    </div>
+</div>
+
+<script>
+const TRACKERS = [
+    { name: "Google Analytics", domain: "www.google-analytics.com", path: "/analytics.js", category: "analytics" },
+    { name: "Google Tag Manager", domain: "www.googletagmanager.com", path: "/gtm.js?id=GTM-TEST", category: "analytics" },
+    { name: "Facebook Pixel", domain: "connect.facebook.net", path: "/en_US/fbevents.js", category: "social" },
+    { name: "DoubleClick Ads", domain: "stats.g.doubleclick.net", path: "/dc.js", category: "advertising" },
+    { name: "Google Ads", domain: "pagead2.googlesyndication.com", path: "/pagead/js/adsbygoogle.js", category: "advertising" },
+    { name: "Twitter/X Pixel", domain: "static.ads-twitter.com", path: "/uwt.js", category: "social" },
+    { name: "LinkedIn Insight", domain: "snap.licdn.com", path: "/li.lms-analytics/insight.min.js", category: "social" },
+    { name: "Hotjar", domain: "static.hotjar.com", path: "/c/hotjar-0.js", category: "analytics" },
+    { name: "Segment Analytics", domain: "cdn.segment.com", path: "/analytics.js/v1/test/analytics.min.js", category: "analytics" },
+    { name: "Amplitude", domain: "cdn.amplitude.com", path: "/libs/amplitude-8.21.4-min.gz.js", category: "analytics" },
+    { name: "Mixpanel", domain: "cdn.mxpnl.com", path: "/libs/mixpanel-2-latest.min.js", category: "analytics" },
+    { name: "FullStory", domain: "edge.fullstory.com", path: "/s/fs.js", category: "fingerprint" },
+    { name: "Quantcast", domain: "secure.quantserve.com", path: "/quant.js", category: "advertising" },
+    { name: "Criteo", domain: "static.criteo.net", path: "/js/ld/publishertag.prebid.js", category: "advertising" },
+    { name: "Outbrain", domain: "widgets.outbrain.com", path: "/outbrain.js", category: "advertising" },
+    { name: "Taboola", domain: "cdn.taboola.com", path: "/libtrc/impl.330-1.js", category: "advertising" },
+    { name: "Sentry (error tracking)", domain: "browser.sentry-cdn.com", path: "/7.0.0/bundle.min.js", category: "analytics" },
+    { name: "New Relic", domain: "bam.nr-data.net", path: "/timing.js", category: "analytics" },
+];
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+let results = {};
+
+function renderTrackerItems() {
+    const list = document.getElementById('trackerList');
+    list.innerHTML = '';
+    for (const t of TRACKERS) {
+        const item = document.createElement('div');
+        item.className = 'tracker-item';
+        item.id = 'tracker-' + t.domain.replace(/\./g, '-');
+        item.innerHTML = `
+            <div class="tracker-status status-pending" id="icon-${escapeHtml(t.domain.replace(/\./g, '-'))}">⬜</div>
+            <div class="tracker-info">
+                <div class="tracker-name">${escapeHtml(t.name)}</div>
+                <div class="tracker-domain">${escapeHtml(t.domain)}</div>
+            </div>
+            <span class="tracker-category cat-${escapeHtml(t.category)}">${escapeHtml(t.category)}</span>
+            <div class="tracker-result result-pending" id="result-${escapeHtml(t.domain.replace(/\./g, '-'))}">Pending</div>
+        `;
+        list.appendChild(item);
+    }
+}
+
+function updateTracker(tracker, status) {
+    const id = tracker.domain.replace(/\./g, '-');
+    const item = document.getElementById('tracker-' + id);
+    const icon = document.getElementById('icon-' + id);
+    const result = document.getElementById('result-' + id);
+    if (!item) return;
+
+    item.className = 'tracker-item ' + status;
+    if (status === 'blocked') {
+        icon.className = 'tracker-status status-blocked';
+        icon.textContent = '✅';
+        result.className = 'tracker-result result-blocked';
+        result.textContent = 'Blocked';
+    } else if (status === 'loaded') {
+        icon.className = 'tracker-status status-loaded';
+        icon.textContent = '❌';
+        result.className = 'tracker-result result-loaded';
+        result.textContent = 'Loaded';
+    } else if (status === 'testing') {
+        icon.className = 'tracker-status status-testing';
+        icon.innerHTML = '<div class="spinner"></div>';
+        result.className = 'tracker-result result-testing';
+        result.textContent = 'Testing...';
+    }
+}
+
+function testTracker(tracker) {
+    return new Promise((resolve) => {
+        const timeout = 3000;
+        const url = 'https://' + tracker.domain + tracker.path;
+        const controller = new AbortController();
+        const timer = setTimeout(() => {
+            controller.abort();
+            resolve('blocked'); // timed out = likely blocked/filtered
+        }, timeout);
+
+        // Use image probe — works for most tracking pixels
+        const img = new Image();
+        img.onload = () => {
+            clearTimeout(timer);
+            resolve('loaded');
+        };
+        img.onerror = (e) => {
+            clearTimeout(timer);
+            // Blocked by extension = network error fast
+            // CORS/404 from real server = also error but may still reach domain
+            // Heuristic: if error fires very quickly (<200ms), it's likely blocked
+            resolve('loaded'); // reached the server (CORS error or 404), tracker not blocked at network level
+        };
+
+        // Also try fetch for more accurate detection
+        fetch(url, {
+            mode: 'no-cors',
+            signal: controller.signal,
+            cache: 'no-store'
+        }).then(() => {
+            clearTimeout(timer);
+            resolve('loaded');
+        }).catch((err) => {
+            clearTimeout(timer);
+            if (err.name === 'AbortError') {
+                resolve('blocked');
+            } else {
+                // TypeError = network error = request was blocked before reaching network
+                resolve('blocked');
+            }
+        });
+    });
+}
+
+async function runTests() {
+    const btn = document.getElementById('runBtn');
+    btn.disabled = true;
+    btn.textContent = 'Testing...';
+
+    results = {};
+    renderTrackerItems();
+    document.getElementById('scoreCard').classList.remove('hidden');
+    document.getElementById('scorePct').textContent = '0%';
+    document.getElementById('scoreBarFill').style.width = '0%';
+    document.getElementById('scoreText').textContent = 'Testing trackers...';
+    document.getElementById('gradeDisplay').innerHTML = '';
+
+    let blocked = 0;
+    let tested = 0;
+
+    // Test in batches of 4
+    const batchSize = 4;
+    for (let i = 0; i < TRACKERS.length; i += batchSize) {
+        const batch = TRACKERS.slice(i, i + batchSize);
+        batch.forEach(t => updateTracker(t, 'testing'));
+        const batchResults = await Promise.all(batch.map(t => testTracker(t)));
+        batch.forEach((t, idx) => {
+            const status = batchResults[idx];
+            results[t.domain] = status;
+            updateTracker(t, status);
+            if (status === 'blocked') blocked++;
+            tested++;
+        });
+        const pct = Math.round((blocked / TRACKERS.length) * 100);
+        document.getElementById('scorePct').textContent = pct + '%';
+        document.getElementById('scoreBarFill').style.width = pct + '%';
+    }
+
+    renderScore(blocked, TRACKERS.length);
+    btn.disabled = false;
+    btn.textContent = 'Run Again';
+}
+
+function renderScore(blocked, total) {
+    const pct = Math.round((blocked / total) * 100);
+    let grade, gradeColor, description;
+    if (pct >= 90) { grade = 'A+'; gradeColor = '#22c55e'; description = 'Excellent Protection'; }
+    else if (pct >= 75) { grade = 'A'; gradeColor = '#22c55e'; description = 'Strong Protection'; }
+    else if (pct >= 60) { grade = 'B'; gradeColor = '#84cc16'; description = 'Good Protection'; }
+    else if (pct >= 40) { grade = 'C'; gradeColor = '#f59e0b'; description = 'Moderate Protection'; }
+    else if (pct >= 20) { grade = 'D'; gradeColor = '#ef4444'; description = 'Weak Protection'; }
+    else { grade = 'F'; gradeColor = '#dc2626'; description = 'No Protection Detected'; }
+
+    document.getElementById('scorePct').textContent = pct + '%';
+    document.getElementById('scorePct').style.color = gradeColor;
+    document.getElementById('scoreBarFill').style.width = pct + '%';
+    document.getElementById('scoreText').textContent = description;
+
+    const gradeDisplay = document.getElementById('gradeDisplay');
+    gradeDisplay.innerHTML = `
+        <div class="grade-box">
+            <div class="grade-value" style="color:${escapeHtml(gradeColor)}">${escapeHtml(grade)}</div>
+            <div class="grade-label">Overall Grade</div>
+        </div>
+        <div class="grade-box">
+            <div class="grade-value" style="color:#22c55e">${escapeHtml(String(blocked))}</div>
+            <div class="grade-label">Trackers Blocked</div>
+        </div>
+        <div class="grade-box">
+            <div class="grade-value" style="color:#ef4444">${escapeHtml(String(total - blocked))}</div>
+            <div class="grade-label">Trackers Loaded</div>
+        </div>
+        <div class="grade-box">
+            <div class="grade-value">${escapeHtml(String(total))}</div>
+            <div class="grade-label">Total Tested</div>
+        </div>
+    `;
+}
+
+// Initialize list on page load
+renderTrackerItems();
+</script>
+</body>
+</html>

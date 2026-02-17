@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy Analyzer | The Shield IT</title>
+    <meta name="description" content="Analyze privacy policies for red flags, data collection practices, and user rights. Paste any privacy policy to get an instant risk assessment.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #64748b; text-decoration: none; font-size: 0.9rem;
+            margin-bottom: 30px; transition: color 0.2s;
+        }
+        .back-link:hover { color: #94a3b8; }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #f1f5f9; }
+        label { display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 500; }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        textarea:focus { outline: none; border-color: rgba(245, 158, 11, 0.5); }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px;
+            border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+        .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        .score-display {
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; padding: 30px;
+            border-radius: 16px; margin-bottom: 20px;
+        }
+        .score-number { font-size: 4rem; font-weight: 800; line-height: 1; }
+        .score-label { font-size: 1.2rem; margin-top: 8px; opacity: 0.8; }
+        .score-low { background: rgba(34, 197, 94, 0.1); border: 2px solid rgba(34, 197, 94, 0.3); color: #22c55e; }
+        .score-medium { background: rgba(245, 158, 11, 0.1); border: 2px solid rgba(245, 158, 11, 0.3); color: #f59e0b; }
+        .score-high { background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+        .score-critical { background: rgba(127, 29, 29, 0.2); border: 2px solid rgba(239, 68, 68, 0.5); color: #fca5a5; }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .category-card {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 18px;
+            border-left: 4px solid;
+        }
+        .category-card.good { border-color: #22c55e; }
+        .category-card.warn { border-color: #f59e0b; }
+        .category-card.bad { border-color: #ef4444; }
+        .category-card.info { border-color: #3b82f6; }
+        .category-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+        .category-findings { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; }
+        .finding-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 4px; }
+        .finding-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+        .dot-good { background: #22c55e; }
+        .dot-warn { background: #f59e0b; }
+        .dot-bad { background: #ef4444; }
+        .flagged-section {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .flagged-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .tag-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+        .tag-yellow { background: rgba(245,158,11,0.2); color: #fde68a; }
+        .flagged-text { font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; font-style: italic; }
+        .hidden { display: none; }
+        .examples { font-size: 0.8rem; color: #64748b; margin-top: 8px; }
+        .stat-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+        .stat-box {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+            padding: 12px 20px;
+            text-align: center;
+            flex: 1; min-width: 100px;
+        }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: #f59e0b; }
+        .stat-label { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Privacy Policy Analyzer</h1>
+        <p class="subtitle">Paste any privacy policy to identify red flags, data practices, and user rights</p>
+    </header>
+
+    <div class="card">
+        <h2>Paste Privacy Policy Text</h2>
+        <div>
+            <label for="policyText">Privacy Policy Content</label>
+            <textarea id="policyText" rows="14" placeholder="Paste the full text of a privacy policy here..."></textarea>
+        </div>
+        <p class="examples">Tip: Copy the entire text of any website's Privacy Policy page and paste it here for analysis.</p>
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="analyzePolicy()">Analyze Policy</button>
+            <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
+            <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+        </div>
+    </div>
+
+    <div id="results" class="hidden">
+        <div class="card">
+            <h2>Risk Assessment</h2>
+            <div id="scoreDisplay" class="score-display">
+                <div id="scoreNumber" class="score-number">0</div>
+                <div id="scoreLabel" class="score-label">Risk Score</div>
+            </div>
+            <div class="stat-row" id="statRow"></div>
+        </div>
+
+        <div class="card">
+            <h2>Category Breakdown</h2>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+
+        <div class="card" id="flaggedCard">
+            <h2>Flagged Clauses</h2>
+            <div id="flaggedList"></div>
+        </div>
+
+        <div class="card">
+            <h2>What This Means</h2>
+            <div id="summary" style="color:#94a3b8; line-height:1.8; font-size:0.95rem;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const CHECKS = [
+    {
+        category: "Data Selling",
+        icon: "💰",
+        patterns: [
+            { re: /sell\s+(your|user|personal|customer)\s+data/gi, label: "Explicitly sells user data", severity: "bad" },
+            { re: /sell\s+information\s+(to|with)\s+third/gi, label: "Sells info to third parties", severity: "bad" },
+            { re: /monetize\s+(your|user)\s+(data|information)/gi, label: "Monetizes user data", severity: "bad" },
+            { re: /data\s+broker/gi, label: "Mentions data brokers", severity: "bad" },
+            { re: /we\s+do\s+not\s+sell/gi, label: "Explicitly does NOT sell data", severity: "good" },
+        ]
+    },
+    {
+        category: "Third-Party Sharing",
+        icon: "🔗",
+        patterns: [
+            { re: /share\s+(your|user)?\s*(personal|data|information)\s+with\s+(our\s+)?(partners|affiliates|third.parties)/gi, label: "Shares data with partners/affiliates", severity: "bad" },
+            { re: /disclose\s+(your|personal)\s+(data|information)\s+to\s+third/gi, label: "Discloses personal data to third parties", severity: "bad" },
+            { re: /third.party\s+(advertising|advertisers)/gi, label: "Third-party advertising sharing", severity: "bad" },
+            { re: /we\s+(only|never)\s+share\s+(your|personal)/gi, label: "Limited sharing policy", severity: "good" },
+        ]
+    },
+    {
+        category: "Tracking & Analytics",
+        icon: "📊",
+        patterns: [
+            { re: /track(ing)?\s+your\s+(location|behavior|activity|browsing)/gi, label: "Tracks user location/behavior", severity: "warn" },
+            { re: /cross.site\s+tracking/gi, label: "Cross-site tracking", severity: "bad" },
+            { re: /google\s+analytics/gi, label: "Uses Google Analytics", severity: "warn" },
+            { re: /facebook\s+pixel/gi, label: "Uses Facebook Pixel", severity: "warn" },
+            { re: /fingerprint(ing)?/gi, label: "Device fingerprinting", severity: "warn" },
+            { re: /behavioral\s+(advertising|targeting)/gi, label: "Behavioral advertising", severity: "bad" },
+            { re: /opt.out\s+of\s+tracking/gi, label: "Provides tracking opt-out", severity: "good" },
+        ]
+    },
+    {
+        category: "Data Retention",
+        icon: "🗄️",
+        patterns: [
+            { re: /retain\s+(your|user|personal)?\s*(data|information)\s+(indefinitely|forever|permanently)/gi, label: "Retains data indefinitely", severity: "bad" },
+            { re: /delete\s+(your|account|personal)\s*(data|information)\s+upon\s+request/gi, label: "Deletes data on request", severity: "good" },
+            { re: /retain.*?(\d+)\s+(days?|months?|years?)/gi, label: "Specified retention period", severity: "info" },
+            { re: /right\s+to\s+(erasure|deletion|be\s+forgotten)/gi, label: "Right to erasure mentioned", severity: "good" },
+            { re: /we\s+keep\s+your\s+(data|information)\s+as\s+long\s+as/gi, label: "Vague retention policy", severity: "warn" },
+        ]
+    },
+    {
+        category: "User Rights",
+        icon: "⚖️",
+        patterns: [
+            { re: /GDPR|General\s+Data\s+Protection\s+Regulation/gi, label: "References GDPR", severity: "good" },
+            { re: /CCPA|California\s+Consumer\s+Privacy\s+Act/gi, label: "References CCPA", severity: "good" },
+            { re: /right\s+to\s+access\s+(your|personal)?\s*(data|information)/gi, label: "Right to access data", severity: "good" },
+            { re: /right\s+to\s+opt.out/gi, label: "Right to opt-out", severity: "good" },
+            { re: /data\s+portability/gi, label: "Data portability mentioned", severity: "good" },
+            { re: /no\s+(opt.out|ability\s+to\s+(opt|withdraw))/gi, label: "No opt-out offered", severity: "bad" },
+        ]
+    },
+    {
+        category: "Cookies & Consent",
+        icon: "🍪",
+        patterns: [
+            { re: /cookie\s+consent/gi, label: "Cookie consent mentioned", severity: "good" },
+            { re: /essential\s+cookies\s+only/gi, label: "Only uses essential cookies", severity: "good" },
+            { re: /by\s+(using|continuing)\s+(to\s+use)?\s*this\s+site\s+you\s+(agree|consent)/gi, label: "Implied consent by site use", severity: "bad" },
+            { re: /advertising\s+cookies/gi, label: "Uses advertising cookies", severity: "warn" },
+            { re: /persistent\s+cookies/gi, label: "Uses persistent cookies", severity: "warn" },
+        ]
+    },
+    {
+        category: "Security Measures",
+        icon: "🔒",
+        patterns: [
+            { re: /encrypt(ion|ed)/gi, label: "Encryption mentioned", severity: "good" },
+            { re: /we\s+cannot\s+guarantee\s+(the\s+)?(security|safety)/gi, label: "Disclaims security guarantee", severity: "warn" },
+            { re: /security\s+(breach|incident)\s+notification/gi, label: "Breach notification policy", severity: "good" },
+            { re: /data\s+breach/gi, label: "Addresses data breaches", severity: "info" },
+            { re: /SSL|TLS|HTTPS/gi, label: "Transport encryption mentioned", severity: "good" },
+        ]
+    },
+    {
+        category: "Children's Privacy",
+        icon: "👶",
+        patterns: [
+            { re: /COPPA|Children's\s+Online\s+Privacy/gi, label: "References COPPA", severity: "good" },
+            { re: /do\s+not\s+knowingly\s+collect\s+(data|information)\s+from\s+children/gi, label: "Does not collect children's data", severity: "good" },
+            { re: /collect(s|ing)?\s+(data|information)\s+from\s+children\s+(under\s+)?13/gi, label: "Collects data from under-13", severity: "bad" },
+        ]
+    }
+];
+
+const SEVERITY_SCORE = { bad: 15, warn: 7, info: 0, good: -5 };
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+function extractSentence(text, matchIndex, matchLength) {
+    const start = Math.max(0, matchIndex - 100);
+    const end = Math.min(text.length, matchIndex + matchLength + 100);
+    let excerpt = text.slice(start, end).trim();
+    if (start > 0) excerpt = '...' + excerpt;
+    if (end < text.length) excerpt += '...';
+    return excerpt;
+}
+
+function analyzePolicy() {
+    const text = document.getElementById('policyText').value.trim();
+    if (!text || text.length < 100) {
+        alert('Please paste a longer privacy policy text (at least 100 characters).');
+        return;
+    }
+
+    let totalScore = 0;
+    const categoryResults = [];
+    const flaggedClauses = [];
+    let totalFindings = 0;
+    let goodFindings = 0;
+    let badFindings = 0;
+    let warnFindings = 0;
+
+    for (const check of CHECKS) {
+        const findings = [];
+        for (const pat of check.patterns) {
+            const re = new RegExp(pat.re.source, pat.re.flags.replace('g','') + 'gi');
+            let match;
+            let found = false;
+            const globalRe = new RegExp(pat.re.source, 'gi');
+            while ((match = globalRe.exec(text)) !== null) {
+                if (!found) {
+                    findings.push({ label: pat.label, severity: pat.severity });
+                    totalScore += SEVERITY_SCORE[pat.severity] || 0;
+                    totalFindings++;
+                    if (pat.severity === 'good') goodFindings++;
+                    else if (pat.severity === 'bad') { badFindings++; }
+                    else if (pat.severity === 'warn') { warnFindings++; }
+                    found = true;
+                }
+                if (pat.severity === 'bad' || pat.severity === 'warn') {
+                    const excerpt = extractSentence(text, match.index, match[0].length);
+                    flaggedClauses.push({
+                        category: check.category,
+                        label: pat.label,
+                        severity: pat.severity,
+                        excerpt
+                    });
+                }
+                if (found) break;
+            }
+        }
+        if (findings.length > 0) {
+            categoryResults.push({ ...check, findings });
+        }
+    }
+
+    // Clamp score 0-100
+    totalScore = Math.max(0, Math.min(100, totalScore));
+
+    renderResults(totalScore, categoryResults, flaggedClauses, {
+        total: totalFindings, good: goodFindings, bad: badFindings, warn: warnFindings,
+        wordCount: text.split(/\s+/).length
+    });
+}
+
+function renderResults(score, categories, flagged, stats) {
+    document.getElementById('results').classList.remove('hidden');
+
+    // Score
+    const scoreEl = document.getElementById('scoreDisplay');
+    const scoreNum = document.getElementById('scoreNumber');
+    const scoreLabel = document.getElementById('scoreLabel');
+    scoreNum.textContent = score;
+    scoreEl.className = 'score-display ';
+    if (score <= 20) {
+        scoreEl.className += 'score-low';
+        scoreLabel.textContent = 'Low Risk — Fairly privacy-friendly';
+    } else if (score <= 45) {
+        scoreEl.className += 'score-medium';
+        scoreLabel.textContent = 'Moderate Risk — Some concerns found';
+    } else if (score <= 70) {
+        scoreEl.className += 'score-high';
+        scoreLabel.textContent = 'High Risk — Significant privacy issues';
+    } else {
+        scoreEl.className += 'score-critical';
+        scoreLabel.textContent = 'Critical Risk — Major privacy violations';
+    }
+
+    // Stats
+    const statRow = document.getElementById('statRow');
+    statRow.innerHTML = '';
+    const statsData = [
+        { value: stats.wordCount.toLocaleString(), label: 'Words Analyzed' },
+        { value: stats.good, label: 'Positive Clauses' },
+        { value: stats.warn, label: 'Warnings' },
+        { value: stats.bad, label: 'Red Flags' },
+    ];
+    for (const s of statsData) {
+        const box = document.createElement('div');
+        box.className = 'stat-box';
+        box.innerHTML = `<div class="stat-value">${escapeHtml(String(s.value))}</div><div class="stat-label">${escapeHtml(s.label)}</div>`;
+        statRow.appendChild(box);
+    }
+
+    // Categories
+    const grid = document.getElementById('categoriesGrid');
+    grid.innerHTML = '';
+    for (const cat of categories) {
+        const hasBad = cat.findings.some(f => f.severity === 'bad');
+        const hasWarn = cat.findings.some(f => f.severity === 'warn');
+        const allGood = cat.findings.every(f => f.severity === 'good');
+        const cls = hasBad ? 'bad' : hasWarn ? 'warn' : allGood ? 'good' : 'info';
+
+        const card = document.createElement('div');
+        card.className = `category-card ${cls}`;
+        const findingsHtml = cat.findings.map(f => {
+            const dotClass = f.severity === 'good' ? 'dot-good' : f.severity === 'bad' ? 'dot-bad' : 'dot-warn';
+            return `<div class="finding-item"><div class="finding-dot ${dotClass}"></div><span>${escapeHtml(f.label)}</span></div>`;
+        }).join('');
+        card.innerHTML = `<div class="category-title">${escapeHtml(cat.icon + ' ' + cat.category)}</div><div class="category-findings">${findingsHtml}</div>`;
+        grid.appendChild(card);
+    }
+
+    // Flagged clauses
+    const flaggedList = document.getElementById('flaggedList');
+    flaggedList.innerHTML = '';
+    if (flagged.length === 0) {
+        flaggedList.innerHTML = '<p style="color:#94a3b8;">No specifically flagged clauses detected.</p>';
+    } else {
+        // Deduplicate by label
+        const seen = new Set();
+        for (const f of flagged) {
+            if (seen.has(f.label)) continue;
+            seen.add(f.label);
+            const div = document.createElement('div');
+            div.className = 'flagged-section';
+            const tagClass = f.severity === 'bad' ? 'tag-red' : 'tag-yellow';
+            div.innerHTML = `
+                <span class="flagged-tag ${tagClass}">${escapeHtml(f.category)}: ${escapeHtml(f.label)}</span>
+                <p class="flagged-text">"${escapeHtml(f.excerpt)}"</p>
+            `;
+            flaggedList.appendChild(div);
+        }
+    }
+
+    // Summary
+    const summary = document.getElementById('summary');
+    const score_n = parseInt(document.getElementById('scoreNumber').textContent);
+    let msg = '';
+    if (score_n <= 20) {
+        msg = 'This privacy policy appears relatively user-friendly. It shows respect for user rights and limits data collection and sharing. Always read the full document for context.';
+    } else if (score_n <= 45) {
+        msg = 'This policy has some concerning elements mixed with positive ones. Pay attention to the flagged sections, especially around data sharing and tracking. Consider whether the service is worth the privacy trade-offs.';
+    } else if (score_n <= 70) {
+        msg = 'This policy contains significant privacy concerns. The company appears to collect and share substantial amounts of user data. Review the red-flagged clauses carefully and consider privacy-preserving alternatives.';
+    } else {
+        msg = 'This policy is highly problematic from a privacy perspective. It contains multiple clauses that could significantly compromise your privacy. Consider avoiding this service or using it only with strong privacy protections (VPN, separate browser, fake details where legally permissible).';
+    }
+    summary.textContent = msg;
+
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function loadExample() {
+    document.getElementById('policyText').value = `Privacy Policy - Example Corp
+
+Last updated: January 1, 2024
+
+1. Information We Collect
+We collect various types of information including personal information such as name, email, and location. We also collect usage data, device information, and browsing behavior across our services.
+
+2. How We Use Your Information
+We use your data to provide services, improve our products, and for targeted advertising. We use Google Analytics and the Facebook Pixel to track user behavior and measure ad performance. We may use device fingerprinting technologies to identify your device.
+
+3. Data Sharing
+We share your personal information with our partners and affiliates to provide joint services. We may disclose your personal data to third parties for advertising purposes. We do not sell your data to data brokers. We share information with law enforcement when required by law.
+
+4. Cookies
+By using this site you agree to our use of cookies. We use persistent cookies and advertising cookies. You may opt-out of tracking in your browser settings.
+
+5. Data Retention
+We retain your personal data as long as your account is active and for a period thereafter as required by law. We keep certain data indefinitely for analytics and safety purposes.
+
+6. Your Rights
+If you are in the EU, you have rights under GDPR including the right to access, right to erasure, and data portability. California residents may exercise their rights under CCPA. You have the right to opt-out of marketing communications.
+
+7. Security
+We implement SSL/TLS encryption for data in transit. However, we cannot guarantee the security of your information. We have a data breach notification policy and will inform affected users within 72 hours.
+
+8. Children's Privacy
+We do not knowingly collect information from children under 13. We comply with COPPA regulations.
+
+9. Contact
+For privacy inquiries, contact our Data Protection Officer at privacy@example.com.`;
+}
+
+function clearAll() {
+    document.getElementById('policyText').value = '';
+    document.getElementById('results').classList.add('hidden');
+}
+</script>
+</body>
+</html>
