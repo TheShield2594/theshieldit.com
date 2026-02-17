@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Basics — Beginner's Guide | The Shield IT</title>
+    <meta name="description" content="Learn the fundamentals of cybersecurity. Understand threats, attacks, defenses, and best practices to protect yourself online.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #ef4444 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #94a3b8; }
+        .toc { background: rgba(30,41,59,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 24px; margin-bottom: 30px; }
+        .toc h2 { font-size: 1rem; margin-bottom: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+        .toc ol { padding-left: 20px; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { color: #ef4444; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .toc a:hover { color: #fca5a5; }
+        .section { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; margin-bottom: 24px; }
+        .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .section-icon { font-size: 1.8rem; }
+        h2 { font-size: 1.5rem; color: #f1f5f9; }
+        h3 { font-size: 1.05rem; color: #e2e8f0; margin: 18px 0 10px; font-weight: 700; }
+        p { font-size: 0.9rem; color: #94a3b8; line-height: 1.8; margin-bottom: 12px; }
+        .highlight { background: rgba(239,68,68,0.08); border-left: 3px solid #ef4444; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; }
+        .info-box { background: rgba(59,130,246,0.08); border-left: 3px solid #3b82f6; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; }
+        .attack-card { background: rgba(15,23,42,0.6); border-radius: 12px; padding: 16px; margin: 10px 0; border-left: 4px solid #ef4444; }
+        .attack-name { font-weight: 700; font-size: 0.95rem; color: #fca5a5; margin-bottom: 6px; }
+        .attack-how { font-size: 0.82rem; color: #94a3b8; margin-bottom: 6px; line-height: 1.6; }
+        .attack-prevent { font-size: 0.82rem; color: #86efac; }
+        .checklist { list-style: none; }
+        .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; color: #94a3b8; line-height: 1.6; }
+        .checklist li:last-child { border-bottom: none; }
+        .check { color: #22c55e; flex-shrink: 0; font-weight: 700; }
+        .principle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+        .principle { background: rgba(15,23,42,0.5); border-radius: 10px; padding: 14px; }
+        .principle-name { font-weight: 700; font-size: 0.88rem; color: #f1f5f9; margin-bottom: 6px; }
+        .principle-desc { font-size: 0.78rem; color: #64748b; line-height: 1.5; }
+        .nav-buttons { display: flex; justify-content: space-between; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+        .nav-btn { padding: 12px 24px; border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: opacity 0.2s; }
+        .nav-primary { background: linear-gradient(135deg, #ef4444, #f59e0b); color: white; }
+        .nav-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Security Basics</h1>
+        <p class="subtitle">Understand cybersecurity threats, how attacks work, and how to defend yourself</p>
+    </header>
+
+    <div class="toc">
+        <h2>Contents</h2>
+        <ol>
+            <li><a href="#threat-landscape">The Threat Landscape</a></li>
+            <li><a href="#common-attacks">Common Attack Types</a></li>
+            <li><a href="#principles">Core Security Principles</a></li>
+            <li><a href="#phishing">Recognizing Phishing</a></li>
+            <li><a href="#malware">Malware Prevention</a></li>
+            <li><a href="#updates">Updates & Patching</a></li>
+            <li><a href="#backups">Backups: Your Last Line of Defense</a></li>
+        </ol>
+    </div>
+
+    <div class="section" id="threat-landscape">
+        <div class="section-header"><div class="section-icon">🗺️</div><h2>The Threat Landscape</h2></div>
+        <p>Cybersecurity threats come from many directions: opportunistic criminals running automated attacks, targeted attacks by skilled adversaries, malicious insiders, and nation-state actors. Most people only face the first category — automated opportunistic attacks.</p>
+        <p>The good news: most cyberattacks are not sophisticated. They exploit the same basic weaknesses: reused passwords, unpatched software, and clicking on malicious links. Fixing these three problems eliminates the vast majority of your risk.</p>
+        <div class="info-box"><strong>The 80/20 rule of security:</strong> 80% of breaches are caused by just a few root causes — weak passwords, phishing, unpatched vulnerabilities, and misconfigured systems. Fixing these is more valuable than exotic defenses.</div>
+    </div>
+
+    <div class="section" id="common-attacks">
+        <div class="section-header"><div class="section-icon">⚔️</div><h2>Common Attack Types</h2></div>
+        <div class="attack-card">
+            <div class="attack-name">🎣 Phishing</div>
+            <div class="attack-how">Tricking you into revealing credentials or installing malware via deceptive emails, SMS, or calls. Over 90% of data breaches start with phishing.</div>
+            <div class="attack-prevent">✓ Verify sender addresses • Don't click unexpected links • Use 2FA • Hover over links before clicking</div>
+        </div>
+        <div class="attack-card">
+            <div class="attack-name">🔐 Credential Stuffing</div>
+            <div class="attack-how">Attackers take email/password combinations from breached databases and try them on other services. Works because most people reuse passwords.</div>
+            <div class="attack-prevent">✓ Unique password for every site • Use a password manager • Enable 2FA • Check haveibeenpwned.com</div>
+        </div>
+        <div class="attack-card">
+            <div class="attack-name">💰 Ransomware</div>
+            <div class="attack-how">Malware that encrypts your files and demands payment to decrypt them. Often delivered via phishing or exploit kits. Can spread across networks.</div>
+            <div class="attack-prevent">✓ Regular offline backups (3-2-1 rule) • Don't open unexpected attachments • Keep systems patched • Email filtering</div>
+        </div>
+        <div class="attack-card">
+            <div class="attack-name">🕵️ Social Engineering</div>
+            <div class="attack-how">Manipulating people into taking actions or revealing information. Exploits trust, urgency, authority, and reciprocity — not technical vulnerabilities.</div>
+            <div class="attack-prevent">✓ Verify requests through known channels • Never give credentials to inbound callers • Create a verification code word with family</div>
+        </div>
+        <div class="attack-card">
+            <div class="attack-name">🔓 Unpatched Vulnerabilities</div>
+            <div class="attack-how">Attackers exploit known security flaws in software that hasn't been updated. Eternal Blue (used in WannaCry) was patched by Microsoft months before it caused $4B in damage.</div>
+            <div class="attack-prevent">✓ Enable automatic updates • Patch within 48 hours of critical releases • Remove unused software</div>
+        </div>
+    </div>
+
+    <div class="section" id="principles">
+        <div class="section-header"><div class="section-icon">🏛️</div><h2>Core Security Principles</h2></div>
+        <div class="principle-grid">
+            <div class="principle"><div class="principle-name">🎯 Least Privilege</div><div class="principle-desc">Grant users only the minimum access needed. If a process doesn't need admin rights, don't give it admin rights.</div></div>
+            <div class="principle"><div class="principle-name">🛡️ Defense in Depth</div><div class="principle-desc">Multiple layers of security. If one layer fails, others still protect. No single control is sufficient.</div></div>
+            <div class="principle"><div class="principle-name">🔒 Zero Trust</div><div class="principle-desc">Never trust, always verify. Assume breach. Don't trust network location — verify every access request explicitly.</div></div>
+            <div class="principle"><div class="principle-name">📐 Attack Surface Reduction</div><div class="principle-desc">Remove what you don't use. Fewer services, ports, users, and software = fewer ways to attack.</div></div>
+            <div class="principle"><div class="principle-name">📋 Separation of Duties</div><div class="principle-desc">No single person should have enough access to commit and conceal fraud. Split critical functions across multiple people.</div></div>
+            <div class="principle"><div class="principle-name">📊 Audit & Monitor</div><div class="principle-desc">Log everything. You can't detect what you can't measure. Anomalies in logs often reveal breaches in progress.</div></div>
+        </div>
+    </div>
+
+    <div class="section" id="phishing">
+        <div class="section-header"><div class="section-icon">🎣</div><h2>Recognizing Phishing</h2></div>
+        <h3>Email Red Flags</h3>
+        <ul class="checklist">
+            <li><span class="check">🚩</span>Sender email domain doesn't match the company (paypa1.com, amaz0n-support.net)</li>
+            <li><span class="check">🚩</span>Generic greeting ("Dear Customer") when the company knows your name</li>
+            <li><span class="check">🚩</span>Urgent language: "Your account will be suspended in 24 hours"</li>
+            <li><span class="check">🚩</span>Links that don't match the displayed text (hover before clicking)</li>
+            <li><span class="check">🚩</span>Unexpected attachments, especially .exe, .zip, .docm, .xlsm</li>
+            <li><span class="check">🚩</span>Requests for credentials, passwords, or payment info by email</li>
+        </ul>
+        <div class="highlight"><strong>Golden rule:</strong> If an email asks you to click a link to log in, don't use the link. Instead, type the website address directly into your browser or use your saved bookmark.</div>
+    </div>
+
+    <div class="section" id="malware">
+        <div class="section-header"><div class="section-icon">🦠</div><h2>Malware Prevention</h2></div>
+        <ul class="checklist">
+            <li><span class="check">✓</span>Never open email attachments from unknown senders — scan with VirusTotal if unsure</li>
+            <li><span class="check">✓</span>Only download software from official sources and app stores</li>
+            <li><span class="check">✓</span>On Windows: enable Windows Defender (free, built-in, very effective)</li>
+            <li><span class="check">✓</span>Disable macros in Office documents from the internet</li>
+            <li><span class="check">✓</span>Run as a standard user, not as administrator</li>
+            <li><span class="check">✓</span>Use an ad blocker — malvertising is a common malware delivery vector</li>
+            <li><span class="check">✓</span>Verify software checksums (SHA-256 hash) when downloading sensitive tools</li>
+        </ul>
+    </div>
+
+    <div class="section" id="updates">
+        <div class="section-header"><div class="section-icon">🔄</div><h2>Updates & Patching</h2></div>
+        <p>The majority of successful cyberattacks exploit vulnerabilities that have already been patched. Updates are not optional — they are your most reliable defense against known threats.</p>
+        <ul class="checklist">
+            <li><span class="check">✓</span>Enable automatic updates for your operating system</li>
+            <li><span class="check">✓</span>Keep browser and browser extensions updated</li>
+            <li><span class="check">✓</span>Update apps promptly — especially anything internet-facing</li>
+            <li><span class="check">✓</span>Replace end-of-life software that no longer receives security patches</li>
+            <li><span class="check">✓</span>Update router firmware — often forgotten but critical</li>
+        </ul>
+        <div class="info-box">The WannaCry ransomware (2017) infected 230,000 computers using a vulnerability Microsoft had patched <em>two months earlier</em>. Patching is free. Ransomware recovery is not.</div>
+    </div>
+
+    <div class="section" id="backups">
+        <div class="section-header"><div class="section-icon">💾</div><h2>Backups: Your Last Line of Defense</h2></div>
+        <p>Backups protect against ransomware, hardware failure, accidental deletion, and theft. The <strong>3-2-1 rule</strong> is the gold standard:</p>
+        <ul class="checklist">
+            <li><span class="check">3</span>Keep <strong>3 copies</strong> of your data (1 original + 2 backups)</li>
+            <li><span class="check">2</span>Store on <strong>2 different media types</strong> (e.g. internal drive + external drive)</li>
+            <li><span class="check">1</span>Keep <strong>1 copy offsite</strong> (cloud or physically separate location)</li>
+        </ul>
+        <div class="highlight"><strong>Critical:</strong> A backup connected to your computer can also be encrypted by ransomware. Keep at least one backup that is offline or air-gapped.</div>
+        <p>Test your backups periodically by actually restoring a file. A backup you've never tested is not a backup — it's a hope.</p>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="/guide-privacy-101.html" class="nav-btn nav-secondary">← Privacy 101</a>
+        <a href="/cheat-sheets.html" class="nav-btn nav-primary">📋 Cheat Sheets →</a>
+        <a href="/glossary.html" class="nav-btn nav-secondary">📖 Glossary</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Signature Verifier | The Shield IT</title>
+    <meta name="description" content="Verify digital signatures using RSA-PKCS1, RSA-PSS, and ECDSA. Client-side verification with the Web Crypto API — no data leaves your browser.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 950px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #64748b; text-decoration: none; font-size: 0.9rem;
+            margin-bottom: 30px; transition: color 0.2s;
+        }
+        .back-link:hover { color: #94a3b8; }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #f1f5f9; }
+        .info-note {
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 10px; padding: 14px 18px;
+            font-size: 0.85rem; color: #6ee7b7; line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: #cbd5e1; font-weight: 500; }
+        .input-group { margin-bottom: 20px; }
+        textarea {
+            width: 100%; padding: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px; color: #e2e8f0;
+            font-size: 0.85rem; resize: vertical;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+        textarea:focus { outline: none; border-color: rgba(16,185,129,0.5); }
+        select {
+            width: 100%; padding: 12px 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px; color: #e2e8f0;
+            font-size: 0.9rem; cursor: pointer;
+        }
+        select:focus { outline: none; border-color: rgba(16,185,129,0.5); }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 640px) { .row-2 { grid-template-columns: 1fr; } }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 13px 28px; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-primary { background: linear-gradient(135deg, #10b981, #06b6d4); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; padding: 8px 16px; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+        .result-box {
+            border-radius: 16px; padding: 30px;
+            text-align: center; margin-bottom: 20px;
+            border: 2px solid;
+        }
+        .result-valid { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.4); }
+        .result-invalid { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.4); }
+        .result-error { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3); }
+        .result-icon { font-size: 3rem; margin-bottom: 12px; }
+        .result-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+        .result-valid .result-title { color: #10b981; }
+        .result-invalid .result-title { color: #ef4444; }
+        .result-error .result-title { color: #f59e0b; }
+        .result-body { color: #94a3b8; font-size: 0.9rem; line-height: 1.6; }
+        .detail-row {
+            display: flex; gap: 12px; justify-content: center;
+            flex-wrap: wrap; margin-top: 16px;
+        }
+        .detail-chip {
+            padding: 4px 14px; border-radius: 20px;
+            font-size: 0.78rem; background: rgba(255,255,255,0.08);
+            color: #94a3b8; font-family: monospace;
+        }
+        .tabs { display: flex; gap: 2px; margin-bottom: 24px; background: rgba(15,23,42,0.5); border-radius: 10px; padding: 4px; }
+        .tab {
+            flex: 1; padding: 9px; text-align: center; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 500; cursor: pointer;
+            color: #64748b; transition: all 0.2s; border: none; background: transparent;
+        }
+        .tab.active { background: rgba(16,185,129,0.15); color: #10b981; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .hint { font-size: 0.78rem; color: #64748b; margin-top: 6px; }
+        .file-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 8px; font-size: 0.8rem; color: #64748b;
+            cursor: pointer; transition: all 0.2s; background: transparent;
+        }
+        .file-btn:hover { border-color: rgba(16,185,129,0.4); color: #10b981; }
+        input[type="file"] { display: none; }
+        .algo-info {
+            background: rgba(15,23,42,0.4);
+            border-radius: 8px; padding: 12px 16px;
+            font-size: 0.8rem; color: #64748b; line-height: 1.7;
+            margin-top: 12px;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Digital Signature Verifier</h1>
+        <p class="subtitle">Verify RSA and ECDSA digital signatures — all processing done in your browser</p>
+    </header>
+
+    <div class="card">
+        <div class="info-note">
+            🔒 <strong>Privacy first:</strong> All cryptographic operations use the browser's Web Crypto API. No keys, messages, or signatures are ever sent to a server.
+        </div>
+
+        <h2>Algorithm</h2>
+        <div class="input-group">
+            <label for="algorithm">Signature Algorithm</label>
+            <select id="algorithm" onchange="onAlgoChange()">
+                <optgroup label="RSA">
+                    <option value="RSASSA-PKCS1-v1_5-SHA-256">RSA-PKCS1-v1_5 with SHA-256 (most common)</option>
+                    <option value="RSASSA-PKCS1-v1_5-SHA-384">RSA-PKCS1-v1_5 with SHA-384</option>
+                    <option value="RSASSA-PKCS1-v1_5-SHA-512">RSA-PKCS1-v1_5 with SHA-512</option>
+                    <option value="RSA-PSS-SHA-256">RSA-PSS with SHA-256</option>
+                    <option value="RSA-PSS-SHA-384">RSA-PSS with SHA-384</option>
+                    <option value="RSA-PSS-SHA-512">RSA-PSS with SHA-512</option>
+                </optgroup>
+                <optgroup label="ECDSA">
+                    <option value="ECDSA-P-256-SHA-256">ECDSA P-256 with SHA-256</option>
+                    <option value="ECDSA-P-384-SHA-384">ECDSA P-384 with SHA-384</option>
+                    <option value="ECDSA-P-521-SHA-512">ECDSA P-521 with SHA-512</option>
+                </optgroup>
+            </select>
+            <div class="algo-info" id="algoInfo">RSA PKCS#1 v1.5 is the most widely deployed signature scheme. Used in TLS, JWT (RS256), code signing, and many other applications.</div>
+        </div>
+
+        <div id="pssSaltRow" class="input-group hidden">
+            <label for="saltLength">RSA-PSS Salt Length (bytes)</label>
+            <select id="saltLength">
+                <option value="32">32 (SHA-256 digest size)</option>
+                <option value="48">48 (SHA-384 digest size)</option>
+                <option value="64">64 (SHA-512 digest size)</option>
+                <option value="0">0 (min)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Public Key (PEM)</h2>
+        <div class="input-group">
+            <label>Public Key</label>
+            <textarea id="publicKey" rows="7" placeholder="-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
+-----END PUBLIC KEY-----"></textarea>
+            <div class="btn-row" style="margin-top:8px;">
+                <label class="file-btn">📁 Load from file <input type="file" id="keyFile" accept=".pem,.key,.pub,.crt,.cer" onchange="loadKeyFile(this)"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Message</h2>
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('text')">Plain Text</button>
+            <button class="tab" onclick="switchTab('hex')">Hex</button>
+            <button class="tab" onclick="switchTab('base64')">Base64</button>
+            <button class="tab" onclick="switchTab('file')">File</button>
+        </div>
+
+        <div class="tab-content active" id="tab-text">
+            <div class="input-group">
+                <label>Message Content</label>
+                <textarea id="msgText" rows="5" placeholder="Enter the original message that was signed..."></textarea>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-hex">
+            <div class="input-group">
+                <label>Message (hex encoded)</label>
+                <textarea id="msgHex" rows="4" placeholder="48656c6c6f2c20576f726c6421..." style="font-family:monospace;"></textarea>
+                <div class="hint">Lowercase or uppercase hex, with or without spaces</div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-base64">
+            <div class="input-group">
+                <label>Message (base64 encoded)</label>
+                <textarea id="msgBase64" rows="4" placeholder="SGVsbG8sIFdvcmxkIQ==" style="font-family:monospace;"></textarea>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-file">
+            <div class="input-group">
+                <label>Message File</label>
+                <label class="file-btn" style="display:inline-flex; margin-bottom:10px;">
+                    📁 Choose file to verify
+                    <input type="file" id="msgFile" onchange="loadMsgFile(this)">
+                </label>
+                <div id="fileInfo" style="font-size:0.82rem; color:#64748b;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Signature</h2>
+        <div class="row-2">
+            <div class="input-group">
+                <label>Encoding</label>
+                <select id="sigEncoding">
+                    <option value="base64">Base64</option>
+                    <option value="base64url">Base64 URL-safe</option>
+                    <option value="hex">Hex</option>
+                    <option value="raw">Raw binary (file)</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-group" id="sigTextGroup">
+            <label>Signature</label>
+            <textarea id="sigText" rows="4" placeholder="Base64-encoded signature..." style="font-family:monospace;"></textarea>
+        </div>
+        <div class="input-group hidden" id="sigFileGroup">
+            <label>Signature File</label>
+            <label class="file-btn">
+                📁 Load signature file
+                <input type="file" id="sigFile" onchange="loadSigFile(this)">
+            </label>
+            <div id="sigFileInfo" style="font-size:0.82rem; color:#64748b; margin-top:8px;"></div>
+        </div>
+
+        <div id="sigEncodingNote" style="font-size:0.78rem; color:#64748b; margin-top:8px;"></div>
+    </div>
+
+    <div style="text-align:center; margin-bottom:20px;">
+        <button class="btn btn-primary" onclick="verifySignature()" style="min-width:220px;">Verify Signature</button>
+    </div>
+
+    <div id="resultSection" class="hidden"></div>
+
+    <div class="card">
+        <h2>Algorithm Reference</h2>
+        <div style="font-size:0.85rem; color:#94a3b8; line-height:1.9;">
+            <strong style="color:#e2e8f0;">RSA-PKCS1-v1_5</strong> — Classic RSA signature scheme. Used in TLS 1.2 and below, JWT RS256/RS384/RS512.<br>
+            <strong style="color:#e2e8f0;">RSA-PSS</strong> — Probabilistic RSA signature with better security proofs. Used in TLS 1.3, modern applications.<br>
+            <strong style="color:#e2e8f0;">ECDSA</strong> — Elliptic Curve signature. Smaller keys with equivalent security. Used in JWT ES256/ES384/ES512, Bitcoin, TLS 1.3.<br><br>
+            <strong style="color:#e2e8f0;">Public Key Format:</strong> PKCS#8 SubjectPublicKeyInfo (BEGIN PUBLIC KEY). Not PKCS#1 (BEGIN RSA PUBLIC KEY).<br>
+            To convert: <code style="background:rgba(255,255,255,0.07); padding:2px 6px; border-radius:4px;">openssl rsa -in private.pem -pubout -out public.pem</code>
+        </div>
+    </div>
+</div>
+
+<script>
+let msgFileData = null;
+let sigFileData = null;
+let activeTab = 'text';
+
+const ALGO_INFO = {
+    'RSASSA-PKCS1-v1_5-SHA-256': 'RSA PKCS#1 v1.5 is the most widely deployed signature scheme. Used in TLS, JWT (RS256), code signing, and many other applications.',
+    'RSASSA-PKCS1-v1_5-SHA-384': 'RSA PKCS#1 v1.5 with SHA-384 hash. Used in JWT RS384.',
+    'RSASSA-PKCS1-v1_5-SHA-512': 'RSA PKCS#1 v1.5 with SHA-512 hash. Used in JWT RS512 for maximum hash strength.',
+    'RSA-PSS-SHA-256': 'RSA-PSS with SHA-256. Probabilistic padding with stronger security proofs than PKCS#1. Required in TLS 1.3.',
+    'RSA-PSS-SHA-384': 'RSA-PSS with SHA-384. Used where stronger hash is required.',
+    'RSA-PSS-SHA-512': 'RSA-PSS with SHA-512 for maximum security.',
+    'ECDSA-P-256-SHA-256': 'ECDSA with NIST P-256 curve and SHA-256. Used in JWT ES256, TLS 1.3. Fast and efficient.',
+    'ECDSA-P-384-SHA-384': 'ECDSA with NIST P-384 curve and SHA-384. Used in JWT ES384. Higher security level.',
+    'ECDSA-P-521-SHA-512': 'ECDSA with NIST P-521 curve and SHA-512. Highest security ECDSA. Used in JWT ES512.',
+};
+
+function onAlgoChange() {
+    const algo = document.getElementById('algorithm').value;
+    document.getElementById('algoInfo').textContent = ALGO_INFO[algo] || '';
+    const isPSS = algo.startsWith('RSA-PSS');
+    document.getElementById('pssSaltRow').classList.toggle('hidden', !isPSS);
+    if (isPSS) {
+        const hashBits = algo.endsWith('256') ? '32' : algo.endsWith('384') ? '48' : '64';
+        document.getElementById('saltLength').value = hashBits;
+    }
+}
+
+function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab').forEach((t, i) => {
+        const tabs = ['text', 'hex', 'base64', 'file'];
+        t.classList.toggle('active', tabs[i] === tab);
+    });
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+
+document.getElementById('sigEncoding').addEventListener('change', function() {
+    const isRaw = this.value === 'raw';
+    document.getElementById('sigTextGroup').classList.toggle('hidden', isRaw);
+    document.getElementById('sigFileGroup').classList.toggle('hidden', !isRaw);
+    const notes = {
+        base64: 'Standard base64 with +/= characters',
+        base64url: 'URL-safe base64 with -_ characters (used in JWT)',
+        hex: 'Hexadecimal string (0-9, a-f)',
+        raw: 'Raw binary signature file (.sig)'
+    };
+    document.getElementById('sigEncodingNote').textContent = notes[this.value] || '';
+});
+
+function loadKeyFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => { document.getElementById('publicKey').value = e.target.result; };
+    reader.readAsText(file);
+}
+
+function loadMsgFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        msgFileData = new Uint8Array(e.target.result);
+        document.getElementById('fileInfo').textContent = `Loaded: ${file.name} (${file.size.toLocaleString()} bytes)`;
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function loadSigFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        sigFileData = new Uint8Array(e.target.result);
+        document.getElementById('sigFileInfo').textContent = `Loaded: ${file.name} (${file.size.toLocaleString()} bytes)`;
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function base64ToBytes(b64) {
+    b64 = b64.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, '');
+    const pad = b64.length % 4;
+    if (pad) b64 += '==='.slice(0, 4 - pad);
+    const bin = atob(b64);
+    return new Uint8Array([...bin].map(c => c.charCodeAt(0)));
+}
+
+function hexToBytes(hex) {
+    hex = hex.replace(/\s/g, '');
+    if (hex.length % 2 !== 0) throw new Error('Hex string has odd length');
+    return new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+}
+
+function pemToBytes(pem) {
+    const b64 = pem
+        .replace(/-----BEGIN.*?-----/, '')
+        .replace(/-----END.*?-----/, '')
+        .replace(/\s/g, '');
+    return base64ToBytes(b64);
+}
+
+function getAlgoParams(algoStr) {
+    if (algoStr.startsWith('RSASSA-PKCS1-v1_5')) {
+        const hash = 'SHA-' + algoStr.split('-SHA-')[1];
+        return {
+            importAlgo: { name: 'RSASSA-PKCS1-v1_5', hash },
+            verifyAlgo: { name: 'RSASSA-PKCS1-v1_5' },
+            keyUsage: ['verify']
+        };
+    }
+    if (algoStr.startsWith('RSA-PSS')) {
+        const hash = 'SHA-' + algoStr.split('-SHA-')[1];
+        const saltLength = parseInt(document.getElementById('saltLength').value);
+        return {
+            importAlgo: { name: 'RSA-PSS', hash },
+            verifyAlgo: { name: 'RSA-PSS', saltLength },
+            keyUsage: ['verify']
+        };
+    }
+    if (algoStr.startsWith('ECDSA')) {
+        const parts = algoStr.split('-');
+        const namedCurve = parts[1] + '-' + parts[2];
+        const hash = 'SHA-' + parts[4];
+        return {
+            importAlgo: { name: 'ECDSA', namedCurve },
+            verifyAlgo: { name: 'ECDSA', hash },
+            keyUsage: ['verify']
+        };
+    }
+    throw new Error('Unknown algorithm: ' + algoStr);
+}
+
+async function verifySignature() {
+    const resultSection = document.getElementById('resultSection');
+    resultSection.classList.remove('hidden');
+    resultSection.innerHTML = '<div class="result-box" style="border-color:rgba(100,116,139,0.3)"><div class="result-icon">⏳</div><div class="result-title" style="color:#94a3b8;">Verifying...</div></div>';
+
+    try {
+        // Get public key
+        const pemText = document.getElementById('publicKey').value.trim();
+        if (!pemText) throw new Error('Public key is required');
+        const keyBytes = pemToBytes(pemText);
+
+        // Get message
+        let msgBytes;
+        if (activeTab === 'text') {
+            const txt = document.getElementById('msgText').value;
+            if (!txt) throw new Error('Message is required');
+            msgBytes = new TextEncoder().encode(txt);
+        } else if (activeTab === 'hex') {
+            const hex = document.getElementById('msgHex').value.trim();
+            if (!hex) throw new Error('Message hex is required');
+            msgBytes = hexToBytes(hex);
+        } else if (activeTab === 'base64') {
+            const b64 = document.getElementById('msgBase64').value.trim();
+            if (!b64) throw new Error('Message base64 is required');
+            msgBytes = base64ToBytes(b64);
+        } else if (activeTab === 'file') {
+            if (!msgFileData) throw new Error('Please load a message file');
+            msgBytes = msgFileData;
+        }
+
+        // Get signature
+        const sigEncoding = document.getElementById('sigEncoding').value;
+        let sigBytes;
+        if (sigEncoding === 'raw') {
+            if (!sigFileData) throw new Error('Please load a signature file');
+            sigBytes = sigFileData;
+        } else if (sigEncoding === 'base64' || sigEncoding === 'base64url') {
+            const sigText = document.getElementById('sigText').value.trim();
+            if (!sigText) throw new Error('Signature is required');
+            sigBytes = base64ToBytes(sigText);
+        } else if (sigEncoding === 'hex') {
+            const sigText = document.getElementById('sigText').value.trim();
+            if (!sigText) throw new Error('Signature is required');
+            sigBytes = hexToBytes(sigText);
+        }
+
+        // Import key and verify
+        const algoStr = document.getElementById('algorithm').value;
+        const { importAlgo, verifyAlgo, keyUsage } = getAlgoParams(algoStr);
+
+        const cryptoKey = await crypto.subtle.importKey(
+            'spki',
+            keyBytes,
+            importAlgo,
+            false,
+            keyUsage
+        );
+
+        const valid = await crypto.subtle.verify(
+            verifyAlgo,
+            cryptoKey,
+            sigBytes,
+            msgBytes
+        );
+
+        const msgLen = msgBytes.length;
+        const sigLen = sigBytes.length;
+
+        if (valid) {
+            resultSection.innerHTML = `
+                <div class="result-box result-valid">
+                    <div class="result-icon">✅</div>
+                    <div class="result-title">Signature Valid</div>
+                    <div class="result-body">The signature is cryptographically valid. The message was signed by the holder of the corresponding private key and has not been tampered with.</div>
+                    <div class="detail-row">
+                        <span class="detail-chip">${escapeHtml(algoStr)}</span>
+                        <span class="detail-chip">Message: ${escapeHtml(String(msgLen))} bytes</span>
+                        <span class="detail-chip">Signature: ${escapeHtml(String(sigLen))} bytes</span>
+                    </div>
+                </div>`;
+        } else {
+            resultSection.innerHTML = `
+                <div class="result-box result-invalid">
+                    <div class="result-icon">❌</div>
+                    <div class="result-title">Signature Invalid</div>
+                    <div class="result-body">The signature does not match. This could mean the message was altered, the wrong key was used, the wrong algorithm was selected, or the signature data is corrupted.</div>
+                    <div class="detail-row">
+                        <span class="detail-chip">${escapeHtml(algoStr)}</span>
+                        <span class="detail-chip">Message: ${escapeHtml(String(msgLen))} bytes</span>
+                        <span class="detail-chip">Signature: ${escapeHtml(String(sigLen))} bytes</span>
+                    </div>
+                </div>`;
+        }
+    } catch (err) {
+        const msg = err.message || 'Unknown error';
+        let hint = '';
+        if (msg.includes('spki') || msg.includes('import')) {
+            hint = ' Make sure the key is in PKCS#8 format (-----BEGIN PUBLIC KEY-----), not PKCS#1 (-----BEGIN RSA PUBLIC KEY-----)';
+        } else if (msg.includes('base64') || msg.includes('hex')) {
+            hint = ' Check that the encoding format matches the selected encoding type.';
+        }
+
+        resultSection.innerHTML = `
+            <div class="result-box result-error">
+                <div class="result-icon">⚠️</div>
+                <div class="result-title">Verification Error</div>
+                <div class="result-body">${escapeHtml(msg)}${escapeHtml(hint)}</div>
+            </div>`;
+    }
+
+    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+onAlgoChange();
+</script>
+</body>
+</html>

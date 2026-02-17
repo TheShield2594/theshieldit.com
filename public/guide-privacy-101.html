@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy 101 — Beginner's Guide | The Shield IT</title>
+    <meta name="description" content="Your complete beginner's guide to digital privacy. Learn what data is collected about you, how to protect it, and which tools make the biggest difference.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .toc { background: rgba(30,41,59,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 24px; margin-bottom: 30px; }
+        .toc h2 { font-size: 1rem; margin-bottom: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #06b6d4; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .toc-list a:hover { color: #67e8f9; }
+        .toc-list li::before { content: "→ "; color: #475569; }
+        .section { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; margin-bottom: 24px; }
+        .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .section-icon { font-size: 1.8rem; }
+        h2 { font-size: 1.5rem; color: #f1f5f9; }
+        h3 { font-size: 1.1rem; color: #e2e8f0; margin: 20px 0 10px; }
+        p { font-size: 0.9rem; color: #94a3b8; line-height: 1.8; margin-bottom: 14px; }
+        .highlight { background: rgba(6,182,212,0.08); border-left: 3px solid #06b6d4; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; }
+        .tool-rec { display: flex; align-items: flex-start; gap: 14px; background: rgba(15,23,42,0.5); border-radius: 12px; padding: 14px; margin: 10px 0; }
+        .tool-icon { font-size: 1.3rem; flex-shrink: 0; }
+        .tool-name { font-weight: 700; font-size: 0.9rem; color: #f1f5f9; }
+        .tool-desc { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+        .tool-why { font-size: 0.8rem; color: #94a3b8; margin-top: 6px; }
+        .checklist { list-style: none; }
+        .checklist li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; color: #94a3b8; }
+        .checklist li:last-child { border-bottom: none; }
+        .check { color: #22c55e; flex-shrink: 0; font-weight: 700; }
+        .level-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; margin-left: 8px; }
+        .level-easy { background: rgba(34,197,94,0.15); color: #86efac; }
+        .level-medium { background: rgba(245,158,11,0.15); color: #fde68a; }
+        .level-hard { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .nav-buttons { display: flex; justify-content: space-between; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+        .nav-btn { padding: 12px 24px; border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: opacity 0.2s; }
+        .nav-primary { background: linear-gradient(135deg, #06b6d4, #8b5cf6); color: white; }
+        .nav-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Privacy 101</h1>
+        <p class="subtitle">A beginner's guide to protecting your digital privacy — no tech background needed</p>
+    </header>
+
+    <div class="toc">
+        <h2>Contents</h2>
+        <ol class="toc-list">
+            <li><a href="#why">Why Privacy Matters</a></li>
+            <li><a href="#collected">What Data Is Collected About You</a></li>
+            <li><a href="#browser">Browser Privacy</a></li>
+            <li><a href="#passwords">Passwords & Accounts</a></li>
+            <li><a href="#communication">Secure Communication</a></li>
+            <li><a href="#devices">Device Security</a></li>
+            <li><a href="#network">Network Privacy</a></li>
+            <li><a href="#checklist">Quick Wins Checklist</a></li>
+        </ol>
+    </div>
+
+    <div class="section" id="why">
+        <div class="section-header"><div class="section-icon">🤔</div><h2>Why Privacy Matters</h2></div>
+        <p>Privacy isn't about hiding wrongdoing. It's about control — your control over information about yourself. When you lose privacy, you lose the ability to make decisions without being judged, manipulated, or discriminated against.</p>
+        <p>Your data is used to build profiles that predict your behavior, influence your political views, determine insurance rates, affect job applications, and target you with psychological advertising. You are the product, not the customer.</p>
+        <div class="highlight"><strong>"Saying you don't care about privacy because you have nothing to hide is like saying you don't care about free speech because you have nothing to say."</strong> — Edward Snowden</div>
+        <p>Privacy protects everyone — not just people doing something wrong. It protects journalists, activists, abuse survivors, LGBTQ+ individuals in hostile environments, and anyone who simply doesn't want corporations profiling their every move.</p>
+    </div>
+
+    <div class="section" id="collected">
+        <div class="section-header"><div class="section-icon">📊</div><h2>What Data Is Collected About You</h2></div>
+        <h3>By websites and apps:</h3>
+        <ul class="checklist">
+            <li><span class="check">•</span>Every page you visit, how long you stay, what you click</li>
+            <li><span class="check">•</span>Your IP address (reveals your approximate location and ISP)</li>
+            <li><span class="check">•</span>Browser fingerprint (screen size, fonts, plugins — uniquely identifies you)</li>
+            <li><span class="check">•</span>Search queries and browsing history</li>
+            <li><span class="check">•</span>Location data (GPS, WiFi triangulation)</li>
+            <li><span class="check">•</span>Purchase history and browsing habits</li>
+        </ul>
+        <h3>By social media:</h3>
+        <ul class="checklist">
+            <li><span class="check">•</span>All posts, likes, messages (even deleted ones, stored on servers)</li>
+            <li><span class="check">•</span>Your social graph — who you know and how close you are</li>
+            <li><span class="check">•</span>Face recognition data (if you upload photos)</li>
+            <li><span class="check">•</span>Tracking pixels on third-party sites (Facebook tracks you even when you're not on Facebook)</li>
+        </ul>
+        <div class="highlight">Even if you've never had a Facebook account, Facebook builds "shadow profiles" on you using data from websites with Facebook Pixel and from contacts uploaded by other users.</div>
+    </div>
+
+    <div class="section" id="browser">
+        <div class="section-header"><div class="section-icon">🌐</div><h2>Browser Privacy</h2></div>
+        <p>Your browser is your window to the internet — and also the primary tool used to track you. Here's what matters:</p>
+        <h3>Recommended Browsers <span class="level-badge level-easy">Start Here</span></h3>
+        <div class="tool-rec"><div class="tool-icon">🦁</div><div><div class="tool-name">Brave</div><div class="tool-desc">Built-in ad blocker, fingerprint randomization, blocks trackers by default</div><div class="tool-why">Best choice for most users — private without configuration</div></div></div>
+        <div class="tool-rec"><div class="tool-icon">🦊</div><div><div class="tool-name">Firefox</div><div class="tool-desc">Open source, highly configurable, large extension ecosystem</div><div class="tool-why">Best with uBlock Origin + Privacy Badger installed</div></div></div>
+        <h3>Essential Browser Extensions</h3>
+        <div class="tool-rec"><div class="tool-icon">🛡️</div><div><div class="tool-name">uBlock Origin</div><div class="tool-desc">Blocks ads, trackers, and malicious sites</div><div class="tool-why">The single most impactful privacy tool. Free and open source.</div></div></div>
+        <div class="tool-rec"><div class="tool-icon">🔒</div><div><div class="tool-name">HTTPS Everywhere (or built-in)</div><div class="tool-desc">Forces HTTPS connections where available</div><div class="tool-why">Modern browsers have this built-in — enable it in settings</div></div></div>
+        <h3>What to Avoid</h3>
+        <p>Google Chrome sends browsing data to Google by default and has been weakening ad-blocking APIs. Microsoft Edge has telemetry you can't fully disable. Incognito/Private mode only hides history from people using your device — your ISP, employer, and websites still see your traffic.</p>
+    </div>
+
+    <div class="section" id="passwords">
+        <div class="section-header"><div class="section-icon">🔐</div><h2>Passwords & Accounts</h2></div>
+        <p>Weak and reused passwords are the #1 cause of account compromises. Here's what to do:</p>
+        <div class="tool-rec"><div class="tool-icon">🔑</div><div><div class="tool-name">Use a Password Manager <span class="level-badge level-easy">Essential</span></div><div class="tool-desc">Bitwarden (free, open source) or KeePassXC (local-only)</div><div class="tool-why">Generates and stores unique 20+ character passwords for every site. You only remember one master password.</div></div></div>
+        <div class="tool-rec"><div class="tool-icon">📱</div><div><div class="tool-name">Enable 2FA on Every Important Account <span class="level-badge level-easy">Essential</span></div><div class="tool-desc">Use an authenticator app (Aegis on Android, Raivo on iOS)</div><div class="tool-why">Even if your password is stolen, attackers can't get in without the second factor. Avoid SMS 2FA — use TOTP apps instead.</div></div></div>
+        <div class="highlight"><strong>Most important accounts to secure with 2FA:</strong> Email (controls everything else), banking, social media, cloud storage, and your password manager.</div>
+    </div>
+
+    <div class="section" id="communication">
+        <div class="section-header"><div class="section-icon">💬</div><h2>Secure Communication</h2></div>
+        <div class="tool-rec"><div class="tool-icon">📡</div><div><div class="tool-name">Signal <span class="level-badge level-easy">Best Choice</span></div><div class="tool-desc">End-to-end encrypted messaging and calls. Open source, audited.</div><div class="tool-why">The gold standard for private communication. Used by journalists, lawyers, and security researchers worldwide.</div></div></div>
+        <div class="tool-rec"><div class="tool-icon">✉️</div><div><div class="tool-name">ProtonMail or Tutanota</div><div class="tool-desc">End-to-end encrypted email providers</div><div class="tool-why">Regular email is like a postcard — anyone can read it. Encrypted email services protect your messages.</div></div></div>
+        <p><strong>What about WhatsApp?</strong> WhatsApp uses Signal's encryption protocol for messages, but collects significant metadata (who you talk to, when, how often) and shares it with Meta. Better than unencrypted alternatives, but Signal is the superior choice.</p>
+    </div>
+
+    <div class="section" id="devices">
+        <div class="section-header"><div class="section-icon">💻</div><h2>Device Security</h2></div>
+        <ul class="checklist">
+            <li><span class="check">✓</span>Enable full-disk encryption (FileVault on Mac, BitLocker on Windows, built-in on modern iPhones and Android)</li>
+            <li><span class="check">✓</span>Use a strong screen lock PIN (6+ digits, not biometrics as your only method)</li>
+            <li><span class="check">✓</span>Keep your OS and apps updated — most exploits target unpatched systems</li>
+            <li><span class="check">✓</span>Review and revoke unnecessary app permissions (location, microphone, camera, contacts)</li>
+            <li><span class="check">✓</span>Use a privacy-respecting DNS (Cloudflare 1.1.1.1 or NextDNS)</li>
+            <li><span class="check">✓</span>On Android: use Brave or Firefox, not Chrome</li>
+            <li><span class="check">✓</span>Disable advertising IDs (Settings → Privacy → Advertising)</li>
+        </ul>
+    </div>
+
+    <div class="section" id="network">
+        <div class="section-header"><div class="section-icon">🌐</div><h2>Network Privacy</h2></div>
+        <h3>VPNs <span class="level-badge level-medium">Intermediate</span></h3>
+        <p>A VPN encrypts your traffic and hides your activity from your ISP. But it shifts trust — your VPN provider can see your traffic instead. Choose carefully: Mullvad and ProtonVPN have independently audited no-logs policies.</p>
+        <div class="highlight"><strong>VPN myths:</strong> VPNs don't make you anonymous. Websites can still track you via cookies, fingerprinting, and account logins. A VPN primarily protects you from ISP monitoring and hides your IP from websites.</div>
+        <h3>Public WiFi</h3>
+        <p>Public WiFi is generally safe for HTTPS traffic — your browser encrypts data in transit. The main risks are evil twin attacks (fake hotspots) and unencrypted HTTP sites. Always verify you're on the real network and use a VPN if you're accessing sensitive accounts.</p>
+    </div>
+
+    <div class="section" id="checklist">
+        <div class="section-header"><div class="section-icon">✅</div><h2>Quick Wins Checklist</h2></div>
+        <p>Do these today. Each one takes less than 30 minutes and significantly improves your privacy:</p>
+        <ul class="checklist">
+            <li><span class="check">□</span><div><strong>Install uBlock Origin</strong> in your browser — blocks thousands of trackers immediately</div></li>
+            <li><span class="check">□</span><div><strong>Set up Bitwarden</strong> — start saving all new passwords there, and change your most important account passwords to strong, unique ones</div></li>
+            <li><span class="check">□</span><div><strong>Enable 2FA on email and bank accounts</strong> — use an authenticator app, not SMS</div></li>
+            <li><span class="check">□</span><div><strong>Switch to Signal</strong> for personal messaging — invite 3 close friends or family</div></li>
+            <li><span class="check">□</span><div><strong>Switch DNS to 1.1.1.1</strong> — change in router or device network settings</div></li>
+            <li><span class="check">□</span><div><strong>Review Google account permissions</strong> — myaccount.google.com → Data & Privacy → reduce what's tracked</div></li>
+            <li><span class="check">□</span><div><strong>Opt out of targeted advertising</strong> on your phone (iOS: Settings → Privacy → Tracking; Android: Settings → Privacy → Ads)</div></li>
+        </ul>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="/guide-security-basics.html" class="nav-btn nav-primary">Next: Security Basics →</a>
+        <a href="/glossary.html" class="nav-btn nav-secondary">📖 Glossary</a>
+        <a href="/cheat-sheets.html" class="nav-btn nav-secondary">📋 Cheat Sheets</a>
+    </div>
+</div>
+</body>
+</html>

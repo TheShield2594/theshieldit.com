@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Defense Game | The Shield IT</title>
+    <meta name="description" content="Defend your network against incoming cyber attacks! An educational security game where you manage firewalls, patch systems, and respond to threats in real time.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 20px; padding-top: 20px; }
+        h1 { font-size: 2.2rem; margin-bottom: 8px; background: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 20px; }
+        .back-link:hover { color: #94a3b8; }
+        .hud { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .hud-box { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 16px; flex: 1; text-align: center; min-width: 90px; }
+        .hud-val { font-size: 1.4rem; font-weight: 700; }
+        .hud-label { font-size: 0.68rem; color: #64748b; margin-top: 2px; }
+        .health-bar-bg { height: 8px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+        .health-bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s, background 0.5s; }
+        .game-area { background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 0; overflow: hidden; margin-bottom: 16px; position: relative; min-height: 340px; }
+        .network-canvas { width: 100%; padding: 20px; }
+        /* Network nodes */
+        .nodes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 20px; }
+        .node { background: rgba(30,41,59,0.8); border-radius: 12px; padding: 14px; border: 2px solid; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+        .node.safe { border-color: rgba(34,197,94,0.4); }
+        .node.vulnerable { border-color: rgba(245,158,11,0.6); animation: pulse-warn 1.5s ease-in-out infinite; }
+        .node.compromised { border-color: rgba(239,68,68,0.8); animation: pulse-danger 0.8s ease-in-out infinite; }
+        .node.patching { border-color: rgba(59,130,246,0.6); }
+        @keyframes pulse-warn { 0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.3)} 50%{box-shadow:0 0 0 8px rgba(245,158,11,0)} }
+        @keyframes pulse-danger { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)} 50%{box-shadow:0 0 0 10px rgba(239,68,68,0)} }
+        .node-icon { font-size: 1.8rem; margin-bottom: 6px; }
+        .node-name { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; margin-bottom: 4px; }
+        .node-status { font-size: 0.7rem; color: #64748b; }
+        .node-hp { height: 4px; background: rgba(255,255,255,0.1); border-radius: 999px; margin-top: 8px; overflow: hidden; }
+        .node-hp-fill { height: 100%; border-radius: 999px; transition: width 0.3s; background: #22c55e; }
+        .node-action-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); border-radius: 10px; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+        .node:hover .node-action-overlay { display: flex; }
+        .node-action-btn { padding: 6px 14px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .btn-patch { background: #3b82f6; color: white; }
+        .btn-firewall { background: #22c55e; color: white; }
+        .btn-isolate { background: #ef4444; color: white; }
+        .threat-log { background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; max-height: 200px; overflow-y: auto; margin-bottom: 16px; }
+        .log-title { font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .log-entry { font-size: 0.78rem; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; gap: 10px; }
+        .log-time { color: #475569; font-family: monospace; flex-shrink: 0; }
+        .log-text { flex: 1; }
+        .log-attack { color: #fca5a5; }
+        .log-defend { color: #86efac; }
+        .log-warn { color: #fde68a; }
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+        .ctrl-btn { padding: 10px 18px; border-radius: 10px; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .ctrl-primary { background: linear-gradient(135deg, #22c55e, #06b6d4); color: white; }
+        .ctrl-primary:hover { opacity: 0.9; }
+        .ctrl-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+        .ctrl-secondary:hover { background: rgba(255,255,255,0.12); }
+        .ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .overlay { position: absolute; inset: 0; background: rgba(10,14,26,0.95); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 10; text-align: center; padding: 40px; }
+        .overlay-title { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+        .overlay-body { color: #94a3b8; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.7; max-width: 400px; }
+        .overlay-btn { padding: 14px 32px; background: linear-gradient(135deg, #22c55e, #06b6d4); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .level-badge { padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background: rgba(6,182,212,0.15); color: #67e8f9; margin-left: 8px; }
+        .wave-announce { text-align: center; padding: 12px; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); border-radius: 10px; font-size: 0.9rem; color: #67e8f9; margin-bottom: 12px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>🛡️ Network Defense Game</h1>
+        <p class="subtitle">Defend your network from waves of cyber attacks — click nodes to patch, firewall, or isolate them</p>
+    </header>
+
+    <div class="hud">
+        <div class="hud-box"><div class="hud-val" id="hudScore" style="color:#22c55e">0</div><div class="hud-label">Score</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudWave" style="color:#06b6d4">1</div><div class="hud-label">Wave</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudThreats" style="color:#f59e0b">0</div><div class="hud-label">Threats</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudDefended" style="color:#22c55e">0</div><div class="hud-label">Defended</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudBreach" style="color:#ef4444">0</div><div class="hud-label">Breaches</div></div>
+    </div>
+    <div class="health-bar-bg"><div class="health-bar-fill" id="healthBar" style="width:100%; background:#22c55e;"></div></div>
+
+    <div id="waveAnnounce" class="wave-announce hidden"></div>
+
+    <div class="game-area" id="gameArea">
+        <div class="overlay" id="startOverlay">
+            <div class="overlay-title">🛡️ Network Defense</div>
+            <div class="overlay-body">Defend your 9-node network across 5 waves of increasing attacks. Click nodes when they're under attack to:<br><br><strong>🔵 Patch</strong> — Fix vulnerabilities (takes 3s)<br><strong>🟢 Firewall</strong> — Block incoming attacks (takes 2s)<br><strong>🔴 Isolate</strong> — Emergency stop, sacrifice the node<br><br>Don't let your health drop to 0!</div>
+            <button class="overlay-btn" onclick="startGame()">Start Defense</button>
+        </div>
+        <div class="nodes-grid" id="nodesGrid"></div>
+    </div>
+
+    <div class="threat-log" id="threatLog">
+        <div class="log-title">📋 Threat Log</div>
+        <div id="logEntries"></div>
+    </div>
+
+    <div class="controls">
+        <button class="ctrl-btn ctrl-primary" id="startBtn" onclick="startGame()" disabled>Start</button>
+        <button class="ctrl-btn ctrl-secondary" onclick="restartGame()">Restart</button>
+        <span style="align-self:center; font-size:0.8rem; color:#64748b; margin-left:8px;">Click attack nodes to defend them. Act quickly!</span>
+    </div>
+</div>
+
+<script>
+const NODE_TEMPLATES = [
+    { name: 'Web Server', icon: '🌐' },
+    { name: 'Database', icon: '🗄️' },
+    { name: 'Email Server', icon: '📧' },
+    { name: 'Firewall', icon: '🔥' },
+    { name: 'File Server', icon: '📁' },
+    { name: 'API Gateway', icon: '⚡' },
+    { name: 'Workstation', icon: '💻' },
+    { name: 'Router', icon: '📡' },
+    { name: 'VPN Gateway', icon: '🔒' },
+];
+
+const ATTACK_TYPES = [
+    { name: 'SQL Injection', color: '#ef4444', dmg: 15, lesson: 'Use parameterized queries' },
+    { name: 'DDoS Attack', color: '#f97316', dmg: 20, lesson: 'Rate limiting + CDN' },
+    { name: 'Phishing', color: '#f59e0b', dmg: 10, lesson: 'Email filtering + MFA' },
+    { name: 'Ransomware', color: '#dc2626', dmg: 25, lesson: 'Backups + least privilege' },
+    { name: 'Brute Force', color: '#8b5cf6', dmg: 12, lesson: 'Account lockout + MFA' },
+    { name: 'Zero-Day Exploit', color: '#ff0055', dmg: 30, lesson: 'Patch fast + WAF' },
+    { name: 'Man-in-the-Middle', color: '#ec4899', dmg: 18, lesson: 'TLS everywhere + cert pinning' },
+    { name: 'Insider Threat', color: '#a855f7', dmg: 22, lesson: 'Least privilege + audit logs' },
+];
+
+let nodes = [];
+let health = 100;
+let score = 0;
+let wave = 1;
+let threats = 0;
+let defended = 0;
+let breaches = 0;
+let gameActive = false;
+let attackTimers = [];
+let waveTimer = null;
+const MAX_WAVES = 5;
+let logTime = 0;
+
+function escHtml(t) { const d=document.createElement('div'); d.textContent=String(t); return d.innerHTML; }
+
+function initNodes() {
+    nodes = NODE_TEMPLATES.map((t, i) => ({
+        id: i, name: t.name, icon: t.icon,
+        status: 'safe', hp: 100, maxHp: 100, firewalled: false, patching: false
+    }));
+}
+
+function renderNodes() {
+    const grid = document.getElementById('nodesGrid');
+    grid.innerHTML = '';
+    for (const node of nodes) {
+        const div = document.createElement('div');
+        div.className = `node ${node.status}`;
+        div.id = `node-${node.id}`;
+        const hpPct = Math.max(0, node.hp);
+        const hpColor = hpPct > 66 ? '#22c55e' : hpPct > 33 ? '#f59e0b' : '#ef4444';
+        div.innerHTML = `
+            <div class="node-action-overlay" id="overlay-${node.id}">
+                <button class="node-action-btn btn-patch" onclick="defenseAction(${node.id},'patch'); event.stopPropagation()">🔵 Patch (3s)</button>
+                <button class="node-action-btn btn-firewall" onclick="defenseAction(${node.id},'firewall'); event.stopPropagation()">🟢 Firewall (2s)</button>
+                <button class="node-action-btn btn-isolate" onclick="defenseAction(${node.id},'isolate'); event.stopPropagation()">🔴 Isolate</button>
+            </div>
+            <div class="node-icon">${escHtml(node.icon)}</div>
+            <div class="node-name">${escHtml(node.name)}</div>
+            <div class="node-status" id="nstatus-${node.id}">${escHtml(getStatusText(node))}</div>
+            <div class="node-hp"><div class="node-hp-fill" style="width:${hpPct}%; background:${hpColor}"></div></div>
+        `;
+        grid.appendChild(div);
+    }
+}
+
+function getStatusText(node) {
+    if (node.status === 'compromised') return '🚨 UNDER ATTACK';
+    if (node.status === 'vulnerable') return '⚠️ VULNERABLE';
+    if (node.status === 'patching') return '🔵 Patching...';
+    if (node.firewalled) return '🟢 Firewalled';
+    return '✅ Secure';
+}
+
+function updateNode(nodeId) {
+    const node = nodes[nodeId];
+    const el = document.getElementById(`node-${nodeId}`);
+    if (!el) return;
+    el.className = `node ${node.status}`;
+    const st = document.getElementById(`nstatus-${nodeId}`);
+    if (st) st.textContent = getStatusText(node);
+    const hpPct = Math.max(0, node.hp);
+    const hpColor = hpPct > 66 ? '#22c55e' : hpPct > 33 ? '#f59e0b' : '#ef4444';
+    const hpFill = el.querySelector('.node-hp-fill');
+    if (hpFill) { hpFill.style.width = hpPct + '%'; hpFill.style.background = hpColor; }
+}
+
+function updateHealth() {
+    const bar = document.getElementById('healthBar');
+    bar.style.width = Math.max(0, health) + '%';
+    bar.style.background = health > 60 ? '#22c55e' : health > 30 ? '#f59e0b' : '#ef4444';
+}
+
+function addLog(text, type) {
+    logTime++;
+    const entries = document.getElementById('logEntries');
+    const div = document.createElement('div');
+    div.className = `log-entry`;
+    div.innerHTML = `<span class="log-time">${String(logTime).padStart(3,'0')}</span><span class="log-text log-${type}">${escHtml(text)}</span>`;
+    entries.prepend(div);
+    if (entries.children.length > 50) entries.lastChild?.remove();
+}
+
+function launchAttack() {
+    if (!gameActive) return;
+    // Pick a random non-compromised node
+    const available = nodes.filter(n => n.status !== 'compromised' && n.status !== 'patching');
+    if (available.length === 0) return;
+    const node = available[Math.floor(Math.random() * available.length)];
+    const attack = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
+
+    threats++;
+    document.getElementById('hudThreats').textContent = threats;
+
+    const wasVulnerable = node.status === 'vulnerable';
+    node.status = wasVulnerable ? 'compromised' : 'vulnerable';
+    updateNode(node.id);
+    addLog(`${attack.name} targeting ${node.name}!`, 'attack');
+
+    if (node.status === 'compromised') {
+        // Give player time to respond before damage starts
+        const dmgTimer = setTimeout(() => {
+            if (!gameActive) return;
+            if (nodes[node.id].status === 'compromised') {
+                // Deal damage
+                health -= attack.dmg;
+                breaches++;
+                nodes[node.id].hp -= 30;
+                nodes[node.id].status = nodes[node.id].hp > 0 ? 'vulnerable' : 'safe';
+                nodes[node.id].hp = Math.max(20, nodes[node.id].hp);
+                updateNode(node.id);
+                updateHealth();
+                document.getElementById('hudBreach').textContent = breaches;
+                addLog(`BREACH! ${node.name} compromised. Health -${attack.dmg}. (${attack.lesson})`, 'attack');
+                if (health <= 0) { endGame(false); }
+            }
+        }, Math.max(2000, 5000 - wave * 500));
+        attackTimers.push(dmgTimer);
+    }
+}
+
+function defenseAction(nodeId, action) {
+    if (!gameActive) return;
+    const node = nodes[nodeId];
+    if (node.status === 'patching') return;
+
+    if (action === 'patch') {
+        node.status = 'patching';
+        updateNode(nodeId);
+        addLog(`Patching ${node.name}...`, 'defend');
+        const t = setTimeout(() => {
+            node.status = 'safe'; node.firewalled = false; node.hp = Math.min(100, node.hp + 40);
+            updateNode(nodeId);
+            score += 50; defended++;
+            document.getElementById('hudScore').textContent = score;
+            document.getElementById('hudDefended').textContent = defended;
+            addLog(`${node.name} patched successfully! +50pts`, 'defend');
+        }, 3000);
+        attackTimers.push(t);
+    } else if (action === 'firewall') {
+        node.firewalled = true;
+        node.status = 'safe';
+        updateNode(nodeId);
+        score += 30; defended++;
+        document.getElementById('hudScore').textContent = score;
+        document.getElementById('hudDefended').textContent = defended;
+        addLog(`Firewall applied to ${node.name}. +30pts`, 'defend');
+        // Firewall wears off
+        const t = setTimeout(() => { if (node.firewalled) { node.firewalled = false; updateNode(nodeId); } }, 8000);
+        attackTimers.push(t);
+    } else if (action === 'isolate') {
+        node.status = 'safe'; node.hp = 40; node.firewalled = false;
+        updateNode(nodeId);
+        score += 10; defended++;
+        document.getElementById('hudScore').textContent = score;
+        document.getElementById('hudDefended').textContent = defended;
+        addLog(`${node.name} isolated. Threat stopped. +10pts`, 'warn');
+    }
+}
+
+function startWave(w) {
+    document.getElementById('hudWave').textContent = w;
+    const announce = document.getElementById('waveAnnounce');
+    announce.textContent = `⚡ Wave ${w} incoming — ${w === MAX_WAVES ? 'FINAL WAVE!' : 'Increasing attack frequency...'}`;
+    announce.classList.remove('hidden');
+    setTimeout(() => announce.classList.add('hidden'), 2500);
+    addLog(`=== WAVE ${w} STARTED ===`, 'warn');
+
+    // Attack interval: faster each wave
+    const interval = Math.max(800, 2500 - w * 300);
+    let attackCount = 5 + w * 3;
+
+    const wt = setInterval(() => {
+        if (!gameActive) { clearInterval(wt); return; }
+        launchAttack();
+        attackCount--;
+        if (attackCount <= 0) {
+            clearInterval(wt);
+            // Short rest between waves
+            if (w < MAX_WAVES) {
+                addLog(`Wave ${w} complete! Preparing for wave ${w+1}...`, 'defend');
+                score += 200;
+                document.getElementById('hudScore').textContent = score;
+                const pause = setTimeout(() => { wave++; startWave(wave); }, 3000);
+                attackTimers.push(pause);
+            } else {
+                setTimeout(() => { if (gameActive) endGame(true); }, 3000);
+            }
+        }
+    }, interval);
+    attackTimers.push(wt);
+}
+
+function startGame() {
+    const overlay = document.getElementById('startOverlay');
+    overlay.style.display = 'none';
+    gameActive = true;
+    document.getElementById('startBtn').disabled = true;
+    addLog('=== GAME STARTED ===', 'defend');
+    addLog('Defending network across 5 waves...', 'warn');
+    startWave(1);
+}
+
+function endGame(won) {
+    gameActive = false;
+    attackTimers.forEach(t => clearTimeout(t)); attackTimers = [];
+    const overlay = document.getElementById('startOverlay');
+    overlay.style.display = 'flex';
+    if (won) {
+        overlay.innerHTML = `<div class="overlay-title">🏆 Network Defended!</div><div class="overlay-body">You successfully defended the network across all ${MAX_WAVES} waves!<br><br>Final Score: <strong>${score}</strong><br>Threats Blocked: ${defended} / ${threats}<br>Breaches: ${breaches}</div><button class="overlay-btn" onclick="restartGame()">Play Again</button>`;
+    } else {
+        overlay.innerHTML = `<div class="overlay-title">💀 Network Breached</div><div class="overlay-body">The attackers overwhelmed your defenses on Wave ${wave}.<br><br>Final Score: <strong>${score}</strong><br>Threats Blocked: ${defended} / ${threats}<br>Breaches: ${breaches}<br><br><em>Tip: Apply firewalls preemptively on high-value nodes.</em></div><button class="overlay-btn" onclick="restartGame()">Try Again</button>`;
+    }
+    document.getElementById('startBtn').disabled = false;
+}
+
+function restartGame() {
+    gameActive = false;
+    attackTimers.forEach(t => clearTimeout(t)); attackTimers = [];
+    health = 100; score = 0; wave = 1; threats = 0; defended = 0; breaches = 0; logTime = 0;
+    document.getElementById('hudScore').textContent = 0;
+    document.getElementById('hudWave').textContent = 1;
+    document.getElementById('hudThreats').textContent = 0;
+    document.getElementById('hudDefended').textContent = 0;
+    document.getElementById('hudBreach').textContent = 0;
+    document.getElementById('logEntries').innerHTML = '';
+    updateHealth();
+    initNodes();
+    renderNodes();
+    const overlay = document.getElementById('startOverlay');
+    overlay.style.display = 'flex';
+    overlay.innerHTML = `<div class="overlay-title">🛡️ Network Defense</div><div class="overlay-body">Defend your 9-node network across 5 waves of increasing attacks. Click nodes when they're under attack to:<br><br><strong>🔵 Patch</strong> — Fix vulnerabilities (takes 3s)<br><strong>🟢 Firewall</strong> — Block incoming attacks (takes 2s)<br><strong>🔴 Isolate</strong> — Emergency stop, sacrifice the node<br><br>Don't let your health drop to 0!</div><button class="overlay-btn" onclick="startGame()">Start Defense</button>`;
+    document.getElementById('startBtn').disabled = true;
+}
+
+initNodes();
+renderNodes();
+</script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Security Analyzer | The Shield IT</title>
+    <meta name="description" content="Analyze your WiFi network security. Check encryption type, router settings, and get personalized recommendations to secure your wireless network.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #64748b; text-decoration: none; font-size: 0.9rem;
+            margin-bottom: 30px; transition: color 0.2s;
+        }
+        .back-link:hover { color: #94a3b8; }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 { font-size: 1.3rem; margin-bottom: 24px; color: #f1f5f9; }
+        .question-block { margin-bottom: 28px; }
+        .question-label {
+            font-size: 1rem; font-weight: 600; color: #f1f5f9;
+            margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+        }
+        .question-hint { font-size: 0.8rem; color: #64748b; margin-bottom: 12px; }
+        .radio-group, .select-group { display: flex; flex-direction: column; gap: 8px; }
+        .radio-option {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .radio-option:hover { border-color: rgba(6,182,212,0.4); background: rgba(6,182,212,0.05); }
+        .radio-option input[type="radio"] { accent-color: #06b6d4; width: 16px; height: 16px; }
+        .radio-option label { cursor: pointer; font-size: 0.9rem; flex: 1; }
+        .radio-option .badge {
+            font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; font-weight: 600;
+        }
+        .badge-best { background: rgba(34,197,94,0.2); color: #86efac; }
+        .badge-good { background: rgba(59,130,246,0.2); color: #93c5fd; }
+        .badge-ok { background: rgba(245,158,11,0.2); color: #fde68a; }
+        .badge-bad { background: rgba(239,68,68,0.2); color: #fca5a5; }
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        select:focus { outline: none; border-color: rgba(6,182,212,0.5); }
+        .toggle-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        .toggle-label { font-size: 0.9rem; }
+        .toggle-sublabel { font-size: 0.75rem; color: #64748b; }
+        .toggle {
+            position: relative; width: 44px; height: 24px;
+            display: inline-block; flex-shrink: 0;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer;
+            inset: 0; background: rgba(100,116,139,0.3);
+            border-radius: 24px; transition: 0.3s;
+        }
+        .toggle-slider:before {
+            content: ''; position: absolute;
+            width: 18px; height: 18px; left: 3px; bottom: 3px;
+            background: white; border-radius: 50%; transition: 0.3s;
+        }
+        .toggle input:checked + .toggle-slider { background: #06b6d4; }
+        .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; width: 100%; justify-content: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: white;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .score-ring-wrapper {
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; padding: 30px 20px;
+        }
+        .score-ring {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; margin-bottom: 12px;
+            border: 8px solid;
+            position: relative;
+        }
+        .score-ring-value { font-size: 2.8rem; font-weight: 800; line-height: 1; }
+        .score-ring-max { font-size: 0.85rem; opacity: 0.6; }
+        .rec-list { display: flex; flex-direction: column; gap: 12px; }
+        .rec-item {
+            display: flex; gap: 14px; align-items: flex-start;
+            background: rgba(15,23,42,0.5);
+            border-radius: 12px; padding: 16px;
+            border-left: 4px solid;
+        }
+        .rec-item.critical { border-color: #ef4444; }
+        .rec-item.warning { border-color: #f59e0b; }
+        .rec-item.good { border-color: #22c55e; }
+        .rec-icon { font-size: 1.3rem; flex-shrink: 0; }
+        .rec-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+        .rec-body { font-size: 0.83rem; color: #94a3b8; line-height: 1.6; }
+        .hidden { display: none; }
+        .info-note {
+            background: rgba(6,182,212,0.08);
+            border: 1px solid rgba(6,182,212,0.2);
+            border-radius: 10px; padding: 14px 18px;
+            font-size: 0.85rem; color: #67e8f9; line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 24px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>WiFi Security Analyzer</h1>
+        <p class="subtitle">Assess your wireless network security and get actionable recommendations</p>
+    </header>
+
+    <div class="card">
+        <div class="info-note">
+            Browsers cannot directly inspect WiFi networks. Answer the questions below based on your router's admin panel settings. Most routers are accessible at <strong>192.168.1.1</strong> or <strong>192.168.0.1</strong>.
+        </div>
+
+        <form id="wifiForm" onsubmit="return false;">
+            <h2>WiFi Configuration Assessment</h2>
+
+            <!-- Encryption -->
+            <div class="question-block">
+                <div class="question-label">🔐 WiFi Encryption Protocol</div>
+                <div class="question-hint">Check your router admin panel → Wireless Settings → Security Mode</div>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-wpa3" value="wpa3">
+                        <label for="enc-wpa3">WPA3 Personal / WPA3-SAE</label>
+                        <span class="badge badge-best">Best</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-wpa2-wpa3" value="wpa2-wpa3">
+                        <label for="enc-wpa2-wpa3">WPA2/WPA3 Mixed Mode</label>
+                        <span class="badge badge-good">Good</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-wpa2" value="wpa2">
+                        <label for="enc-wpa2">WPA2 / WPA2-PSK (AES)</label>
+                        <span class="badge badge-ok">OK</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-wpa" value="wpa">
+                        <label for="enc-wpa">WPA (TKIP) / WPA Mixed</label>
+                        <span class="badge badge-bad">Outdated</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-wep" value="wep">
+                        <label for="enc-wep">WEP (64-bit or 128-bit)</label>
+                        <span class="badge badge-bad">Critical</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-open" value="open">
+                        <label for="enc-open">Open / No Encryption</label>
+                        <span class="badge badge-bad">Critical</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="encryption" id="enc-unknown" value="unknown">
+                        <label for="enc-unknown">I don't know</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Password strength -->
+            <div class="question-block">
+                <div class="question-label">🔑 WiFi Password Strength</div>
+                <div class="question-hint">Evaluate your current WiFi password</div>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" name="password" id="pw-strong" value="strong">
+                        <label for="pw-strong">Strong — 16+ chars, mixed case, numbers, symbols</label>
+                        <span class="badge badge-best">Best</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="password" id="pw-good" value="good">
+                        <label for="pw-good">Good — 12+ chars, mixed case, numbers</label>
+                        <span class="badge badge-good">Good</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="password" id="pw-weak" value="weak">
+                        <label for="pw-weak">Weak — Short, dictionary words, or all letters</label>
+                        <span class="badge badge-bad">Weak</span>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="password" id="pw-default" value="default">
+                        <label for="pw-default">Default / Unchanged factory password</label>
+                        <span class="badge badge-bad">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Router admin -->
+            <div class="question-block">
+                <div class="question-label">⚙️ Router Admin Settings</div>
+                <div class="question-hint">Check your router's admin panel for these settings</div>
+
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">Changed router admin password</div>
+                        <div class="toggle-sublabel">Default admin credentials are publicly known</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="admin-password">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">Firmware is up to date</div>
+                        <div class="toggle-sublabel">Router firmware patches security vulnerabilities</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="firmware">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">Remote management disabled</div>
+                        <div class="toggle-sublabel">Prevents admin access from the internet</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="remote-mgmt">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">WPS disabled</div>
+                        <div class="toggle-sublabel">WPS PIN has known vulnerabilities</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="wps-off">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">Router firewall enabled</div>
+                        <div class="toggle-sublabel">Built-in SPI firewall protects against external attacks</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="firewall">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Network segmentation -->
+            <div class="question-block">
+                <div class="question-label">🌐 Network Features</div>
+                <div class="question-hint">Additional network security features</div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">Guest network enabled</div>
+                        <div class="toggle-sublabel">Isolates IoT and guest devices from main network</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="guest-network">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">Network uses custom DNS (e.g., 1.1.1.1, NextDNS)</div>
+                        <div class="toggle-sublabel">Helps block malicious domains at the DNS level</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="custom-dns">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">SSID is not broadcasting personal info</div>
+                        <div class="toggle-sublabel">Network name shouldn't include your name or address</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="ssid-privacy">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">VPN running on router or devices</div>
+                        <div class="toggle-sublabel">Encrypts all traffic leaving the network</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="vpn">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="analyzeWifi()">Analyze My WiFi Security</button>
+        </form>
+    </div>
+
+    <div class="card hidden" id="resultsCard">
+        <h2>Security Assessment</h2>
+        <div class="score-ring-wrapper">
+            <div class="score-ring" id="scoreRing">
+                <div class="score-ring-value" id="scoreValue">0</div>
+                <div class="score-ring-max">/100</div>
+            </div>
+            <div id="scoreDesc" style="font-size:1.1rem; font-weight:600; margin-bottom:4px;"></div>
+            <div id="scoreSubDesc" style="font-size:0.85rem; color:#94a3b8;"></div>
+        </div>
+
+        <div class="rec-list" id="recList"></div>
+    </div>
+</div>
+
+<script>
+function analyzeWifi() {
+    const enc = document.querySelector('input[name="encryption"]:checked')?.value;
+    const pw = document.querySelector('input[name="password"]:checked')?.value;
+
+    if (!enc || !pw) {
+        alert('Please answer all required questions (encryption type and password strength).');
+        return;
+    }
+
+    let score = 0;
+    const recs = [];
+
+    // Encryption scoring
+    const encScores = { wpa3: 30, 'wpa2-wpa3': 26, wpa2: 20, wpa: 8, wep: 2, open: 0, unknown: 10 };
+    score += encScores[enc] || 0;
+
+    if (enc === 'wpa3') {
+        recs.push({ level: 'good', icon: '✅', title: 'Excellent: WPA3 Encryption', body: 'WPA3 provides the strongest WiFi encryption with protection against brute-force and KRACK attacks. Keep your router firmware updated to maintain these protections.' });
+    } else if (enc === 'wpa2-wpa3') {
+        recs.push({ level: 'good', icon: '✅', title: 'Good: WPA2/WPA3 Mixed Mode', body: 'Mixed mode supports both WPA2 and WPA3 clients. If all your devices support WPA3, consider switching to WPA3-only for maximum security.' });
+    } else if (enc === 'wpa2') {
+        recs.push({ level: 'warning', icon: '⚠️', title: 'Adequate: WPA2 Encryption', body: 'WPA2 with AES is still acceptable but has known vulnerabilities (KRACK). Upgrade to WPA3 if your router supports it. Ensure you are using AES, not TKIP.' });
+    } else if (enc === 'wpa') {
+        recs.push({ level: 'critical', icon: '🚨', title: 'Outdated: WPA/TKIP Encryption', body: 'WPA with TKIP is deprecated and has multiple security weaknesses. Upgrade to WPA2-AES or WPA3 immediately. Most modern routers support at least WPA2.' });
+    } else if (enc === 'wep') {
+        recs.push({ level: 'critical', icon: '🚨', title: 'Critical: WEP Encryption (Broken)', body: 'WEP can be cracked in minutes with freely available tools. This provides essentially no security. Upgrade to WPA2 or WPA3 immediately, or replace your router.' });
+    } else if (enc === 'open') {
+        recs.push({ level: 'critical', icon: '🚨', title: 'Critical: No Encryption', body: 'Your network has no encryption. Anyone nearby can see all your traffic. Enable WPA2 or WPA3 immediately in your router settings.' });
+    }
+
+    // Password scoring
+    const pwScores = { strong: 20, good: 15, weak: 5, default: 0 };
+    score += pwScores[pw] || 0;
+
+    if (pw === 'strong') {
+        recs.push({ level: 'good', icon: '✅', title: 'Strong WiFi Password', body: 'Your password meets best practice standards. Continue using a unique, complex password.' });
+    } else if (pw === 'good') {
+        recs.push({ level: 'warning', icon: '💡', title: 'Good Password — Consider Strengthening', body: 'Your password is decent. Consider adding symbols and increasing length to 20+ characters for extra protection against dictionary attacks.' });
+    } else if (pw === 'weak') {
+        recs.push({ level: 'critical', icon: '🚨', title: 'Weak WiFi Password', body: 'A weak password can be cracked with dictionary attacks. Create a random password of 16+ characters with uppercase, lowercase, numbers, and symbols. Use a password manager to store it.' });
+    } else if (pw === 'default') {
+        recs.push({ level: 'critical', icon: '🚨', title: 'Critical: Default Router Password', body: 'Default passwords are published online and are the first thing attackers try. Change your WiFi password immediately to a strong, unique passphrase.' });
+    }
+
+    // Toggle settings
+    const toggles = [
+        { id: 'admin-password', pts: 8, goodMsg: 'Admin password changed — good practice.', badMsg: 'Router Admin Password', badBody: 'Your router admin account may still use default credentials (often admin/admin or admin/password). Change these in your router admin panel immediately.' },
+        { id: 'firmware', pts: 8, goodMsg: 'Router firmware is up to date.', badMsg: 'Router Firmware Outdated', badBody: 'Outdated firmware may contain unpatched security vulnerabilities. Check your router admin panel for firmware updates and enable automatic updates if available.' },
+        { id: 'remote-mgmt', pts: 6, goodMsg: 'Remote management disabled — correct setting.', badMsg: 'Remote Management Enabled', badBody: 'Remote management exposes your router admin interface to the internet. Disable it in your router settings under Remote Access / WAN Management.' },
+        { id: 'wps-off', pts: 6, goodMsg: 'WPS disabled — eliminates PIN brute-force risk.', badMsg: 'WPS is Enabled', badBody: 'WPS PIN mode has a known vulnerability that allows brute-forcing in hours. Disable WPS entirely in your router wireless settings.' },
+        { id: 'firewall', pts: 5, goodMsg: 'Router firewall enabled — good.', badMsg: 'Router Firewall Disabled', badBody: 'Enable the built-in SPI firewall in your router settings to protect against incoming connection attempts from the internet.' },
+        { id: 'guest-network', pts: 5, goodMsg: 'Guest network enabled — isolates IoT devices.', badMsg: 'No Guest Network', badBody: 'Consider enabling a guest WiFi network for IoT devices, smart TVs, and visitors. This limits access to your main network if any device is compromised.' },
+        { id: 'custom-dns', pts: 4, goodMsg: 'Custom DNS configured for extra protection.', badMsg: 'Using Default ISP DNS', badBody: 'Consider using privacy-respecting DNS like Cloudflare (1.1.1.1) or NextDNS which can also block malicious and tracking domains.' },
+        { id: 'ssid-privacy', pts: 2, goodMsg: 'SSID does not reveal personal information.', badMsg: 'SSID May Reveal Info', badBody: 'Your WiFi network name (SSID) should not include your name, address, apartment number, or other identifying information.' },
+        { id: 'vpn', pts: 6, goodMsg: 'VPN adds encryption layer to all traffic.', badMsg: 'No VPN Configured', badBody: 'A VPN encrypts traffic between your network and the internet, protecting against ISP monitoring and unsecured traffic. Consider router-level or device-level VPN.' },
+    ];
+
+    for (const t of toggles) {
+        const checked = document.getElementById(t.id).checked;
+        if (checked) {
+            score += t.pts;
+            recs.push({ level: 'good', icon: '✅', title: t.goodMsg, body: '' });
+        } else {
+            recs.push({ level: t.id === 'admin-password' || t.id === 'wps-off' ? 'critical' : 'warning', icon: t.id === 'admin-password' || t.id === 'wps-off' ? '🚨' : '⚠️', title: t.badMsg, body: t.badBody });
+        }
+    }
+
+    // Clamp
+    score = Math.max(0, Math.min(100, score));
+    renderResults(score, recs);
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+function renderResults(score, recs) {
+    document.getElementById('resultsCard').classList.remove('hidden');
+    const ring = document.getElementById('scoreRing');
+    const val = document.getElementById('scoreValue');
+    const desc = document.getElementById('scoreDesc');
+    const sub = document.getElementById('scoreSubDesc');
+    val.textContent = score;
+
+    let color, label, sub_text;
+    if (score >= 85) { color = '#22c55e'; label = 'Excellent Security'; sub_text = 'Your WiFi network is well secured.'; }
+    else if (score >= 65) { color = '#84cc16'; label = 'Good Security'; sub_text = 'A few improvements could further harden your network.'; }
+    else if (score >= 45) { color = '#f59e0b'; label = 'Moderate Security'; sub_text = 'Several important security settings need attention.'; }
+    else if (score >= 25) { color = '#ef4444'; label = 'Poor Security'; sub_text = 'Your network has significant vulnerabilities.'; }
+    else { color = '#dc2626'; label = 'Critical Risk'; sub_text = 'Your WiFi network is severely insecure. Take action immediately.'; }
+
+    ring.style.borderColor = color;
+    val.style.color = color;
+    desc.textContent = label;
+    desc.style.color = color;
+    sub.textContent = sub_text;
+
+    const recList = document.getElementById('recList');
+    recList.innerHTML = '';
+    // Show critical first, then warnings, then good
+    const ordered = [
+        ...recs.filter(r => r.level === 'critical'),
+        ...recs.filter(r => r.level === 'warning'),
+        ...recs.filter(r => r.level === 'good'),
+    ];
+    for (const r of ordered) {
+        if (!r.title) continue;
+        const div = document.createElement('div');
+        div.className = `rec-item ${r.level}`;
+        div.innerHTML = `
+            <div class="rec-icon">${r.icon}</div>
+            <div>
+                <div class="rec-title">${escapeHtml(r.title)}</div>
+                ${r.body ? `<div class="rec-body">${escapeHtml(r.body)}</div>` : ''}
+            </div>
+        `;
+        recList.appendChild(div);
+    }
+
+    document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

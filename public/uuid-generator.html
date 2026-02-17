@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID Generator | The Shield IT</title>
+    <meta name="description" content="Generate UUIDs (v1, v4) and GUIDs. Create universally unique identifiers for databases, APIs, and applications.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .uuid-list {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .uuid-item {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .uuid-item:hover {
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .uuid-value {
+            flex: 1;
+            color: #3b82f6;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            color: #3b82f6;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-buttons button {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🆔 UUID Generator</h1>
+            <p class="subtitle">Generate universally unique identifiers</p>
+        </header>
+
+        <div class="card">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="version">UUID Version</label>
+                    <select id="version">
+                        <option value="v4" selected>Version 4 (Random)</option>
+                        <option value="v1">Version 1 (Timestamp)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="count">Number of UUIDs</label>
+                    <input type="number" id="count" value="1" min="1" max="100">
+                </div>
+
+                <div class="control-group">
+                    <label for="format">Format</label>
+                    <select id="format">
+                        <option value="lowercase" selected>Lowercase</option>
+                        <option value="uppercase">Uppercase</option>
+                        <option value="braces">With Braces</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="generateUUIDs()">🎲 Generate UUIDs</button>
+
+            <div class="uuid-list" id="uuidList" style="margin-top: 30px; display: none;"></div>
+
+            <div class="action-buttons" id="actionButtons" style="display: none;">
+                <button onclick="copyAll()">📋 Copy All</button>
+                <button onclick="clearList()">🗑️ Clear List</button>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>📖 About UUIDs</h3>
+            <ul>
+                <li><strong>UUID (Universally Unique Identifier):</strong> 128-bit number used to uniquely identify information</li>
+                <li><strong>Version 4:</strong> Generated using random numbers. Most commonly used. Example: <code style="color: #3b82f6;">550e8400-e29b-41d4-a716-446655440000</code></li>
+                <li><strong>Version 1:</strong> Generated using timestamp and MAC address. Time-based and sortable.</li>
+                <li><strong>Format:</strong> 8-4-4-4-12 hexadecimal digits (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">💡 Common Uses</h3>
+            <ul>
+                <li>Database primary keys (PostgreSQL, MongoDB, etc.)</li>
+                <li>API request/session identifiers</li>
+                <li>File naming and versioning</li>
+                <li>Distributed systems synchronization</li>
+                <li>Transaction tracking</li>
+                <li>Unique resource identifiers in microservices</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">⚠️ Security Note</h3>
+            <ul>
+                <li>All UUIDs are generated locally in your browser using crypto.getRandomValues()</li>
+                <li>Version 4 UUIDs are cryptographically random and suitable for security-sensitive applications</li>
+                <li>Version 1 UUIDs contain timestamp information and may be predictable</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        function generateUUID_v4() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function generateUUID_v1() {
+            // Simple v1 implementation (timestamp-based)
+            const now = new Date().getTime();
+            const timestamp = now * 10000 + 122192928000000000; // Convert to 100-nanosecond intervals since October 15, 1582
+
+            const timeLow = (timestamp & 0xFFFFFFFF).toString(16).padStart(8, '0');
+            const timeMid = ((timestamp / 0x100000000) & 0xFFFF).toString(16).padStart(4, '0');
+            const timeHiAndVersion = (((timestamp / 0x1000000000000) & 0x0FFF) | 0x1000).toString(16).padStart(4, '0');
+
+            const clockSeq = crypto.getRandomValues(new Uint8Array(2));
+            const clockSeqStr = ((clockSeq[0] & 0x3F | 0x80) * 256 + clockSeq[1]).toString(16).padStart(4, '0');
+
+            const node = Array.from(crypto.getRandomValues(new Uint8Array(6)))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+
+            return `${timeLow}-${timeMid}-${timeHiAndVersion}-${clockSeqStr}-${node}`;
+        }
+
+        function formatUUID(uuid, format) {
+            switch(format) {
+                case 'uppercase':
+                    return uuid.toUpperCase();
+                case 'braces':
+                    return `{${uuid}}`;
+                default:
+                    return uuid;
+            }
+        }
+
+        function generateUUIDs() {
+            const version = document.getElementById('version').value;
+            const count = Math.min(100, Math.max(1, parseInt(document.getElementById('count').value) || 1));
+            const format = document.getElementById('format').value;
+
+            const uuidList = document.getElementById('uuidList');
+            const actionButtons = document.getElementById('actionButtons');
+
+            uuidList.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const uuid = version === 'v4' ? generateUUID_v4() : generateUUID_v1();
+                const formattedUUID = formatUUID(uuid, format);
+
+                const item = document.createElement('div');
+                item.className = 'uuid-item';
+
+                const value = document.createElement('div');
+                value.className = 'uuid-value';
+                value.textContent = formattedUUID;
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copy';
+                copyBtn.onclick = () => copyUUID(formattedUUID, copyBtn);
+
+                item.appendChild(value);
+                item.appendChild(copyBtn);
+                uuidList.appendChild(item);
+            }
+
+            uuidList.style.display = 'block';
+            actionButtons.style.display = 'flex';
+        }
+
+        function copyUUID(uuid, button) {
+            navigator.clipboard.writeText(uuid).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 1500);
+            }).catch(err => {
+                alert('Failed to copy: ' + err.message);
+            });
+        }
+
+        function copyAll() {
+            const uuids = Array.from(document.querySelectorAll('.uuid-value'))
+                .map(el => el.textContent)
+                .join('\n');
+
+            navigator.clipboard.writeText(uuids).then(() => {
+                showToast();
+            }).catch(err => {
+                alert('Failed to copy: ' + err.message);
+            });
+        }
+
+        function clearList() {
+            document.getElementById('uuidList').style.display = 'none';
+            document.getElementById('actionButtons').style.display = 'none';
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Generate one UUID on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            generateUUIDs();
+        });
+    </script>
+</body>
+</html>

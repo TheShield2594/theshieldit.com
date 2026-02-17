@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool History | The Shield IT</title>
+    <meta name="description" content="View your recently used security and privacy tools. History stored locally in your browser — never sent to any server.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #94a3b8; }
+        .card { background: rgba(30,41,59,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .privacy-note { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 12px 16px; font-size: 0.82rem; color: #86efac; margin-bottom: 20px; }
+        .controls { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 20px; }
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-danger { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+        .btn-danger:hover { background: rgba(239,68,68,0.25); }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+        .history-list { display: flex; flex-direction: column; gap: 8px; }
+        .history-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: rgba(15,23,42,0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.2s; text-decoration: none; color: inherit; }
+        .history-item:hover { border-color: rgba(139,92,246,0.3); }
+        .item-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(139,92,246,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .item-info { flex: 1; }
+        .item-name { font-weight: 600; font-size: 0.9rem; color: #f1f5f9; }
+        .item-time { font-size: 0.73rem; color: #64748b; margin-top: 2px; }
+        .item-visits { font-size: 0.73rem; color: #8b5cf6; padding: 2px 8px; background: rgba(139,92,246,0.1); border-radius: 20px; flex-shrink: 0; }
+        .remove-btn { background: none; border: none; color: #475569; cursor: pointer; font-size: 1.1rem; padding: 4px; border-radius: 6px; flex-shrink: 0; transition: color 0.2s; }
+        .remove-btn:hover { color: #ef4444; }
+        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+        .empty-title { font-size: 1.2rem; font-weight: 600; color: #64748b; margin-bottom: 8px; }
+        .empty-body { font-size: 0.85rem; color: #475569; line-height: 1.6; }
+        .go-home { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 12px 24px; background: linear-gradient(135deg, #8b5cf6, #06b6d4); border-radius: 10px; color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .group-header { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin: 16px 0 8px; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>🕐 Tool History</h1>
+        <p class="subtitle">Your recently used tools — stored only in your browser</p>
+    </header>
+
+    <div class="card">
+        <div class="privacy-note">🔒 Your history is stored entirely in your browser's localStorage. Nothing is sent to any server. Clearing your browser data will remove this history.</div>
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="exportHistory()">⬇️ Export</button>
+            <button class="btn btn-danger" onclick="clearHistory()">🗑️ Clear All History</button>
+        </div>
+        <div id="historyContainer"></div>
+    </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'shield_tool_history';
+const MAX_HISTORY = 50;
+
+function getHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+}
+
+function saveHistory(h) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+}
+
+function removeItem(href) {
+    const h = getHistory().filter(i => i.href !== href);
+    saveHistory(h);
+    render();
+}
+
+function clearHistory() {
+    if (confirm('Clear all tool history?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+    }
+}
+
+function exportHistory() {
+    const h = getHistory();
+    const txt = h.map(i => `${new Date(i.lastVisit).toISOString()}\t${i.name}\t${window.location.origin}${i.href}`).join('\n');
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'shield-history.txt'; a.click();
+}
+
+function timeAgo(ts) {
+    const diff = Date.now() - ts;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return Math.round(diff/60000) + 'm ago';
+    if (diff < 86400000) return Math.round(diff/3600000) + 'h ago';
+    if (diff < 86400000*7) return Math.round(diff/86400000) + 'd ago';
+    return new Date(ts).toLocaleDateString();
+}
+
+function groupByDay(items) {
+    const groups = {};
+    for (const item of items) {
+        const d = new Date(item.lastVisit);
+        const today = new Date(); today.setHours(0,0,0,0);
+        const yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1);
+        let label;
+        if (d >= today) label = 'Today';
+        else if (d >= yesterday) label = 'Yesterday';
+        else label = d.toLocaleDateString(undefined, { weekday:'long', month:'short', day:'numeric' });
+        if (!groups[label]) groups[label] = [];
+        groups[label].push(item);
+    }
+    return groups;
+}
+
+function escHtml(t) { const d=document.createElement('div'); d.textContent=String(t); return d.innerHTML; }
+
+const ICONS = { security:'🛡️', developer:'⚙️', education:'📚', default:'🔧' };
+
+function render() {
+    const container = document.getElementById('historyContainer');
+    const history = getHistory();
+
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <div class="empty-title">No history yet</div>
+                <div class="empty-body">As you use tools on The Shield IT, they'll appear here for quick access.<br>Start by visiting any tool from the home page.</div>
+                <a href="/" class="go-home">🏠 Browse Tools</a>
+            </div>`;
+        return;
+    }
+
+    const groups = groupByDay(history);
+    let html = '<div class="history-list">';
+    for (const [day, items] of Object.entries(groups)) {
+        html += `<div class="group-header">${escHtml(day)}</div>`;
+        for (const item of items) {
+            const icon = ICONS[item.category] || ICONS.default;
+            html += `
+                <a href="${escHtml(item.href)}" class="history-item" onclick="trackVisit('${escHtml(item.name)}','${escHtml(item.href)}','${escHtml(item.category||'')}')">
+                    <div class="item-icon">${icon}</div>
+                    <div class="item-info">
+                        <div class="item-name">${escHtml(item.name)}</div>
+                        <div class="item-time">${escHtml(timeAgo(item.lastVisit))}</div>
+                    </div>
+                    <span class="item-visits">${escHtml(String(item.visits || 1))} visit${(item.visits||1)===1?'':'s'}</span>
+                    <button class="remove-btn" onclick="event.preventDefault(); removeItem('${escHtml(item.href)}')" title="Remove">×</button>
+                </a>
+            `;
+        }
+    }
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Track a visit — called when user navigates from this page
+function trackVisit(name, href, category) {
+    const h = getHistory();
+    const existing = h.find(i => i.href === href);
+    if (existing) { existing.lastVisit = Date.now(); existing.visits = (existing.visits || 1) + 1; }
+    else { h.unshift({ name, href, category, lastVisit: Date.now(), visits: 1 }); }
+    if (h.length > MAX_HISTORY) h.splice(MAX_HISTORY);
+    saveHistory(h);
+}
+
+// Global function for tool pages to call
+window.shieldTrackVisit = function(name, href, category) {
+    const h = getHistory();
+    const existing = h.find(i => i.href === href);
+    if (existing) { existing.lastVisit = Date.now(); existing.visits = (existing.visits || 1) + 1; }
+    else { h.unshift({ name, href, category, lastVisit: Date.now(), visits: 1 }); }
+    if (h.length > MAX_HISTORY) h.splice(MAX_HISTORY);
+    saveHistory(h);
+};
+
+render();
+</script>
+</body>
+</html>

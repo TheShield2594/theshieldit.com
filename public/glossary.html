@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security & Privacy Glossary | The Shield IT</title>
+    <meta name="description" content="Comprehensive glossary of cybersecurity and privacy terms. A-Z definitions for AES, zero-knowledge, VPN, phishing, GDPR, and 100+ more terms.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #f59e0b 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #94a3b8; }
+        .search-bar { position: relative; margin-bottom: 24px; }
+        .search-bar input { width: 100%; padding: 14px 20px 14px 48px; background: rgba(30,41,59,0.9); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; color: #e2e8f0; font-size: 1rem; transition: border-color 0.3s; }
+        .search-bar input:focus { outline: none; border-color: rgba(245,158,11,0.5); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; pointer-events: none; }
+        .alpha-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+        .alpha-btn { padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #64748b; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+        .alpha-btn:hover, .alpha-btn.active { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); color: #fde68a; }
+        .letter-section { margin-bottom: 32px; }
+        .letter-heading { font-size: 1.8rem; font-weight: 800; color: #f59e0b; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(245,158,11,0.2); }
+        .term-list { display: flex; flex-direction: column; gap: 0; }
+        .term-item { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
+        .term-item:last-child { border-bottom: none; }
+        .term-item:hover { background: rgba(255,255,255,0.03); border-radius: 8px; }
+        .term-name { font-weight: 700; font-size: 1rem; color: #f1f5f9; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .term-cat { padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
+        .cat-crypto { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+        .cat-network { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+        .cat-attack { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .cat-privacy { background: rgba(245,158,11,0.15); color: #fde68a; }
+        .cat-protocol { background: rgba(6,182,212,0.15); color: #67e8f9; }
+        .cat-legal { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+        .cat-tool { background: rgba(20,184,166,0.15); color: #99f6e4; }
+        .term-def { font-size: 0.88rem; color: #94a3b8; line-height: 1.7; }
+        .no-results { text-align: center; padding: 60px 20px; color: #64748b; font-size: 1.1rem; }
+        .count-badge { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 16px; font-size: 0.8rem; color: #64748b; text-align: right; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Security & Privacy Glossary</h1>
+        <p class="subtitle">Plain-English definitions for cybersecurity and privacy terminology</p>
+    </header>
+
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search terms... (e.g. 'VPN', 'phishing', 'AES')" oninput="filterTerms(this.value)">
+    </div>
+
+    <div class="alpha-nav" id="alphNav"></div>
+    <div class="count-badge" id="countBadge"></div>
+    <div id="glossaryContent"></div>
+</div>
+
+<script>
+const TERMS = [
+    // A
+    { term: 'AES', cat: 'crypto', def: 'Advanced Encryption Standard. A symmetric encryption algorithm standardized by NIST in 2001. AES-128, AES-192, and AES-256 refer to key sizes. AES-256 is considered quantum-resistant for practical purposes and is the most widely deployed strong cipher.' },
+    { term: 'Argon2', cat: 'crypto', def: 'A memory-hard password hashing function and winner of the Password Hashing Competition (2015). It is the recommended algorithm for hashing passwords, offering resistance to GPU and ASIC brute-force attacks. Variants: Argon2d, Argon2i, Argon2id.' },
+    { term: 'Authentication', cat: 'protocol', def: 'The process of verifying the identity of a user, device, or system. Can be achieved through knowledge (passwords), possession (hardware token), or inherence (biometrics). Multi-factor authentication combines two or more of these.' },
+    { term: 'Attack Surface', cat: 'network', def: 'The total set of points (attack vectors) in a system where an unauthorized user can try to input data or extract data. Reducing the attack surface is a key principle in security hardening.' },
+    // B
+    { term: 'Backdoor', cat: 'attack', def: 'A covert method of bypassing normal authentication or encryption in a system. Can be intentional (government mandated) or malicious. Backdoors fundamentally undermine security — there is no such thing as a "safe" backdoor.' },
+    { term: 'BIOS/UEFI', cat: 'protocol', def: 'Firmware that initializes hardware before the OS loads. Modern UEFI replaces legacy BIOS. Secure Boot (a UEFI feature) prevents unauthorized bootloaders from loading, protecting against bootkits.' },
+    { term: 'Brute Force', cat: 'attack', def: 'An attack that tries every possible combination to guess a password or key. Mitigated by strong passwords, rate limiting, account lockout, and CAPTCHAs. Modern GPUs can try billions of passwords per second against weak hashes.' },
+    // C
+    { term: 'CAPTCHA', cat: 'tool', def: 'Completely Automated Public Turing test to tell Computers and Humans Apart. A challenge designed to be easy for humans but difficult for bots. Used to prevent automated abuse.' },
+    { term: 'Certificate Authority (CA)', cat: 'protocol', def: 'A trusted entity that issues digital certificates. Web browsers trust a set of root CAs. When a CA is compromised, all certificates it issued may be considered untrustworthy.' },
+    { term: 'CCPA', cat: 'legal', def: 'California Consumer Privacy Act. US state law giving California residents rights over their personal data: right to know, right to delete, and right to opt-out of data sales. Effective January 2020.' },
+    { term: 'Certificate Pinning', cat: 'protocol', def: 'A security mechanism where an app explicitly trusts only specific certificates or public keys, rather than any CA-signed certificate. Prevents MITM attacks via rogue CAs but makes certificate rotation harder.' },
+    { term: 'Cipher', cat: 'crypto', def: 'An algorithm for performing encryption or decryption. Ciphers can be symmetric (same key for encrypt/decrypt, e.g. AES) or asymmetric (different keys, e.g. RSA). A cipher combined with a mode of operation and key forms an encryption scheme.' },
+    { term: 'Cookie', cat: 'privacy', def: 'Small data files stored by websites in your browser. Session cookies expire when you close the browser; persistent cookies have an expiration date. Third-party cookies are set by domains other than the one you\'re visiting, enabling cross-site tracking.' },
+    { term: 'CORS', cat: 'protocol', def: 'Cross-Origin Resource Sharing. A browser security mechanism that restricts web pages from making requests to a different domain than the one that served the page. Controlled via HTTP headers.' },
+    { term: 'Cross-Site Scripting (XSS)', cat: 'attack', def: 'An attack where malicious scripts are injected into web pages viewed by other users. Stored XSS persists in a database; reflected XSS requires a victim to click a malicious link; DOM-based XSS occurs in client-side code.' },
+    { term: 'Cryptography', cat: 'crypto', def: 'The practice and study of secure communication techniques. Modern cryptography relies on mathematical problems believed to be computationally infeasible to solve, such as integer factorization (RSA) and discrete logarithms (ECC).' },
+    { term: 'CSP', cat: 'protocol', def: 'Content Security Policy. An HTTP response header that controls which resources a browser is allowed to load for a given page. Effective mitigation against XSS attacks when properly configured.' },
+    // D
+    { term: 'Dark Web', cat: 'network', def: 'A part of the internet only accessible via specialized software (primarily Tor). Not indexed by search engines. Used for both legitimate privacy (journalists, activists) and illegal activities. Distinct from the Deep Web (any unindexed content, like your email inbox).' },
+    { term: 'Data Breach', cat: 'attack', def: 'An incident where sensitive, protected, or confidential data is accessed, disclosed, or stolen without authorization. Common causes include SQL injection, phishing, credential stuffing, and insider threats.' },
+    { term: 'DDoS', cat: 'attack', def: 'Distributed Denial of Service. An attack that overwhelms a target with traffic from many sources (often a botnet), making it unavailable to legitimate users. Amplification attacks use protocols like DNS, NTP, and memcached to multiply traffic.' },
+    { term: 'DNS', cat: 'network', def: 'Domain Name System. The internet\'s phonebook — translates domain names to IP addresses. Standard DNS is unencrypted and can be intercepted. DNS-over-HTTPS (DoH) and DNS-over-TLS (DoT) encrypt DNS queries.' },
+    { term: 'DNS Leak', cat: 'privacy', def: 'When DNS queries travel outside an encrypted VPN tunnel, revealing your browsing activity to your ISP or DNS provider despite using a VPN. Can be tested with tools like our DNS Leak Test.' },
+    // E
+    { term: 'E2E Encryption', cat: 'crypto', def: 'End-to-End Encryption. Only the communicating users can read messages — not the service provider, network operators, or governments. Signal, WhatsApp, and iMessage implement E2EE. Requires secure key exchange and management.' },
+    { term: 'ECDSA', cat: 'crypto', def: 'Elliptic Curve Digital Signature Algorithm. A public-key signature scheme using elliptic curve mathematics. Provides the same security as RSA with much smaller keys. Used in TLS 1.3, Bitcoin, and many modern protocols.' },
+    { term: 'Exploit', cat: 'attack', def: 'A piece of software, data, or sequence of commands that takes advantage of a vulnerability to cause unintended behavior. Zero-day exploits target vulnerabilities unknown to the vendor.' },
+    // F
+    { term: 'Fingerprinting', cat: 'privacy', def: 'Tracking technique that identifies browsers/devices by collecting unique characteristics (screen resolution, fonts, plugins, canvas rendering, etc.). Does not use cookies and is harder to block. Our Browser Fingerprint tool demonstrates this.' },
+    { term: 'Firewall', cat: 'network', def: 'A network security device that monitors and controls network traffic based on security rules. Can be hardware, software, or cloud-based. Stateful firewalls track connection state; application-layer firewalls inspect traffic content.' },
+    { term: 'FIDO2', cat: 'protocol', def: 'An open authentication standard enabling passwordless login using hardware security keys or device biometrics. Resistant to phishing because authentication is bound to the original domain. The foundation of passkeys.' },
+    // G
+    { term: 'GDPR', cat: 'legal', def: 'General Data Protection Regulation. EU law governing personal data processing, effective May 2018. Grants rights including access, rectification, erasure, portability, and objection. Fines up to 4% of global annual turnover.' },
+    { term: 'GPS Tracking', cat: 'privacy', def: 'Determining location using GPS satellites. Smartphones can share GPS coordinates with apps. EXIF data in photos often includes GPS coordinates — our EXIF Remover tool can strip this metadata.' },
+    // H
+    { term: 'Hash Function', cat: 'crypto', def: 'A one-way function that maps data of arbitrary size to a fixed-size output (hash). Cryptographic hash functions must be collision-resistant, preimage-resistant, and second-preimage-resistant. Common examples: SHA-256, SHA-3, BLAKE3.' },
+    { term: 'HSTS', cat: 'protocol', def: 'HTTP Strict Transport Security. Forces browsers to only connect to a site over HTTPS. An HSTS preload list is built into browsers, providing protection even before the first visit.' },
+    { term: 'HTTPS', cat: 'protocol', def: 'Hypertext Transfer Protocol Secure. HTTP over TLS encryption. Protects data in transit from eavesdropping and tampering. Sites without HTTPS transmit all data including passwords in plaintext.' },
+    // I
+    { term: 'IP Address', cat: 'network', def: 'A numerical label assigned to each device connected to a network. IPv4 uses 32-bit addresses (e.g. 192.168.1.1); IPv6 uses 128-bit addresses. Your public IP address can reveal your approximate geographic location and ISP.' },
+    { term: 'ISP', cat: 'network', def: 'Internet Service Provider. Can see all unencrypted traffic, DNS queries (without DoH/DoT), and connection metadata. Required by law in many countries to store browsing records for 1-2 years.' },
+    // J
+    { term: 'JWT', cat: 'protocol', def: 'JSON Web Token. A compact, URL-safe token format for transmitting claims between parties. Consists of Header.Payload.Signature encoded in base64url. Must be validated carefully — algorithm confusion attacks are common.' },
+    // K
+    { term: 'Kill Switch', cat: 'tool', def: 'A VPN feature that disconnects the internet if the VPN connection drops, preventing data from being sent unencrypted. Essential for privacy-sensitive activities.' },
+    { term: 'KRACK', cat: 'attack', def: 'Key Reinstallation Attack. A 2017 vulnerability in the WPA2 protocol allowing attackers to decrypt WiFi traffic. Addressed by firmware updates. WPA3 is inherently protected against KRACK-style attacks.' },
+    // M
+    { term: 'Malware', cat: 'attack', def: 'Malicious software designed to damage, disrupt, or gain unauthorized access. Types include viruses (self-replicating), ransomware (encrypts data for ransom), spyware (monitors activity), rootkits (hides existence), and trojans (disguised as legitimate software).' },
+    { term: 'Man-in-the-Middle (MITM)', cat: 'attack', def: 'An attack where the attacker secretly relays and potentially alters communication between two parties who believe they are communicating directly. HTTPS, certificate pinning, and HSTS all help prevent MITM attacks.' },
+    { term: 'MFA / 2FA', cat: 'protocol', def: 'Multi-Factor / Two-Factor Authentication. Adds an extra verification step beyond a password. TOTP apps (Authenticator) are better than SMS (vulnerable to SIM swapping). Hardware keys (YubiKey) are the most secure form.' },
+    { term: 'Metadata', cat: 'privacy', def: 'Data about data. File metadata can include author, creation date, GPS location, and editing history. Network metadata includes who communicates with whom and when — often more revealing than content.' },
+    // N
+    { term: 'NDA', cat: 'legal', def: 'Non-Disclosure Agreement. A legal contract that restricts sharing of confidential information. Security researchers often encounter NDAs when doing coordinated vulnerability disclosure.' },
+    // O
+    { term: 'OSINT', cat: 'tool', def: 'Open Source Intelligence. The collection and analysis of publicly available information. Includes social media, domain records, EXIF data, breach databases, and more. Used by both security researchers and threat actors.' },
+    { term: 'OWASP', cat: 'tool', def: 'Open Web Application Security Project. A nonprofit producing the OWASP Top 10, a standard awareness document for the most critical web application security risks including injection, broken authentication, and XSS.' },
+    // P
+    { term: 'Passkey', cat: 'protocol', def: 'A FIDO2-based passwordless authentication credential using public-key cryptography. Stored on device (phone, computer), protected by biometrics or PIN. Phishing-resistant because keys are bound to the specific website domain.' },
+    { term: 'PGP / GPG', cat: 'crypto', def: 'Pretty Good Privacy / GNU Privacy Guard. Email and file encryption standard using asymmetric cryptography. Uses a web of trust model. OpenPGP is the open standard. Widely used for secure email communication.' },
+    { term: 'Phishing', cat: 'attack', def: 'A social engineering attack that tricks victims into revealing credentials or installing malware, typically via deceptive emails or fake websites. Spear phishing targets specific individuals; whaling targets executives.' },
+    { term: 'PKI', cat: 'protocol', def: 'Public Key Infrastructure. A set of roles, policies, hardware, software, and procedures to create, manage, distribute, use, store, and revoke digital certificates. The foundation of HTTPS trust on the web.' },
+    { term: 'Privacy by Design', cat: 'privacy', def: 'An approach to systems engineering that takes privacy into account throughout engineering processes. Developed by Ann Cavoukian. Core principle: embed privacy proactively, not as an afterthought.' },
+    // R
+    { term: 'Ransomware', cat: 'attack', def: 'Malware that encrypts victim\'s data and demands payment for the decryption key. Modern ransomware often includes double extortion (threatening to publish data). Prevention: regular backups, patching, least privilege.' },
+    { term: 'RSA', cat: 'crypto', def: 'Rivest-Shamir-Adleman. A public-key cryptosystem based on integer factorization. RSA-2048 is the minimum recommended key size. Being superseded by Elliptic Curve Cryptography (ECC) for efficiency. Not quantum-resistant.' },
+    // S
+    { term: 'Salt', cat: 'crypto', def: 'Random data added to a password before hashing to prevent rainbow table attacks. Each password gets a unique salt, ensuring identical passwords produce different hashes. Stored alongside the hash.' },
+    { term: 'Session Hijacking', cat: 'attack', def: 'An attack exploiting a valid session token to gain unauthorized access. Prevented by using HTTPS, secure/HttpOnly cookie flags, short session timeouts, and binding sessions to IP/user-agent.' },
+    { term: 'SQL Injection', cat: 'attack', def: 'An attack where malicious SQL code is inserted into a query. Can allow attackers to read, modify, or delete database contents. Prevented by parameterized queries and prepared statements — NEVER string concatenation.' },
+    { term: 'SRI', cat: 'protocol', def: 'Subresource Integrity. A security feature that allows browsers to verify that resources they fetch are delivered without unexpected manipulation. Uses a cryptographic hash in the integrity attribute of script/link tags.' },
+    { term: 'SSL/TLS', cat: 'protocol', def: 'Secure Sockets Layer / Transport Layer Security. Cryptographic protocols for secure communication over networks. SSL is deprecated; TLS 1.2 and 1.3 are current standards. TLS 1.3 is faster and removes weak cipher suites.' },
+    // T
+    { term: 'Threat Model', cat: 'tool', def: 'A structured approach to identifying threats, vulnerabilities, and countermeasures relevant to a specific system or scenario. Answers: what are we protecting, from whom, and what are we willing to do about it?' },
+    { term: 'Tor', cat: 'network', def: 'The Onion Router. An anonymity network that routes traffic through multiple volunteer-operated nodes, encrypting at each layer. Provides strong anonymity but significantly reduces speed. Not a VPN — different threat model.' },
+    { term: 'Tracker', cat: 'privacy', def: 'A third-party script or pixel embedded in websites to collect user data for analytics or advertising. Common examples: Google Analytics, Facebook Pixel, and DoubleClick. Blocked by uBlock Origin, Brave, and privacy-focused browsers.' },
+    { term: 'Two-Factor Authentication', cat: 'protocol', def: 'See MFA / 2FA.' },
+    // V
+    { term: 'VPN', cat: 'tool', def: 'Virtual Private Network. Creates an encrypted tunnel between your device and a VPN server, hiding your traffic from ISPs and masking your IP. Does NOT make you anonymous — the VPN provider sees your traffic instead of your ISP.' },
+    { term: 'Vulnerability', cat: 'tool', def: 'A weakness in a system that can be exploited by a threat actor. CVE (Common Vulnerabilities and Exposures) is the standard system for identifying vulnerabilities. CVSS scores severity from 0-10.' },
+    // W
+    { term: 'WebRTC', cat: 'protocol', def: 'Web Real-Time Communication. A browser API for peer-to-peer video/audio/data. Can bypass VPNs to expose your real IP address — a common VPN leak. Our WebRTC Leak Test checks for this vulnerability.' },
+    { term: 'WPA3', cat: 'protocol', def: 'WiFi Protected Access 3. The latest WiFi security protocol, replacing WPA2. Uses SAE (Simultaneous Authentication of Equals) for stronger password protection, forward secrecy, and protection against offline dictionary attacks.' },
+    // X
+    { term: 'XSS', cat: 'attack', def: 'See Cross-Site Scripting.' },
+    // Z
+    { term: 'Zero-Day', cat: 'attack', def: 'A software vulnerability that is unknown to the vendor and has no available patch. Highly valuable to attackers. Named "zero-day" because the vendor has had zero days to fix it.' },
+    { term: 'Zero-Knowledge Proof', cat: 'crypto', def: 'A cryptographic method where one party proves they know a value without revealing the value itself. Used in privacy-preserving authentication, blockchain, and zero-knowledge encryption services like Bitwarden.' },
+    { term: 'Zero-Knowledge Encryption', cat: 'crypto', def: 'An encryption model where the service provider cannot access user data because they never have the decryption key. Bitwarden, ProtonMail, and Tresorit use this model. Different from end-to-end encryption, though related.' },
+];
+
+function escHtml(text) {
+    const d = document.createElement('div'); d.textContent = String(text); return d.innerHTML;
+}
+
+const CATS = { crypto:'Cryptography', network:'Networking', attack:'Attack', privacy:'Privacy', protocol:'Protocol', legal:'Legal', tool:'Tool' };
+const CAT_CLS = { crypto:'cat-crypto', network:'cat-network', attack:'cat-attack', privacy:'cat-privacy', protocol:'cat-protocol', legal:'cat-legal', tool:'cat-tool' };
+
+function buildAlphaNav(letters) {
+    const nav = document.getElementById('alphNav');
+    nav.innerHTML = '';
+    for (const l of letters) {
+        const btn = document.createElement('button');
+        btn.className = 'alpha-btn';
+        btn.textContent = l;
+        btn.onclick = () => {
+            document.querySelector(`[data-letter="${l}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        nav.appendChild(btn);
+    }
+}
+
+function renderTerms(terms) {
+    const content = document.getElementById('glossaryContent');
+    content.innerHTML = '';
+    if (terms.length === 0) {
+        content.innerHTML = '<div class="no-results">No terms found. Try a different search.</div>';
+        return;
+    }
+
+    const byLetter = {};
+    for (const t of terms) {
+        const l = t.term[0].toUpperCase();
+        if (!byLetter[l]) byLetter[l] = [];
+        byLetter[l].push(t);
+    }
+
+    const letters = Object.keys(byLetter).sort();
+    buildAlphaNav(letters);
+    document.getElementById('countBadge').textContent = `${terms.length} terms`;
+
+    for (const l of letters) {
+        const section = document.createElement('div');
+        section.className = 'letter-section';
+        section.dataset.letter = l;
+        section.innerHTML = `<div class="letter-heading">${escHtml(l)}</div>`;
+        const list = document.createElement('div');
+        list.className = 'term-list';
+        list.style.background = 'rgba(30,41,59,0.6)';
+        list.style.borderRadius = '12px';
+        list.style.border = '1px solid rgba(255,255,255,0.08)';
+        for (const t of byLetter[l]) {
+            const item = document.createElement('div');
+            item.className = 'term-item';
+            item.innerHTML = `
+                <div class="term-name">${escHtml(t.term)}<span class="term-cat ${escHtml(CAT_CLS[t.cat])}">${escHtml(CATS[t.cat])}</span></div>
+                <div class="term-def">${escHtml(t.def)}</div>
+            `;
+            list.appendChild(item);
+        }
+        section.appendChild(list);
+        content.appendChild(section);
+    }
+}
+
+function filterTerms(query) {
+    const q = query.toLowerCase();
+    if (!q) { renderTerms(TERMS); return; }
+    const filtered = TERMS.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q));
+    renderTerms(filtered);
+}
+
+// Sort terms by name
+TERMS.sort((a, b) => a.term.localeCompare(b.term));
+renderTerms(TERMS);
+</script>
+</body>
+</html>

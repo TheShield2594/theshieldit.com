@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Decoder & Validator | The Shield IT</title>
+    <meta name="description" content="Decode, verify, and validate JSON Web Tokens (JWT). Inspect header, payload, and signature.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .jwt-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .jwt-section h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .jwt-content {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .jwt-part {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .jwt-part.header {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+        }
+
+        .jwt-part.payload {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .jwt-part.signature {
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 3px solid #06b6d4;
+        }
+
+        .validity-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .validity-badge.valid {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .validity-badge.expired {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .validity-badge.invalid {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+        }
+
+        .info-row {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔑 JWT Decoder & Validator</h1>
+            <p class="subtitle">Decode and validate JSON Web Tokens</p>
+        </header>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="jwtInput">JSON Web Token</label>
+                <textarea id="jwtInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" oninput="decodeJWT()"></textarea>
+            </div>
+
+            <div id="results" style="display: none;">
+                <div class="grid">
+                    <div class="jwt-section">
+                        <h3>🔵 Header</h3>
+                        <div class="jwt-content" id="headerContent"></div>
+                    </div>
+
+                    <div class="jwt-section">
+                        <h3>🟣 Payload</h3>
+                        <div class="jwt-content" id="payloadContent"></div>
+                    </div>
+
+                    <div class="jwt-section">
+                        <h3>🔷 Signature</h3>
+                        <div class="jwt-content" id="signatureContent"></div>
+                    </div>
+                </div>
+
+                <div class="jwt-section" style="margin-top: 20px;">
+                    <h3>ℹ️ Token Information</h3>
+                    <div id="tokenInfo"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔐 About JSON Web Tokens</h3>
+            <ul>
+                <li><strong>Header:</strong> Contains token type (typ) and signing algorithm (alg)</li>
+                <li><strong>Payload:</strong> Contains the claims (data) - subject, expiration, custom data, etc.</li>
+                <li><strong>Signature:</strong> Cryptographic signature to verify token integrity</li>
+                <li><strong>Format:</strong> Three Base64-URL encoded parts separated by dots (header.payload.signature)</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">📋 Common Claims</h3>
+            <ul>
+                <li><strong>iss (Issuer):</strong> Who issued the token</li>
+                <li><strong>sub (Subject):</strong> Who the token is about (usually user ID)</li>
+                <li><strong>aud (Audience):</strong> Who the token is intended for</li>
+                <li><strong>exp (Expiration):</strong> When the token expires (Unix timestamp)</li>
+                <li><strong>iat (Issued At):</strong> When the token was issued (Unix timestamp)</li>
+                <li><strong>nbf (Not Before):</strong> Token not valid before this time</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">⚠️ Security Notes</h3>
+            <ul>
+                <li>JWTs are signed but not encrypted - anyone can decode and read the contents</li>
+                <li>Never put sensitive information (passwords, credit cards) in JWT payloads</li>
+                <li>Always verify the signature on the server side</li>
+                <li>Use strong signing algorithms (RS256, ES256) for production</li>
+                <li>All decoding happens locally in your browser - no data is sent to any server</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function decodeJWT() {
+            const jwtInput = document.getElementById('jwtInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+
+            if (!jwtInput) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            try {
+                const parts = jwtInput.split('.');
+
+                if (parts.length !== 3) {
+                    throw new Error('Invalid JWT format. Expected 3 parts separated by dots.');
+                }
+
+                // Decode header and payload
+                const header = JSON.parse(base64UrlDecode(parts[0]));
+                const payload = JSON.parse(base64UrlDecode(parts[1]));
+                const signature = parts[2];
+
+                // Display header
+                document.getElementById('headerContent').textContent = JSON.stringify(header, null, 2);
+
+                // Display payload
+                document.getElementById('payloadContent').textContent = JSON.stringify(payload, null, 2);
+
+                // Display signature
+                document.getElementById('signatureContent').textContent = signature;
+
+                // Display token information
+                displayTokenInfo(header, payload);
+
+                resultsDiv.style.display = 'block';
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid rgba(239, 68, 68, 0.5); border-radius: 12px; padding: 20px; text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⚠️</div>
+                        <div style="font-size: 1.2rem; font-weight: 600; color: #ef4444; margin-bottom: 10px;">Invalid JWT</div>
+                        <div style="color: #cbd5e1;">${escapeHtml(error.message)}</div>
+                    </div>
+                `;
+                resultsDiv.style.display = 'block';
+            }
+        }
+
+        function displayTokenInfo(header, payload) {
+            const tokenInfoDiv = document.getElementById('tokenInfo');
+            let html = '';
+
+            // Check expiration
+            const now = Math.floor(Date.now() / 1000);
+            let validityStatus = '';
+
+            if (payload.exp) {
+                const expDate = new Date(payload.exp * 1000);
+                const isExpired = now > payload.exp;
+
+                if (isExpired) {
+                    validityStatus = '<span class="validity-badge expired">❌ Expired</span>';
+                } else {
+                    const daysUntilExpiry = Math.ceil((payload.exp - now) / (60 * 60 * 24));
+                    validityStatus = `<span class="validity-badge valid">✅ Valid (${daysUntilExpiry} days remaining)</span>`;
+                }
+
+                html += `<div style="margin-bottom: 20px;">${validityStatus}</div>`;
+            }
+
+            // Algorithm
+            html += `
+                <div class="info-row">
+                    <div class="info-label">Algorithm</div>
+                    <div class="info-value">${escapeHtml(header.alg || 'Unknown')}</div>
+                </div>
+            `;
+
+            // Token type
+            if (header.typ) {
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Type</div>
+                        <div class="info-value">${escapeHtml(header.typ)}</div>
+                    </div>
+                `;
+            }
+
+            // Issuer
+            if (payload.iss) {
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Issuer</div>
+                        <div class="info-value">${escapeHtml(payload.iss)}</div>
+                    </div>
+                `;
+            }
+
+            // Subject
+            if (payload.sub) {
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Subject</div>
+                        <div class="info-value">${escapeHtml(payload.sub)}</div>
+                    </div>
+                `;
+            }
+
+            // Audience
+            if (payload.aud) {
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Audience</div>
+                        <div class="info-value">${escapeHtml(String(payload.aud))}</div>
+                    </div>
+                `;
+            }
+
+            // Issued At
+            if (payload.iat) {
+                const iatDate = new Date(payload.iat * 1000);
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Issued At</div>
+                        <div class="info-value">${escapeHtml(iatDate.toUTCString())}</div>
+                    </div>
+                `;
+            }
+
+            // Expiration
+            if (payload.exp) {
+                const expDate = new Date(payload.exp * 1000);
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Expires At</div>
+                        <div class="info-value">${escapeHtml(expDate.toUTCString())}</div>
+                    </div>
+                `;
+            }
+
+            // Not Before
+            if (payload.nbf) {
+                const nbfDate = new Date(payload.nbf * 1000);
+                html += `
+                    <div class="info-row">
+                        <div class="info-label">Not Before</div>
+                        <div class="info-value">${escapeHtml(nbfDate.toUTCString())}</div>
+                    </div>
+                `;
+            }
+
+            tokenInfoDiv.innerHTML = html;
+        }
+
+        function base64UrlDecode(str) {
+            // Replace URL-safe characters with standard Base64 characters
+            str = str.replace(/-/g, '+').replace(/_/g, '/');
+
+            // Pad with '=' to make length multiple of 4
+            while (str.length % 4) {
+                str += '=';
+            }
+
+            // Decode Base64
+            const decoded = atob(str);
+
+            // Return as string
+            return decoded;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
+
+        // Decode on page load if there's a sample token
+        window.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('jwtInput').value) {
+                decodeJWT();
+            }
+        });
+    </script>
+</body>
+</html>

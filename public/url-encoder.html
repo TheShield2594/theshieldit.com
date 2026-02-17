@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Encoder & Decoder | The Shield IT</title>
+    <meta name="description" content="Encode and decode URLs. Convert special characters for safe URL transmission.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        button.tertiary {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Tools</a>
+
+        <header>
+            <h1>🔗 URL Encoder & Decoder</h1>
+            <p class="subtitle">Encode and decode URLs for safe transmission</p>
+        </header>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="input">Input</label>
+                <textarea id="input" placeholder="Enter text or URL to encode/decode..."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button onclick="encodeURL()">🔒 Encode URL</button>
+                <button class="secondary" onclick="decodeURL()">🔓 Decode URL</button>
+                <button class="tertiary" onclick="encodeComponent()">📦 Encode Component</button>
+            </div>
+
+            <div class="input-group">
+                <label for="output">Output</label>
+                <textarea id="output" placeholder="Result will appear here..." readonly></textarea>
+            </div>
+
+            <div class="button-group">
+                <button onclick="copyOutput()">📋 Copy Output</button>
+                <button class="secondary" onclick="swapInputOutput()">🔄 Swap Input/Output</button>
+                <button class="tertiary" onclick="clearAll()">🗑️ Clear All</button>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>🔍 What's the Difference?</h3>
+            <ul>
+                <li><strong>Encode URL:</strong> Encodes special characters in a full URL, preserving :, /, ?, &, =, etc.</li>
+                <li><strong>Decode URL:</strong> Decodes URL-encoded strings back to normal text</li>
+                <li><strong>Encode Component:</strong> Encodes everything including :, /, ?, &, =, etc. Use for query parameters or URL parts</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">💡 Common Use Cases</h3>
+            <ul>
+                <li>Encode query parameters with special characters</li>
+                <li>Decode URLs from logs or browser address bars</li>
+                <li>Prepare data for inclusion in URLs</li>
+                <li>Debug URL-related issues in web applications</li>
+                <li>Safely transmit data in URL parameters</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">📋 Examples</h3>
+            <ul>
+                <li><strong>Space:</strong> " " → "%20" or "+"</li>
+                <li><strong>Special chars:</strong> "Hello World!" → "Hello%20World%21"</li>
+                <li><strong>URL component:</strong> "foo=bar&baz=qux" → "foo%3Dbar%26baz%3Dqux"</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        function encodeURL() {
+            const input = document.getElementById('input').value;
+            try {
+                const encoded = encodeURI(input);
+                document.getElementById('output').value = encoded;
+            } catch (error) {
+                document.getElementById('output').value = 'Error: ' + error.message;
+            }
+        }
+
+        function decodeURL() {
+            const input = document.getElementById('input').value;
+            try {
+                const decoded = decodeURIComponent(input);
+                document.getElementById('output').value = decoded;
+            } catch (error) {
+                document.getElementById('output').value = 'Error: ' + error.message;
+            }
+        }
+
+        function encodeComponent() {
+            const input = document.getElementById('input').value;
+            try {
+                const encoded = encodeURIComponent(input);
+                document.getElementById('output').value = encoded;
+            } catch (error) {
+                document.getElementById('output').value = 'Error: ' + error.message;
+            }
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').value;
+            if (!output || output.startsWith('Error:')) {
+                alert('No valid output to copy');
+                return;
+            }
+
+            navigator.clipboard.writeText(output).then(() => {
+                showToast();
+            }).catch(err => {
+                alert('Failed to copy: ' + err.message);
+            });
+        }
+
+        function swapInputOutput() {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+            const temp = input.value;
+            input.value = output.value;
+            output.value = temp;
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

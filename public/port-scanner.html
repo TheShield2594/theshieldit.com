@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port Scanner | The Shield IT</title>
+    <meta name="description" content="Scan common ports on localhost to check for open services. Useful for developers and security researchers to audit locally running services.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #64748b; text-decoration: none; font-size: 0.9rem;
+            margin-bottom: 30px; transition: color 0.2s;
+        }
+        .back-link:hover { color: #94a3b8; }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #f1f5f9; }
+        .info-note {
+            background: rgba(139,92,246,0.08);
+            border: 1px solid rgba(139,92,246,0.2);
+            border-radius: 10px; padding: 14px 18px;
+            font-size: 0.85rem; color: #c4b5fd; line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .warning-note {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: 10px; padding: 14px 18px;
+            font-size: 0.85rem; color: #fde68a; line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
+        .ctrl-group { display: flex; flex-direction: column; gap: 6px; }
+        .ctrl-group label { font-size: 0.85rem; color: #94a3b8; }
+        input[type="text"], input[type="number"], select {
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        input[type="text"] { width: 220px; }
+        input[type="number"] { width: 100px; }
+        select { min-width: 160px; cursor: pointer; }
+        input:focus, select:focus { outline: none; border-color: rgba(139,92,246,0.5); }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 24px; border: none; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+        .progress-bar-bg { height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; margin: 12px 0; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #ec4899); border-radius: 999px; transition: width 0.3s; }
+        .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+        .stat-box { background: rgba(15,23,42,0.5); border-radius: 10px; padding: 10px 18px; text-align: center; flex: 1; min-width: 90px; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; }
+        .stat-label { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+        .port-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+        }
+        .port-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px;
+            background: rgba(15,23,42,0.5);
+            border-radius: 10px; border: 1px solid;
+            transition: all 0.3s;
+        }
+        .port-item.open { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.05); }
+        .port-item.closed { border-color: rgba(100,116,139,0.2); }
+        .port-item.filtered { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.03); }
+        .port-item.scanning { border-color: rgba(139,92,246,0.3); }
+        .port-num { font-weight: 700; font-size: 0.95rem; width: 48px; flex-shrink: 0; font-family: monospace; }
+        .port-info { flex: 1; }
+        .port-name { font-size: 0.85rem; font-weight: 500; }
+        .port-desc { font-size: 0.72rem; color: #64748b; margin-top: 1px; }
+        .port-status { font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
+        .status-open { color: #22c55e; }
+        .status-closed { color: #475569; }
+        .status-filtered { color: #f59e0b; }
+        .status-scanning { color: #8b5cf6; }
+        .spinner {
+            display: inline-block; width: 12px; height: 12px;
+            border: 2px solid rgba(139,92,246,0.3);
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .custom-port-input { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; background: rgba(139,92,246,0.15); color: #c4b5fd; }
+        .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; margin-top: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Port Scanner</h1>
+        <p class="subtitle">Scan ports on localhost to audit locally running services</p>
+    </header>
+
+    <div class="card">
+        <div class="info-note">
+            <strong>How it works:</strong> This tool scans ports on <code>localhost</code> (127.0.0.1) using WebSocket connection attempts. Due to browser security restrictions, only localhost can be scanned. Use this to audit development servers, databases, and other local services.
+        </div>
+        <div class="warning-note">
+            <strong>Note:</strong> Results may vary by browser and OS. Some ports may appear filtered if the OS resets connections before the browser detects them. This is for educational and self-auditing purposes on your own machine only.
+        </div>
+
+        <div class="controls">
+            <div class="ctrl-group">
+                <label>Target</label>
+                <input type="text" value="localhost" id="target" readonly title="Only localhost scanning is supported">
+            </div>
+            <div class="ctrl-group">
+                <label>Port Profile</label>
+                <select id="portProfile" onchange="updateProfile()">
+                    <option value="common">Common Services (32 ports)</option>
+                    <option value="web">Web & APIs (14 ports)</option>
+                    <option value="database">Databases (10 ports)</option>
+                    <option value="dev">Developer Tools (12 ports)</option>
+                    <option value="all">All Profiles Combined</option>
+                </select>
+            </div>
+            <div class="ctrl-group">
+                <label>Timeout (ms)</label>
+                <input type="number" id="timeout" value="1500" min="500" max="5000" step="100">
+            </div>
+            <button class="btn btn-primary" id="scanBtn" onclick="startScan()">Start Scan</button>
+            <button class="btn btn-secondary" onclick="stopScan()">Stop</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Open — service detected</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#475569"></div>Closed — nothing listening</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Filtered — timed out</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Scan Results</h2>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-value" id="statOpen" style="color:#22c55e">0</div><div class="stat-label">Open</div></div>
+            <div class="stat-box"><div class="stat-value" id="statClosed" style="color:#475569">0</div><div class="stat-label">Closed</div></div>
+            <div class="stat-box"><div class="stat-value" id="statFiltered" style="color:#f59e0b">0</div><div class="stat-label">Filtered</div></div>
+            <div class="stat-box"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total Ports</div></div>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+        </div>
+        <div id="progressText" style="font-size:0.8rem; color:#64748b; margin-bottom:16px;">Select a profile and click Start Scan</div>
+        <div class="port-grid" id="portGrid"></div>
+    </div>
+</div>
+
+<script>
+const PORT_PROFILES = {
+    web: [
+        { port: 80, name: 'HTTP', desc: 'Web server' },
+        { port: 443, name: 'HTTPS', desc: 'Secure web server' },
+        { port: 3000, name: 'Dev Server', desc: 'Node.js/React default' },
+        { port: 3001, name: 'Dev Server', desc: 'Alternate dev port' },
+        { port: 4000, name: 'Phoenix/Gatsby', desc: 'Elixir/Static sites' },
+        { port: 4200, name: 'Angular CLI', desc: 'Angular dev server' },
+        { port: 5000, name: 'Flask/Various', desc: 'Python Flask default' },
+        { port: 5173, name: 'Vite', desc: 'Vite dev server' },
+        { port: 8000, name: 'HTTP Alt', desc: 'Python/Django default' },
+        { port: 8080, name: 'HTTP Proxy', desc: 'Tomcat/common alt' },
+        { port: 8443, name: 'HTTPS Alt', desc: 'Alternate HTTPS' },
+        { port: 8888, name: 'Jupyter', desc: 'Jupyter Notebook' },
+        { port: 9000, name: 'Various', desc: 'SonarQube/misc' },
+        { port: 9200, name: 'Elasticsearch', desc: 'Search API' },
+    ],
+    database: [
+        { port: 1433, name: 'MSSQL', desc: 'Microsoft SQL Server' },
+        { port: 1521, name: 'Oracle DB', desc: 'Oracle Database' },
+        { port: 3306, name: 'MySQL/MariaDB', desc: 'MySQL database' },
+        { port: 5432, name: 'PostgreSQL', desc: 'Postgres database' },
+        { port: 5984, name: 'CouchDB', desc: 'CouchDB HTTP API' },
+        { port: 6379, name: 'Redis', desc: 'Redis in-memory DB' },
+        { port: 27017, name: 'MongoDB', desc: 'MongoDB database' },
+        { port: 27018, name: 'MongoDB', desc: 'MongoDB shard' },
+        { port: 28017, name: 'MongoDB Web', desc: 'MongoDB web UI' },
+        { port: 9042, name: 'Cassandra', desc: 'Apache Cassandra' },
+    ],
+    dev: [
+        { port: 2375, name: 'Docker', desc: 'Docker daemon (insecure)' },
+        { port: 2376, name: 'Docker TLS', desc: 'Docker daemon (TLS)' },
+        { port: 3001, name: 'Dev Alt', desc: 'React/Node alternate' },
+        { port: 4040, name: 'Ngrok', desc: 'Ngrok dashboard' },
+        { port: 5005, name: 'Java Debug', desc: 'JVM debug port' },
+        { port: 6006, name: 'Storybook', desc: 'Storybook UI' },
+        { port: 8086, name: 'InfluxDB', desc: 'InfluxDB HTTP' },
+        { port: 8161, name: 'ActiveMQ', desc: 'ActiveMQ web console' },
+        { port: 8500, name: 'Consul', desc: 'HashiCorp Consul' },
+        { port: 9090, name: 'Prometheus', desc: 'Metrics & alerting' },
+        { port: 9300, name: 'Elasticsearch', desc: 'Transport port' },
+        { port: 15672, name: 'RabbitMQ', desc: 'RabbitMQ management' },
+    ],
+    get common() {
+        const ports = [
+            { port: 21, name: 'FTP', desc: 'File Transfer Protocol' },
+            { port: 22, name: 'SSH', desc: 'Secure Shell' },
+            { port: 23, name: 'Telnet', desc: 'Telnet (insecure)' },
+            { port: 25, name: 'SMTP', desc: 'Email sending' },
+            { port: 53, name: 'DNS', desc: 'Domain name resolution' },
+            { port: 110, name: 'POP3', desc: 'Email retrieval' },
+            { port: 143, name: 'IMAP', desc: 'Email access' },
+            { port: 161, name: 'SNMP', desc: 'Network management' },
+            { port: 445, name: 'SMB', desc: 'Windows file sharing' },
+            { port: 587, name: 'SMTP TLS', desc: 'Secure email' },
+            { port: 993, name: 'IMAP TLS', desc: 'Secure IMAP' },
+            { port: 995, name: 'POP3 TLS', desc: 'Secure POP3' },
+            { port: 3389, name: 'RDP', desc: 'Remote Desktop' },
+        ];
+        return [...ports, ...PORT_PROFILES.web.slice(0, 8), ...PORT_PROFILES.database.slice(0, 5), ...PORT_PROFILES.dev.slice(0, 6)];
+    },
+    get all() {
+        const seen = new Set();
+        return [...PORT_PROFILES.web, ...PORT_PROFILES.database, ...PORT_PROFILES.dev, ...[
+            { port: 21, name: 'FTP', desc: 'File Transfer' },
+            { port: 22, name: 'SSH', desc: 'Secure Shell' },
+            { port: 23, name: 'Telnet', desc: 'Telnet' },
+            { port: 25, name: 'SMTP', desc: 'Email' },
+            { port: 53, name: 'DNS', desc: 'DNS' },
+            { port: 445, name: 'SMB', desc: 'File Sharing' },
+            { port: 3389, name: 'RDP', desc: 'Remote Desktop' },
+        ]].filter(p => { if (seen.has(p.port)) return false; seen.add(p.port); return true; });
+    }
+};
+
+let scanning = false;
+let stopRequested = false;
+let currentPorts = [];
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+function updateProfile() {
+    currentPorts = [];
+    document.getElementById('portGrid').innerHTML = '';
+    resetStats();
+}
+
+function resetStats() {
+    document.getElementById('statOpen').textContent = '0';
+    document.getElementById('statClosed').textContent = '0';
+    document.getElementById('statFiltered').textContent = '0';
+    document.getElementById('statTotal').textContent = '0';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressText').textContent = 'Select a profile and click Start Scan';
+}
+
+function renderPortItems(ports) {
+    const grid = document.getElementById('portGrid');
+    grid.innerHTML = '';
+    for (const p of ports) {
+        const item = document.createElement('div');
+        item.className = 'port-item';
+        item.id = 'port-' + p.port;
+        item.innerHTML = `
+            <div class="port-num">${escapeHtml(String(p.port))}</div>
+            <div class="port-info">
+                <div class="port-name">${escapeHtml(p.name)}</div>
+                <div class="port-desc">${escapeHtml(p.desc)}</div>
+            </div>
+            <div class="port-status status-scanning" id="ps-${escapeHtml(String(p.port))}">Queued</div>
+        `;
+        grid.appendChild(item);
+    }
+}
+
+function updatePortResult(port, status, timeMs) {
+    const item = document.getElementById('port-' + port);
+    const ps = document.getElementById('ps-' + port);
+    if (!item || !ps) return;
+    item.className = 'port-item ' + status;
+    if (status === 'open') {
+        ps.className = 'port-status status-open';
+        ps.textContent = 'Open (' + timeMs + 'ms)';
+    } else if (status === 'closed') {
+        ps.className = 'port-status status-closed';
+        ps.textContent = 'Closed';
+    } else {
+        ps.className = 'port-status status-filtered';
+        ps.textContent = 'Filtered';
+    }
+}
+
+function testPort(port, timeoutMs) {
+    return new Promise((resolve) => {
+        const start = Date.now();
+        let resolved = false;
+        const done = (status) => {
+            if (!resolved) {
+                resolved = true;
+                resolve({ status, time: Date.now() - start });
+            }
+        };
+
+        const timer = setTimeout(() => done('filtered'), timeoutMs);
+
+        // WebSocket probe — fastest for detecting open ports
+        try {
+            const ws = new WebSocket('ws://localhost:' + port);
+            ws.onopen = () => {
+                clearTimeout(timer);
+                ws.close();
+                done('open');
+            };
+            ws.onerror = (e) => {
+                clearTimeout(timer);
+                // Fast error = port is closed (connection refused)
+                // Slow error = filtered
+                const elapsed = Date.now() - start;
+                if (elapsed < timeoutMs * 0.8) {
+                    done('closed');
+                } else {
+                    done('filtered');
+                }
+            };
+            ws.onclose = (e) => {
+                clearTimeout(timer);
+                const elapsed = Date.now() - start;
+                // Some servers close WS immediately after connect = open
+                if (e.code === 1006 && elapsed < 300) {
+                    // Connection refused quickly = closed
+                    done('closed');
+                } else if (elapsed < timeoutMs * 0.9) {
+                    done('open');
+                } else {
+                    done('filtered');
+                }
+            };
+        } catch (e) {
+            clearTimeout(timer);
+            done('closed');
+        }
+    });
+}
+
+async function startScan() {
+    if (scanning) return;
+    scanning = true;
+    stopRequested = false;
+
+    const profile = document.getElementById('portProfile').value;
+    const timeoutMs = Math.max(500, Math.min(5000, parseInt(document.getElementById('timeout').value) || 1500));
+    const ports = PORT_PROFILES[profile] || PORT_PROFILES.common;
+
+    document.getElementById('scanBtn').disabled = true;
+    document.getElementById('statTotal').textContent = ports.length;
+    renderPortItems(ports);
+
+    let open = 0, closed = 0, filtered = 0;
+    let done = 0;
+
+    const BATCH = 6;
+    for (let i = 0; i < ports.length; i += BATCH) {
+        if (stopRequested) break;
+        const batch = ports.slice(i, i + BATCH);
+
+        // Mark as scanning
+        batch.forEach(p => {
+            const ps = document.getElementById('ps-' + p.port);
+            if (ps) { ps.className = 'port-status status-scanning'; ps.innerHTML = '<span class="spinner"></span>'; }
+        });
+
+        const results = await Promise.all(batch.map(p => testPort(p.port, timeoutMs)));
+        batch.forEach((p, idx) => {
+            const r = results[idx];
+            updatePortResult(p.port, r.status, r.time);
+            if (r.status === 'open') open++;
+            else if (r.status === 'closed') closed++;
+            else filtered++;
+            done++;
+        });
+
+        document.getElementById('statOpen').textContent = open;
+        document.getElementById('statClosed').textContent = closed;
+        document.getElementById('statFiltered').textContent = filtered;
+        document.getElementById('progressBar').style.width = Math.round((done / ports.length) * 100) + '%';
+        document.getElementById('progressText').textContent = `Scanned ${done}/${ports.length} ports — ${open} open`;
+    }
+
+    if (stopRequested) {
+        document.getElementById('progressText').textContent = `Scan stopped — ${done} ports scanned, ${open} open`;
+    } else {
+        document.getElementById('progressText').textContent = `Scan complete — ${ports.length} ports scanned, ${open} open`;
+    }
+
+    scanning = false;
+    stopRequested = false;
+    document.getElementById('scanBtn').disabled = false;
+}
+
+function stopScan() {
+    stopRequested = true;
+}
+</script>
+</body>
+</html>
