@@ -9,6 +9,13 @@ const SYMBOLS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 const SIMILAR = "il1Lo0O";
 const AMBIGUOUS = "{}[]()/\\'\"`,;:.<>";
 
+function cryptoPickChar(chars: string): string {
+  const max = Math.floor(0xffffffff / chars.length) * chars.length;
+  const buf = new Uint32Array(1);
+  do { crypto.getRandomValues(buf); } while (buf[0] >= max);
+  return chars[buf[0] % chars.length];
+}
+
 function generatePassword(
   length: number,
   useUppercase: boolean,
@@ -57,51 +64,44 @@ function generatePassword(
 
   // Ensure complexity
   const pass = password.split("");
-  let needsUpper = useUppercase && !/[A-Z]/.test(password);
-  let needsLower = useLowercase && !/[a-z]/.test(password);
-  let needsNumber = useNumbers && !/[0-9]/.test(password);
-  let needsSymbol =
+  const needsUpper = useUppercase && !/[A-Z]/.test(password);
+  const needsLower = useLowercase && !/[a-z]/.test(password);
+  const needsNumber = useNumbers && !/[0-9]/.test(password);
+  const needsSymbol =
     useSymbols && !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password);
-
-  const array = new Uint32Array(4);
-  crypto.getRandomValues(array);
 
   let index = 0;
   if (needsUpper) {
     let chars = UPPERCASE;
     if (excludeSimilar)
-      chars = chars
-        .split("")
-        .filter((c) => !SIMILAR.includes(c))
-        .join("");
-    pass[index++] = chars[array[0] % chars.length];
+      chars = chars.split("").filter((c) => !SIMILAR.includes(c)).join("");
+    pass[index++] = cryptoPickChar(chars);
   }
   if (needsLower) {
     let chars = LOWERCASE;
     if (excludeSimilar)
-      chars = chars
-        .split("")
-        .filter((c) => !SIMILAR.includes(c))
-        .join("");
-    pass[index++] = chars[array[1] % chars.length];
+      chars = chars.split("").filter((c) => !SIMILAR.includes(c)).join("");
+    pass[index++] = cryptoPickChar(chars);
   }
   if (needsNumber) {
     let chars = NUMBERS;
     if (excludeSimilar)
-      chars = chars
-        .split("")
-        .filter((c) => !SIMILAR.includes(c))
-        .join("");
-    pass[index++] = chars[array[2] % chars.length];
+      chars = chars.split("").filter((c) => !SIMILAR.includes(c)).join("");
+    pass[index++] = cryptoPickChar(chars);
   }
   if (needsSymbol) {
     let chars = SYMBOLS;
     if (excludeAmbiguous)
-      chars = chars
-        .split("")
-        .filter((c) => !AMBIGUOUS.includes(c))
-        .join("");
-    pass[index++] = chars[array[3] % chars.length];
+      chars = chars.split("").filter((c) => !AMBIGUOUS.includes(c)).join("");
+    pass[index++] = cryptoPickChar(chars);
+  }
+
+  // Fisher-Yates shuffle so required chars land at random positions
+  for (let i = pass.length - 1; i > 0; i--) {
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    const j = buf[0] % (i + 1);
+    [pass[i], pass[j]] = [pass[j], pass[i]];
   }
 
   return pass.join("");
@@ -159,8 +159,7 @@ export default function PasswordGenerator() {
 
   useEffect(() => {
     generate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [generate]);
 
   const handleCopy = () => {
     if (!password) return;

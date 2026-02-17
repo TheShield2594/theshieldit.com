@@ -11,6 +11,10 @@ function hrefToSlug(href: string): string {
   return href.replace(/^\/tools\//, "")
 }
 
+function findToolBySlug(slug: string) {
+  return TOOLS.find((t) => hrefToSlug(t.href) === slug)
+}
+
 export function generateStaticParams() {
   return TOOLS.map((tool) => ({ slug: hrefToSlug(tool.href) }))
 }
@@ -21,7 +25,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const tool = TOOLS.find((t) => hrefToSlug(t.href) === slug)
+  const tool = findToolBySlug(slug)
   if (!tool) return {}
   return {
     title: `${tool.title} — The Shield IT`,
@@ -44,7 +48,7 @@ export default async function ToolPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const tool = TOOLS.find((t) => hrefToSlug(t.href) === slug)
+  const tool = findToolBySlug(slug)
   if (!tool) notFound()
 
   return (

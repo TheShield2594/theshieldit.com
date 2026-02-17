@@ -7,16 +7,11 @@ function base64UrlDecode(str: string): string {
   while (str.length % 4) {
     str += "=";
   }
-  return atob(str);
+  const binary = atob(str);
+  const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+  return new TextDecoder("utf-8").decode(bytes);
 }
 
-function escapeHtml(text: string): string {
-  return String(text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 type DecodedJWT = {
   header: Record<string, unknown>;
@@ -74,13 +69,25 @@ export default function JwtDecoder() {
 
   const inputClass = "w-full rounded-lg border border-border bg-background/80 px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors resize-y min-h-[120px]";
 
+  const validity = decoded ? getValidity(decoded.payload) : null;
+  const validityBadge = validity?.status === "expired" ? (
+    <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold mb-4 bg-destructive/20 text-destructive border border-destructive/50">
+      Expired
+    </div>
+  ) : validity?.status === "valid" ? (
+    <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold mb-4 bg-green-500/20 text-green-400 border border-green-500/50">
+      Valid ({validity.daysRemaining} days remaining)
+    </div>
+  ) : null;
+
   return (
     <div className="flex-1 px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-3xl space-y-6">
         {/* Input */}
         <div className="rounded-xl border border-border/50 bg-card p-6">
-          <label className="block text-sm font-medium text-muted-foreground mb-2">JSON Web Token</label>
+          <label htmlFor="jwt-input" className="block text-sm font-medium text-muted-foreground mb-2">JSON Web Token</label>
           <textarea
+            id="jwt-input"
             value={jwtInput}
             onChange={(e) => decodeJWT(e.target.value)}
             placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
@@ -136,57 +143,40 @@ export default function JwtDecoder() {
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-4">Token Information</h3>
 
               {/* Validity badge */}
-              {(() => {
-                const validity = getValidity(decoded.payload);
-                if (validity.status === "expired") {
-                  return (
-                    <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold mb-4 bg-destructive/20 text-destructive border border-destructive/50">
-                      Expired
-                    </div>
-                  );
-                }
-                if (validity.status === "valid") {
-                  return (
-                    <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold mb-4 bg-green-500/20 text-green-400 border border-green-500/50">
-                      Valid ({validity.daysRemaining} days remaining)
-                    </div>
-                  );
-                }
-                return null;
-              })()}
+              {validityBadge}
 
               <div className="space-y-3">
                 {/* Algorithm */}
                 <div className="pb-3 border-b border-border">
                   <div className="text-xs text-muted-foreground mb-1">Algorithm</div>
-                  <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.header.alg ?? "Unknown"))}</div>
+                  <div className="text-sm font-medium text-foreground">{String(decoded.header.alg ?? "Unknown")}</div>
                 </div>
 
                 {decoded.header.typ != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Type</div>
-                    <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.header.typ))}</div>
+                    <div className="text-sm font-medium text-foreground">{String(decoded.header.typ)}</div>
                   </div>
                 )}
 
                 {decoded.payload.iss != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Issuer</div>
-                    <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.payload.iss))}</div>
+                    <div className="text-sm font-medium text-foreground">{String(decoded.payload.iss)}</div>
                   </div>
                 )}
 
                 {decoded.payload.sub != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Subject</div>
-                    <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.payload.sub))}</div>
+                    <div className="text-sm font-medium text-foreground">{String(decoded.payload.sub)}</div>
                   </div>
                 )}
 
                 {decoded.payload.aud != null && (
                   <div className="pb-3 border-b border-border">
                     <div className="text-xs text-muted-foreground mb-1">Audience</div>
-                    <div className="text-sm font-medium text-foreground">{escapeHtml(String(decoded.payload.aud))}</div>
+                    <div className="text-sm font-medium text-foreground">{String(decoded.payload.aud)}</div>
                   </div>
                 )}
 

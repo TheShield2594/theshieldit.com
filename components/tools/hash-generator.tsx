@@ -72,8 +72,8 @@ function md5(buffer: ArrayBuffer): string {
   }
   tail[j >> 2] |= 0x80 << ((j % 4) << 3);
   if (j > 55) { md5cycle(state, tail); for (j = 0; j < 16; j++) tail[j] = 0; }
-  tail[14] = n * 8;
-  tail[15] = 0;
+  tail[14] = (n * 8) >>> 0;           // low 32 bits of bit-length
+  tail[15] = Math.floor(n * 8 / 4294967296); // high 32 bits
   md5cycle(state, tail);
 
   let hex = '';
@@ -119,6 +119,7 @@ export default function HashGenerator() {
   const [verifyInput, setVerifyInput] = useState("");
   const [verifyResult, setVerifyResult] = useState<{ type: "match" | "no-match" | null; message: string }>({ type: null, message: "" });
   const [copiedHash, setCopiedHash] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileSelect(file: File) {
@@ -136,12 +137,13 @@ export default function HashGenerator() {
   async function handleGenerate() {
     let data: ArrayBuffer;
     if (activeTab === "text") {
-      if (!textInput) { alert("Please enter some text to hash."); return; }
+      if (!textInput) { setError("Please enter some text to hash."); return; }
       data = new TextEncoder().encode(textInput).buffer;
     } else {
-      if (!currentFile) { alert("Please select a file to hash."); return; }
+      if (!currentFile) { setError("Please select a file to hash."); return; }
       data = await currentFile.arrayBuffer();
     }
+    setError("");
     setGenerating(true);
     try {
       const result = await generateHashes(data);
@@ -149,16 +151,20 @@ export default function HashGenerator() {
       setShowResults(true);
       setVerifyResult({ type: null, message: "" });
     } catch (e: unknown) {
-      alert("Error generating hashes: " + (e instanceof Error ? e.message : String(e)));
+      setError("Error generating hashes: " + (e instanceof Error ? e.message : String(e)));
     } finally {
       setGenerating(false);
     }
   }
 
-  function handleCopy(hash: string) {
-    navigator.clipboard.writeText(hash);
-    setCopiedHash(hash);
-    setTimeout(() => setCopiedHash(null), 1500);
+  async function handleCopy(hash: string) {
+    try {
+      await navigator.clipboard.writeText(hash);
+      setCopiedHash(hash);
+      setTimeout(() => setCopiedHash(null), 1500);
+    } catch (e) {
+      console.error("Clipboard write failed", e);
+    }
   }
 
   function handleVerify() {
@@ -245,6 +251,10 @@ export default function HashGenerator() {
           >
             {generating ? "Generating..." : "Generate Hashes"}
           </button>
+
+          {error && (
+            <p className="mt-3 text-sm text-destructive">{error}</p>
+          )}
 
           <div className="flex items-start gap-2 mt-4 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/20 text-xs text-muted-foreground">
             <svg className="shrink-0 mt-0.5 text-cyan-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
