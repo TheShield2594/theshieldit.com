@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Engineering Escape Room | The Shield IT</title>
+    <meta name="description" content="An interactive escape room game where you must spot and avoid social engineering attacks. Learn phishing, pretexting, baiting, and tailgating through real-world scenarios.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
+        h1 { font-size: 2.2rem; margin-bottom: 8px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 24px; }
+        .back-link:hover { color: #94a3b8; }
+        .hud { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+        .hud-box { background: rgba(30,41,59,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 18px; flex: 1; text-align: center; min-width: 100px; }
+        .hud-val { font-size: 1.5rem; font-weight: 700; }
+        .hud-label { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+        .scene { background: rgba(30,41,59,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .scene-type { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 16px; }
+        .type-phishing { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .type-pretexting { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+        .type-baiting { background: rgba(245,158,11,0.15); color: #fde68a; }
+        .type-tailgating { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+        .type-vishing { background: rgba(6,182,212,0.15); color: #67e8f9; }
+        .type-quid { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+        .scene-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #f1f5f9; }
+        .scene-text { font-size: 0.92rem; color: #cbd5e1; line-height: 1.8; margin-bottom: 20px; }
+        .artifact { background: rgba(15,23,42,0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px; margin: 14px 0; font-size: 0.85rem; color: #94a3b8; font-family: 'Courier New', monospace; line-height: 1.6; }
+        .artifact-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 8px; font-family: inherit; }
+        .choices { display: flex; flex-direction: column; gap: 10px; }
+        .choice-btn { padding: 14px 18px; background: rgba(15,23,42,0.6); border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; color: #e2e8f0; font-size: 0.9rem; text-align: left; cursor: pointer; transition: all 0.2s; line-height: 1.5; }
+        .choice-btn:hover:not(:disabled) { border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.05); }
+        .choice-btn.correct { border-color: #22c55e !important; background: rgba(34,197,94,0.1) !important; color: #86efac; }
+        .choice-btn.wrong { border-color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; color: #fca5a5; }
+        .choice-btn:disabled { cursor: not-allowed; }
+        .feedback { border-radius: 12px; padding: 18px; margin-top: 16px; font-size: 0.9rem; line-height: 1.7; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+        .feedback.wrong { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+        .red-flags { margin-top: 12px; }
+        .red-flags-title { font-weight: 700; margin-bottom: 8px; font-size: 0.85rem; }
+        .red-flag-item { display: flex; gap: 8px; font-size: 0.82rem; margin-bottom: 4px; }
+        .next-btn { margin-top: 16px; padding: 12px 28px; background: linear-gradient(135deg, #f59e0b, #ef4444); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; width: 100%; }
+        .next-btn:hover { opacity: 0.9; }
+        .progress-bar-bg { height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; margin-bottom: 20px; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); border-radius: 999px; transition: width 0.5s; }
+        .end-screen { text-align: center; padding: 40px 20px; }
+        .end-icon { font-size: 4rem; margin-bottom: 16px; }
+        .end-title { font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
+        .end-score { font-size: 1.2rem; color: #94a3b8; margin-bottom: 24px; }
+        .end-grade { font-size: 3rem; font-weight: 800; margin: 16px 0; }
+        .end-msg { font-size: 0.95rem; color: #94a3b8; line-height: 1.8; max-width: 500px; margin: 0 auto 24px; }
+        .restart-btn { padding: 14px 32px; background: linear-gradient(135deg, #f59e0b, #ef4444); border: none; border-radius: 12px; color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+        .hidden { display: none; }
+        .scene-num { font-size: 0.8rem; color: #64748b; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>🚨 Escape Room</h1>
+        <p class="subtitle">Survive 8 social engineering scenarios. One wrong move and they're in.</p>
+    </header>
+
+    <div class="hud">
+        <div class="hud-box"><div class="hud-val" id="hudScore" style="color:#f59e0b">0</div><div class="hud-label">Score</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudCorrect" style="color:#22c55e">0</div><div class="hud-label">Correct</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudWrong" style="color:#ef4444">0</div><div class="hud-label">Mistakes</div></div>
+        <div class="hud-box"><div class="hud-val" id="hudScene">1/8</div><div class="hud-label">Scene</div></div>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+
+    <div id="gameArea"></div>
+    <div id="endScreen" class="scene end-screen hidden"></div>
+</div>
+
+<script>
+const SCENARIOS = [
+    {
+        type: 'phishing', typeLabel: '📧 Phishing',
+        title: 'The IT Helpdesk Email',
+        text: 'You receive an email at work. It\'s Monday morning and the message looks urgent.',
+        artifact: `From: IT-Helpdesk@c0rporate-support.net\nTo: you@yourcompany.com\nSubject: URGENT: Your account will be suspended in 24 hours\n\nDear Employee,\n\nOur security systems detected unusual activity on your account. To avoid suspension, you must verify your credentials immediately by clicking the link below:\n\n🔗 https://yourcompany.secure-login.xyz/verify\n\nFailure to verify within 24 hours will result in account termination.\n\n— IT Department`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Click the verification link — losing access would be catastrophic', correct: false },
+            { text: 'Reply to the email asking for more details before clicking anything', correct: false },
+            { text: 'Do not click. Report to real IT security team using contact info from the company intranet', correct: true },
+            { text: 'Forward the email to colleagues to warn them', correct: false },
+        ],
+        correctIdx: 2,
+        flags: ['Sender domain is "c0rporate-support.net" not your company domain', 'Artificial urgency: "24 hours" to create panic', 'Vague threat: "unusual activity" with no specifics', 'Link domain is "secure-login.xyz" — not your company\'s domain', 'Legitimate IT departments never ask for credentials via email'],
+        explain: 'This is a classic credential phishing attack. The red flags: wrong sender domain (c0rporate-support.net vs your actual company), a link that goes to a completely different domain (secure-login.xyz), and artificial urgency. Always verify with your real IT team using contact info you already know.'
+    },
+    {
+        type: 'vishing', typeLabel: '📞 Vishing',
+        title: 'The Bank Call',
+        text: 'Your phone rings. The caller ID shows your bank\'s name.',
+        artifact: `Caller: "Hello, this is Sarah from Fraud Prevention at National Bank. We've detected suspicious transactions on your account — three purchases totaling $847 in another state. To protect you, we need to verify your identity. Can you please confirm the last 4 digits of your Social Security Number and your online banking password? We need to act quickly to freeze the fraudulent transactions."`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Provide the information — they already know who you are, so it\'s clearly your bank', correct: false },
+            { text: 'Hang up and call the number on the back of your bank card to verify the situation', correct: true },
+            { text: 'Give only the last 4 digits of SSN but not the password', correct: false },
+            { text: 'Ask the caller for their employee ID and badge number to verify their identity', correct: false },
+        ],
+        correctIdx: 1,
+        flags: ['Caller ID spoofing is trivial — it can be faked to show any number', 'Banks NEVER ask for passwords or full SSN over the phone', 'Urgency tactic: "We need to act quickly"', 'Asking employee ID is insufficient — they can give a fake one'],
+        explain: 'This is vishing (voice phishing). Caller ID can be trivially spoofed. Legitimate banks never ask for your password, and asking for SSN over an inbound call is a red flag. Always hang up and call the official number on your card. Never call back numbers the caller provides.'
+    },
+    {
+        type: 'baiting', typeLabel: '💾 Baiting',
+        title: 'The Parking Lot USB',
+        text: 'You find a USB drive in the company parking lot labeled "Q4 Salary Review - CONFIDENTIAL". You\'re curious.',
+        artifact: `📦 USB Drive\nLabel: "HR - Q4 2025 Salary Review - DO NOT SHARE"\nLocation found: Near the main entrance\nContents: (Unknown)`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Plug it into your work computer — you need to find the owner', correct: false },
+            { text: 'Plug it into your personal laptop — safer than work computer', correct: false },
+            { text: 'Hand it to your IT/security team without plugging it in anywhere', correct: true },
+            { text: 'Plug it into an air-gapped computer to safely preview the files', correct: false },
+        ],
+        correctIdx: 2,
+        flags: ['Enticing label triggers curiosity — engineered to make you want to look', 'USB drives can auto-execute malware the moment they\'re connected', 'Even air-gapped computers can be compromised by USB malware (e.g. Stuxnet)', 'The drop location (near entrance) is deliberate'],
+        explain: 'This is USB baiting — one of the most effective attacks. The enticing label is designed to override your judgment. A USB drive can contain a "Rubber Ducky" that types keystrokes automatically or exploit USB firmware. The ONLY safe action is to hand it to security without plugging it in.'
+    },
+    {
+        type: 'pretexting', typeLabel: '🎭 Pretexting',
+        title: 'The New IT Contractor',
+        text: 'A person in professional attire approaches your desk, badge visible, looking stressed.',
+        artifact: `Person: "Hi, I'm Mike from DataSync Solutions — we do your company's network monitoring. I have an emergency ticket from your CTO about a server issue. I need to quickly run a diagnostic tool on your machine. I can\'t wait for a formal request — the CTO is watching this directly. Can I just use your workstation for 5 minutes? I'll be quick."`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Allow it — they have a badge and mentioned the CTO, so it seems legitimate', correct: false },
+            { text: 'Let them use your mouse and keyboard while you watch closely', correct: false },
+            { text: 'Tell them you need to verify the request through your manager or IT team, and offer to contact the CTO directly', correct: true },
+            { text: 'Ask to see their company ID before allowing access', correct: false },
+        ],
+        correctIdx: 2,
+        flags: ['Bypasses normal process: "can\'t wait for a formal request"', 'Name-drops authority: "CTO is watching" to add pressure', 'Physical presence and professional attire build false trust', 'Vague credentials: "DataSync Solutions" — not verifiable on the spot'],
+        explain: 'This is pretexting — fabricating a scenario to gain physical access. The attacker uses authority (CTO), urgency, and professionalism to bypass your skepticism. Always verify requests through established channels. A real emergency wouldn\'t bypass security procedures.'
+    },
+    {
+        type: 'phishing', typeLabel: '📧 Spear Phishing',
+        title: 'The CEO Favor',
+        text: 'You work in finance. An email arrives early Friday afternoon.',
+        artifact: `From: ceo.roberts@yourcompany-mail.com\nTo: finance@yourcompany.com\nSubject: Quick wire transfer needed\n\nHi,\n\nI'm in back-to-back meetings and can't talk. I need you to process an urgent wire transfer of $47,500 to a new vendor — Meridian Consulting. This is for a deal closing today and I need it done before end of business.\n\nWire details:\nBank: First Pacific Bank\nAccount: 8847291056\nRouting: 021000021\n\nKeep this between us for now — NDA is still being signed. I'll explain everything Monday.\n\nThanks,\nJohn Roberts\nCEO`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Process the transfer — the CEO asked and it\'s urgent', correct: false },
+            { text: 'Reply to the email requesting a signed authorization form', correct: false },
+            { text: 'Call the CEO directly on his known phone number and verify before taking any action', correct: true },
+            { text: 'CC the CFO when processing to create an audit trail', correct: false },
+        ],
+        correctIdx: 2,
+        flags: ['Sender: "yourcompany-mail.com" not "yourcompany.com"', 'Urgency + deadline: "before end of business"', '"Keep this between us" — isolating you from verification', 'Friday afternoon timing: when vigilance is lower', 'This is BEC (Business Email Compromise) — costs billions annually'],
+        explain: 'This is Business Email Compromise (BEC), one of the costliest cybercrimes. The sender domain is "yourcompany-mail.com" (different from your company). The "keep this secret" instruction is a key red flag — it\'s designed to prevent you from consulting others. ALWAYS call to verify wire transfers using a known number.'
+    },
+    {
+        type: 'tailgating', typeLabel: '🚪 Tailgating',
+        title: 'The Deliveryman',
+        text: 'You\'re entering your office\'s secure floor, which requires a badge swipe. As you badge in, a person in a delivery uniform behind you says:',
+        artifact: `"Hey, could you hold the door? I've got these packages for the office and my hands are full. I have a delivery for HR — been here a hundred times before."`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Hold the door — they\'re clearly just a delivery person and being nice costs nothing', correct: false },
+            { text: 'Ask them to show a delivery ID then let them in', correct: false },
+            { text: 'Politely decline and direct them to reception to sign in with proper escort', correct: true },
+            { text: 'Let them in but follow them to HR to ensure they go to the right place', correct: false },
+        ],
+        correctIdx: 2,
+        flags: ['"Been here a hundred times" — builds false familiarity', 'Hands full — creates social pressure to help', 'Uniform provides visual authority but can be purchased by anyone', 'Any unauthorized person in a secure area is a risk regardless of reason'],
+        explain: 'This is tailgating (or piggybacking). Social pressure makes us feel rude for refusing to hold a door. But your badge-protected floor exists for a reason. Even real delivery people should sign in at reception. A polite "I\'m sorry, company policy — reception is right there" is the correct response.'
+    },
+    {
+        type: 'quid', typeLabel: '🎁 Quid Pro Quo',
+        title: 'The Helpful Survey',
+        text: 'You receive a LinkedIn message.',
+        artifact: `From: Alex Thompson (IT Security Consultant - 2nd connection)\n\n"Hi! We're conducting a quick 5-minute security survey for IT professionals. In return, you'll get a free 3-month subscription to SecureVault Pro (worth $150).\n\nWe just need a few details for the report:\n- Your company name and your role\n- What security software does your company use?\n- What's your company's primary VPN solution?\n- Do you use MFA? If so, which provider?\n\nClick here to claim your free subscription after completing: [link]\n\nThanks, Alex"`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Complete the survey — it\'s just general info and the reward is valuable', correct: false },
+            { text: 'Complete it but use vague answers to avoid revealing sensitive details', correct: false },
+            { text: 'Do not respond. This is intelligence gathering for a targeted attack', correct: true },
+            { text: 'Report to IT security team and delete the message', correct: false },
+        ],
+        correctIdx: 2,
+        flags: ['Asks specifically for security tools — this is reconnaissance', 'Reward creates reciprocity pressure', 'LinkedIn provides false legitimacy — profiles are easily faked', '"Report to IT" is actually also a good answer here'],
+        explain: 'This is a quid pro quo attack — offering something of value to extract security intelligence. Knowing your VPN, MFA provider, and security software helps attackers craft much more targeted attacks. Any combination of answers 3 or 4 would be reasonable — the key is recognizing the intent to gather intelligence.'
+    },
+    {
+        type: 'phishing', typeLabel: '📱 Smishing',
+        title: 'The Package Text',
+        text: 'You receive an SMS while waiting for a delivery.',
+        artifact: `SMS from: +1 (888) 247-9823\n\n"UPS: Your package has been held due to incomplete address. Update your delivery address within 24 hours to avoid return:\nhttps://ups-redelivery.com/track/A7X3\n\nRef: 1Z8F47E80134921847"`,
+        question: 'What do you do?',
+        choices: [
+            { text: 'Click the link and update your address — you are expecting a package', correct: false },
+            { text: 'Google "UPS tracking" and track the reference number there instead of clicking', correct: true },
+            { text: 'Reply STOP to unsubscribe from the texts', correct: false },
+            { text: 'Call the number in the SMS to verify', correct: false },
+        ],
+        correctIdx: 1,
+        flags: ['Real UPS links go to ups.com — "ups-redelivery.com" is a fake domain', 'Legitimate carriers send tracking updates, not address change requests via SMS', 'Replying to smishing SMS confirms your number is active', 'The phone number could be spoofed'],
+        explain: 'This is smishing (SMS phishing). The domain "ups-redelivery.com" is not ups.com. Real carriers update addresses through your original order or their official app/site. Never click tracking links from texts — always go directly to the carrier\'s real website or app to check your package.'
+    }
+];
+
+let currentScene = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+
+function escHtml(t) { const d=document.createElement('div'); d.textContent=String(t); return d.innerHTML; }
+
+function updateHUD() {
+    document.getElementById('hudScore').textContent = score;
+    document.getElementById('hudCorrect').textContent = correct;
+    document.getElementById('hudWrong').textContent = wrong;
+    document.getElementById('hudScene').textContent = `${currentScene + 1}/${SCENARIOS.length}`;
+    document.getElementById('progressBar').style.width = (currentScene / SCENARIOS.length * 100) + '%';
+}
+
+function renderScene(idx) {
+    const sc = SCENARIOS[idx];
+    answered = false;
+    const area = document.getElementById('gameArea');
+
+    const choicesHtml = sc.choices.map((c, i) => `
+        <button class="choice-btn" onclick="answer(${i})" id="choice-${i}">${escHtml(c.text)}</button>
+    `).join('');
+
+    const flagsHtml = sc.flags.map(f => `<div class="red-flag-item"><span>🚩</span><span>${escHtml(f)}</span></div>`).join('');
+
+    area.innerHTML = `
+        <div class="scene">
+            <div class="scene-num">Scene ${idx + 1} of ${SCENARIOS.length}</div>
+            <div class="scene-type type-${escHtml(sc.type)}">${sc.typeLabel}</div>
+            <div class="scene-title">${escHtml(sc.title)}</div>
+            <div class="scene-text">${escHtml(sc.text)}</div>
+            <div class="artifact"><div class="artifact-label">📄 Message / Scenario</div>${escHtml(sc.artifact)}</div>
+            <div style="font-weight:600; margin-bottom:12px; color:#f1f5f9;">${escHtml(sc.question)}</div>
+            <div class="choices" id="choices">${choicesHtml}</div>
+            <div class="feedback" id="feedback">
+                <div id="feedbackText"></div>
+                <div class="red-flags">
+                    <div class="red-flags-title">🚩 Red Flags in This Scenario:</div>
+                    ${flagsHtml}
+                </div>
+                <button class="next-btn" onclick="nextScene()">${idx === SCENARIOS.length - 1 ? 'See Final Results' : 'Next Scenario →'}</button>
+            </div>
+        </div>
+    `;
+}
+
+function answer(choiceIdx) {
+    if (answered) return;
+    answered = true;
+    const sc = SCENARIOS[currentScene];
+    const isCorrect = choiceIdx === sc.correctIdx;
+
+    document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === sc.correctIdx) btn.classList.add('correct');
+        else if (i === choiceIdx && !isCorrect) btn.classList.add('wrong');
+    });
+
+    if (isCorrect) { score += 100; correct++; }
+    else { wrong++; }
+    updateHUD();
+
+    const fb = document.getElementById('feedback');
+    fb.classList.add('show', isCorrect ? 'correct' : 'wrong');
+    document.getElementById('feedbackText').innerHTML = (isCorrect ? '<strong>✅ Correct!</strong> ' : '<strong>❌ Incorrect.</strong> ') + escHtml(sc.explain);
+}
+
+function nextScene() {
+    currentScene++;
+    if (currentScene >= SCENARIOS.length) {
+        showEnd();
+    } else {
+        updateHUD();
+        renderScene(currentScene);
+        document.getElementById('gameArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function showEnd() {
+    document.getElementById('gameArea').innerHTML = '';
+    document.getElementById('progressBar').style.width = '100%';
+    const pct = Math.round((correct / SCENARIOS.length) * 100);
+    let grade, icon, msg;
+    if (pct >= 90) { grade = 'A+'; icon = '🏆'; msg = 'Outstanding! You have an expert-level ability to recognize social engineering attacks. You would be a strong defense for any organization.'; }
+    else if (pct >= 75) { grade = 'B'; icon = '🛡️'; msg = 'Great performance! You caught most attacks. Review the scenarios you missed to strengthen your awareness.'; }
+    else if (pct >= 50) { grade = 'C'; icon = '⚠️'; msg = 'You caught some attacks but missed key ones. Social engineers exploit exactly these gaps. Review each scenario carefully.'; }
+    else { grade = 'D'; icon = '🚨'; msg = 'Danger! You fell for most attacks. The good news: knowing you\'re vulnerable is the first step. Study the red flags from each scenario and retake the test.'; }
+
+    const end = document.getElementById('endScreen');
+    end.classList.remove('hidden');
+    end.innerHTML = `
+        <div class="end-icon">${icon}</div>
+        <div class="end-title">Mission Complete</div>
+        <div class="end-grade" style="color:${pct>=75?'#22c55e':pct>=50?'#f59e0b':'#ef4444'}">${grade}</div>
+        <div class="end-score">${correct} / ${SCENARIOS.length} correct (${pct}%)</div>
+        <div class="end-msg">${escHtml(msg)}</div>
+        <button class="restart-btn" onclick="restart()">Play Again</button>
+    `;
+    end.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restart() {
+    currentScene = 0; score = 0; correct = 0; wrong = 0;
+    document.getElementById('endScreen').classList.add('hidden');
+    updateHUD();
+    renderScene(0);
+}
+
+updateHUD();
+renderScene(0);
+</script>
+</body>
+</html>

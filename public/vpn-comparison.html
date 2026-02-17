@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Comparison Matrix | The Shield IT</title>
+    <meta name="description" content="Compare the top VPNs side by side. Pricing, logging policy, jurisdiction, features, speed, and privacy ratings for Mullvad, ProtonVPN, ExpressVPN, NordVPN, and more.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 {
+            font-size: 2.5rem; margin-bottom: 10px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; transition: color 0.2s; }
+        .back-link:hover { color: #94a3b8; }
+        .card { background: rgba(30,41,59,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+        .filter-btn { padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #94a3b8; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .filter-btn.active { background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.5); color: #a5b4fc; }
+        .filter-btn:hover { background: rgba(255,255,255,0.08); }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th { background: rgba(15,23,42,0.7); padding: 12px 14px; text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; white-space: nowrap; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.03); }
+        .vpn-name { font-weight: 700; font-size: 0.95rem; }
+        .vpn-tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; margin-left: 6px; }
+        .tag-recommended { background: rgba(34,197,94,0.2); color: #86efac; }
+        .tag-budget { background: rgba(59,130,246,0.2); color: #93c5fd; }
+        .badge-yes { color: #22c55e; font-weight: 600; }
+        .badge-no { color: #ef4444; font-weight: 600; }
+        .badge-partial { color: #f59e0b; font-weight: 600; }
+        .privacy-score { display: inline-flex; align-items: center; gap: 6px; }
+        .score-dots { display: flex; gap: 3px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-filled { background: #22c55e; }
+        .dot-partial { background: #f59e0b; }
+        .dot-empty { background: rgba(255,255,255,0.15); }
+        .price { font-weight: 600; color: #f1f5f9; }
+        .price-sub { font-size: 0.72rem; color: #64748b; }
+        .jurisdiction-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+        .j-good { background: rgba(34,197,94,0.1); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+        .j-ok { background: rgba(245,158,11,0.1); color: #fde68a; border: 1px solid rgba(245,158,11,0.2); }
+        .j-bad { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+        .speed-bar { height: 6px; border-radius: 999px; background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+        .legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.8rem; color: #64748b; margin-top: 16px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .disclaimer { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: 10px; padding: 14px 18px; font-size: 0.82rem; color: #94a3b8; line-height: 1.7; margin-top: 20px; }
+        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; color: #f1f5f9; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+        .feature-card { background: rgba(15,23,42,0.5); border-radius: 12px; padding: 16px; }
+        .feature-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+        .feature-body { font-size: 0.8rem; color: #94a3b8; line-height: 1.6; }
+        .no-logs-badge { display: inline-flex; align-items: center; gap: 4px; }
+        .audited { font-size: 0.7rem; color: #6ee7b7; margin-left: 4px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>VPN Comparison Matrix</h1>
+        <p class="subtitle">Compare leading VPN services on privacy, features, jurisdiction, and price — last updated February 2026</p>
+    </header>
+
+    <div class="card">
+        <div class="filters">
+            <span style="color:#94a3b8; font-size:0.85rem; align-self:center;">Filter:</span>
+            <button class="filter-btn active" onclick="filterVPNs('all', this)">All VPNs</button>
+            <button class="filter-btn" onclick="filterVPNs('no-logs', this)">No-Logs Audited</button>
+            <button class="filter-btn" onclick="filterVPNs('open-source', this)">Open Source</button>
+            <button class="filter-btn" onclick="filterVPNs('free-tier', this)">Free Tier</button>
+            <button class="filter-btn" onclick="filterVPNs('multihop', this)">Multi-Hop</button>
+            <button class="filter-btn" onclick="filterVPNs('tor', this)">Tor Integration</button>
+        </div>
+
+        <div class="table-wrap">
+            <table id="vpnTable">
+                <thead>
+                    <tr>
+                        <th>VPN</th>
+                        <th>Jurisdiction</th>
+                        <th>No-Logs Policy</th>
+                        <th>Open Source</th>
+                        <th>Kill Switch</th>
+                        <th>Multi-Hop</th>
+                        <th>Tor Support</th>
+                        <th>Free Tier</th>
+                        <th>WireGuard</th>
+                        <th>Payment Methods</th>
+                        <th>Price/mo</th>
+                        <th>Speed</th>
+                        <th>Privacy Rating</th>
+                    </tr>
+                </thead>
+                <tbody id="vpnBody"></tbody>
+            </table>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">✅ Yes</div>
+            <div class="legend-item">❌ No</div>
+            <div class="legend-item">⚠️ Partial / Limited</div>
+            <div class="legend-item"><span style="color:#6ee7b7; font-size:0.75rem;">★ Audited</span> = Third-party audited no-logs</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="section-title">Key Features Explained</div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-title">🚫 No-Logs Policy</div>
+                <div class="feature-body">A verified no-logs policy means the VPN doesn't store connection or activity logs. Look for independently audited policies — not just marketing claims.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">🏛️ Jurisdiction</div>
+                <div class="feature-body">VPNs based outside 5/9/14 Eyes surveillance alliances have stronger legal protections against data requests. Switzerland, Panama, and Iceland are considered favorable.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">🔪 Kill Switch</div>
+                <div class="feature-body">Disconnects your internet if the VPN drops, preventing data leaks. Essential for privacy-critical use cases.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">🔀 Multi-Hop</div>
+                <div class="feature-body">Routes traffic through two VPN servers in different countries. Even if one server is compromised, traffic origin remains hidden.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">🧅 Tor Integration</div>
+                <div class="feature-body">Onion over VPN or VPN over Tor support. Adds anonymity layers but reduces speed. Useful for high-risk activities.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">⚡ WireGuard</div>
+                <div class="feature-body">Modern VPN protocol with superior speed and security compared to OpenVPN and IKEv2. Now considered the gold standard.</div>
+            </div>
+        </div>
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> VPN policies change frequently. Always verify current policies on the VPN's official website before subscribing. Privacy ratings are based on publicly available audits, jurisdiction, transparency reports, and community reputation as of February 2026. This is not sponsored content.
+        </div>
+    </div>
+</div>
+
+<script>
+const VPNS = [
+    {
+        name: 'Mullvad', tags: ['no-logs','open-source','multihop'],
+        jurisdiction: { label: 'Sweden', cls: 'j-good' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '✅', cls: 'badge-yes' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '✅', cls: 'badge-yes' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Cash, Crypto, Card',
+        price: '€5/mo', priceNote: 'flat rate',
+        speed: 92, privacy: 5,
+        recommended: true
+    },
+    {
+        name: 'ProtonVPN', tags: ['no-logs','open-source','multihop','free-tier','tor'],
+        jurisdiction: { label: 'Switzerland', cls: 'j-good' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '✅', cls: 'badge-yes' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '✅', cls: 'badge-yes' },
+        free: { label: '✅', cls: 'badge-yes' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, Crypto, PayPal',
+        price: '$4.99/mo', priceNote: '2yr plan',
+        speed: 89, privacy: 5,
+        recommended: true
+    },
+    {
+        name: 'IVPN', tags: ['no-logs','open-source','multihop'],
+        jurisdiction: { label: 'Gibraltar', cls: 'j-good' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '✅', cls: 'badge-yes' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Cash, Crypto, Card',
+        price: '$6/mo', priceNote: 'standard',
+        speed: 84, privacy: 5
+    },
+    {
+        name: 'NordVPN', tags: ['no-logs','multihop'],
+        jurisdiction: { label: 'Panama', cls: 'j-good' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '❌', cls: 'badge-no' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '✅', cls: 'badge-yes' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, Crypto, PayPal',
+        price: '$3.09/mo', priceNote: '2yr plan',
+        speed: 90, privacy: 4
+    },
+    {
+        name: 'ExpressVPN', tags: ['no-logs'],
+        jurisdiction: { label: 'BVI / US*', cls: 'j-ok' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '⚠️', cls: 'badge-partial' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '❌', cls: 'badge-no' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, PayPal, Crypto',
+        price: '$6.67/mo', priceNote: '1yr plan',
+        speed: 88, privacy: 3
+    },
+    {
+        name: 'Surfshark', tags: ['no-logs','multihop'],
+        jurisdiction: { label: 'Netherlands', cls: 'j-ok' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '❌', cls: 'badge-no' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, PayPal, Crypto',
+        price: '$2.30/mo', priceNote: '2yr plan',
+        speed: 86, privacy: 3,
+        budget: true
+    },
+    {
+        name: 'Private Internet Access', tags: ['no-logs','open-source'],
+        jurisdiction: { label: 'USA*', cls: 'j-bad' },
+        noLogs: { label: '✅ Court-verified', cls: 'badge-yes' },
+        openSource: { label: '✅', cls: 'badge-yes' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '⚠️', cls: 'badge-partial' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, Crypto, PayPal',
+        price: '$2.03/mo', priceNote: '3yr plan',
+        speed: 82, privacy: 3,
+        budget: true
+    },
+    {
+        name: 'Windscribe', tags: ['no-logs','open-source','free-tier','multihop'],
+        jurisdiction: { label: 'Canada*', cls: 'j-bad' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '✅', cls: 'badge-yes' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '✅ 10GB/mo', cls: 'badge-yes' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, Crypto, PayPal',
+        price: '$5.75/mo', priceNote: '1yr plan',
+        speed: 80, privacy: 3,
+        budget: true
+    },
+    {
+        name: 'Hide.me', tags: ['no-logs','free-tier'],
+        jurisdiction: { label: 'Malaysia', cls: 'j-good' },
+        noLogs: { label: '✅ Audited ★', cls: 'badge-yes' },
+        openSource: { label: '❌', cls: 'badge-no' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '❌', cls: 'badge-no' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '✅ 10GB/mo', cls: 'badge-yes' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, PayPal, Crypto',
+        price: '$4.99/mo', priceNote: '1yr plan',
+        speed: 78, privacy: 3
+    },
+    {
+        name: 'Astrill', tags: ['multihop'],
+        jurisdiction: { label: 'Seychelles', cls: 'j-good' },
+        noLogs: { label: '⚠️ Claimed', cls: 'badge-partial' },
+        openSource: { label: '❌', cls: 'badge-no' },
+        killSwitch: { label: '✅', cls: 'badge-yes' },
+        multiHop: { label: '✅', cls: 'badge-yes' },
+        tor: { label: '❌', cls: 'badge-no' },
+        free: { label: '❌', cls: 'badge-no' },
+        wireguard: { label: '✅', cls: 'badge-yes' },
+        payment: 'Card, Crypto, PayPal',
+        price: '$12.50/mo', priceNote: '1yr plan',
+        speed: 85, privacy: 3
+    },
+];
+
+function dots(score, max=5) {
+    let html = '<div class="score-dots">';
+    for (let i = 0; i < max; i++) {
+        html += `<div class="dot ${i < score ? 'dot-filled' : 'dot-empty'}"></div>`;
+    }
+    return html + '</div>';
+}
+
+let currentFilter = 'all';
+
+function renderTable(filter) {
+    const tbody = document.getElementById('vpnBody');
+    tbody.innerHTML = '';
+    for (const v of VPNS) {
+        if (filter !== 'all' && !v.tags.includes(filter)) continue;
+        const tr = document.createElement('tr');
+        tr.dataset.tags = (v.tags || []).join(' ');
+        tr.innerHTML = `
+            <td>
+                <div class="vpn-name">${escHtml(v.name)}${v.recommended ? '<span class="vpn-tag tag-recommended">Top Pick</span>' : ''}${v.budget ? '<span class="vpn-tag tag-budget">Budget</span>' : ''}</div>
+            </td>
+            <td><span class="jurisdiction-badge ${escHtml(v.jurisdiction.cls)}">${escHtml(v.jurisdiction.label)}</span></td>
+            <td class="${escHtml(v.noLogs.cls)}">${v.noLogs.label}</td>
+            <td class="${escHtml(v.openSource.cls)}">${v.openSource.label}</td>
+            <td class="${escHtml(v.killSwitch.cls)}">${v.killSwitch.label}</td>
+            <td class="${escHtml(v.multiHop.cls)}">${v.multiHop.label}</td>
+            <td class="${escHtml(v.tor.cls)}">${v.tor.label}</td>
+            <td class="${escHtml(v.free.cls)}">${v.free.label}</td>
+            <td class="${escHtml(v.wireguard.cls)}">${v.wireguard.label}</td>
+            <td style="font-size:0.78rem; color:#94a3b8;">${escHtml(v.payment)}</td>
+            <td><div class="price">${escHtml(v.price)}</div><div class="price-sub">${escHtml(v.priceNote)}</div></td>
+            <td>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="speed-bar" style="width:${escHtml(String(v.speed * 0.6))}px"></div>
+                    <span style="font-size:0.78rem; color:#94a3b8;">${escHtml(String(v.speed))}%</span>
+                </div>
+            </td>
+            <td>${dots(v.privacy)}</td>
+        `;
+        tbody.appendChild(tr);
+    }
+}
+
+function filterVPNs(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTable(filter);
+}
+
+function escHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = String(s);
+    return d.innerHTML;
+}
+
+renderTable('all');
+</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Tools | The Shield IT</title>
+    <meta name="description" content="Your bookmarked security and privacy tools. Favorites stored locally in your browser — never sent to any server.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #94a3b8; }
+        .card { background: rgba(30,41,59,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+        .privacy-note { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 12px 16px; font-size: 0.82rem; color: #86efac; margin-bottom: 20px; }
+        .controls { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 16px; flex-wrap: wrap; }
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+        .btn-danger { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+        .favorites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+        .fav-card { background: rgba(15,23,42,0.6); border-radius: 14px; padding: 18px; border: 1px solid rgba(255,255,255,0.08); transition: border-color 0.2s; position: relative; }
+        .fav-card:hover { border-color: rgba(245,158,11,0.3); }
+        .fav-icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .fav-name { font-weight: 700; font-size: 0.95rem; color: #f1f5f9; margin-bottom: 6px; }
+        .fav-desc { font-size: 0.78rem; color: #64748b; line-height: 1.5; margin-bottom: 12px; }
+        .fav-footer { display: flex; gap: 8px; }
+        .fav-go { flex: 1; padding: 8px 14px; background: linear-gradient(135deg, #f59e0b, #ef4444); border: none; border-radius: 8px; color: white; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+        .fav-remove { padding: 8px 10px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; color: #fca5a5; font-size: 0.8rem; cursor: pointer; }
+        .fav-remove:hover { background: rgba(239,68,68,0.2); }
+        .cat-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; margin-bottom: 8px; }
+        .cat-security { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .cat-developer { background: rgba(59,130,246,0.15); color: #93c5fd; }
+        .cat-education { background: rgba(34,197,94,0.15); color: #86efac; }
+        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+        .empty-title { font-size: 1.2rem; font-weight: 600; color: #64748b; margin-bottom: 8px; }
+        .empty-body { font-size: 0.85rem; color: #475569; line-height: 1.6; }
+        .go-home { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 12px 24px; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 10px; color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        /* Widget for embedding on main site */
+        .how-to { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; padding: 16px 20px; margin-top: 20px; }
+        .how-to h3 { font-size: 0.9rem; font-weight: 700; color: #a5b4fc; margin-bottom: 10px; }
+        .how-to p { font-size: 0.8rem; color: #64748b; line-height: 1.6; }
+        .how-to code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.78rem; color: #e2e8f0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>⭐ Favorites</h1>
+        <p class="subtitle">Your bookmarked tools — stored locally in your browser</p>
+    </header>
+
+    <div class="card">
+        <div class="privacy-note">🔒 Favorites are stored entirely in your browser's localStorage. Nothing is sent to any server. You can export them as a backup.</div>
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="importFavorites()">⬆️ Import</button>
+            <button class="btn btn-secondary" onclick="exportFavorites()">⬇️ Export</button>
+            <button class="btn btn-danger" onclick="clearFavorites()">🗑️ Clear All</button>
+        </div>
+        <div id="favoritesContainer"></div>
+
+        <div class="how-to">
+            <h3>How to Add Favorites</h3>
+            <p>While visiting any tool, open your browser bookmarks and save the page. Or, if a tool has a ⭐ bookmark button, click it to add directly to this list.<br><br>
+            You can also programmatically add favorites from any tool page with:<br>
+            <code>shieldAddFavorite({ name, href, description, category })</code></p>
+        </div>
+    </div>
+</div>
+
+<script>
+const FAV_KEY = 'shield_favorites';
+
+function getFavorites() {
+    try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+    catch { return []; }
+}
+
+function saveFavorites(f) { localStorage.setItem(FAV_KEY, JSON.stringify(f)); }
+
+function removeFavorite(href) {
+    const f = getFavorites().filter(i => i.href !== href);
+    saveFavorites(f); render();
+}
+
+function clearFavorites() {
+    if (confirm('Remove all favorites?')) { localStorage.removeItem(FAV_KEY); render(); }
+}
+
+function exportFavorites() {
+    const f = getFavorites();
+    const txt = JSON.stringify(f, null, 2);
+    const blob = new Blob([txt], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'shield-favorites.json'; a.click();
+}
+
+function importFavorites() {
+    const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+    input.onchange = e => {
+        const file = e.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (!Array.isArray(data)) throw new Error('Invalid format');
+                const existing = getFavorites();
+                const merged = [...existing];
+                for (const item of data) {
+                    if (!merged.find(m => m.href === item.href)) merged.push(item);
+                }
+                saveFavorites(merged); render();
+                alert(`Imported ${data.length} favorites.`);
+            } catch { alert('Invalid favorites file.'); }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+function escHtml(t) { const d=document.createElement('div'); d.textContent=String(t); return d.innerHTML; }
+
+const CAT_ICONS = { security: '🛡️', developer: '⚙️', education: '📚', default: '🔧' };
+
+function render() {
+    const container = document.getElementById('favoritesContainer');
+    const favs = getFavorites();
+
+    if (favs.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">⭐</div>
+                <div class="empty-title">No favorites saved yet</div>
+                <div class="empty-body">Bookmark your most-used tools by clicking the ⭐ button on any tool page, or import a favorites file from another device.</div>
+                <a href="/" class="go-home">🏠 Browse Tools</a>
+            </div>`;
+        return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'favorites-grid';
+    for (const fav of favs) {
+        const cat = fav.category || 'default';
+        const icon = CAT_ICONS[cat] || CAT_ICONS.default;
+        const card = document.createElement('div');
+        card.className = 'fav-card';
+        card.innerHTML = `
+            <div class="cat-badge cat-${escHtml(cat)}">${escHtml(cat)}</div>
+            <div class="fav-icon">${icon}</div>
+            <div class="fav-name">${escHtml(fav.name)}</div>
+            <div class="fav-desc">${escHtml(fav.description || '')}</div>
+            <div class="fav-footer">
+                <a href="${escHtml(fav.href)}" class="fav-go">Open Tool</a>
+                <button class="fav-remove" onclick="removeFavorite('${escHtml(fav.href)}')">✕</button>
+            </div>
+        `;
+        grid.appendChild(card);
+    }
+    container.innerHTML = '';
+    container.appendChild(grid);
+}
+
+// Global API for tool pages to use
+window.shieldAddFavorite = function({ name, href, description, category }) {
+    const f = getFavorites();
+    if (f.find(i => i.href === href)) return; // Already favorited
+    f.push({ name, href, description: description || '', category: category || 'default', addedAt: Date.now() });
+    saveFavorites(f);
+};
+
+window.shieldRemoveFavorite = function(href) {
+    const f = getFavorites().filter(i => i.href !== href);
+    saveFavorites(f);
+};
+
+window.shieldIsFavorite = function(href) {
+    return getFavorites().some(i => i.href === href);
+};
+
+render();
+</script>
+</body>
+</html>

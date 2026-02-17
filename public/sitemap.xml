@@ -4,137 +4,337 @@
   <!-- Homepage - Tools Directory -->
   <url>
     <loc>https://theshieldit.com/</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- QR Code Generator -->
+  <!-- Blog -->
   <url>
-    <loc>https://theshieldit.com/qr-code.html</loc>
-    <lastmod>2026-02-07</lastmod>
+    <loc>https://theshieldit.com/blog.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Beginner Guides -->
+  <url>
+    <loc>https://theshieldit.com/guide-privacy-101.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/guide-security-basics.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Glossary & Cheat Sheets -->
+  <url>
+    <loc>https://theshieldit.com/glossary.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/cheat-sheets.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Password Strength Quest Tool -->
+  <!-- Comparison Pages -->
   <url>
-    <loc>https://theshieldit.com/password-quest.html</loc>
-    <lastmod>2025-11-13</lastmod>
+    <loc>https://theshieldit.com/vpn-comparison.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/password-manager-comparison.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/browser-comparison.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Privacy Guardian RPG Tool -->
-  <url>
-    <loc>https://theshieldit.com/privacy-rpg.html</loc>
-    <lastmod>2025-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- DNS Lookup Tester -->
-  <url>
-    <loc>https://theshieldit.com/dns-tester.html</loc>
-    <lastmod>2026-02-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Vendor Lock-In Score -->
-  <url>
-    <loc>https://theshieldit.com/vendor-lock-in.html</loc>
-    <lastmod>2026-02-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Email Header Analyzer -->
-  <url>
-    <loc>https://theshieldit.com/email-analyzer.html</loc>
-    <lastmod>2026-02-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- WHOIS Lookup -->
-  <url>
-    <loc>https://theshieldit.com/whois-lookup.html</loc>
-    <lastmod>2026-02-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- SSL/TLS Certificate Checker -->
+  <!-- Security Tools -->
   <url>
     <loc>https://theshieldit.com/ssl-checker.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Text Diff/Compare -->
   <url>
-    <loc>https://theshieldit.com/text-diff.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/web-checker.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Hash Generator & Verifier -->
   <url>
-    <loc>https://theshieldit.com/hash-generator.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/privacy-policy-analyzer.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Base64 Encoder/Decoder -->
   <url>
-    <loc>https://theshieldit.com/base64.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/tracker-blocker-test.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- JSON Formatter & Validator -->
   <url>
-    <loc>https://theshieldit.com/json-formatter.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/wifi-security-analyzer.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Regex Tester -->
   <url>
-    <loc>https://theshieldit.com/regex-tester.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/digital-signature-verifier.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Phishing Email Quiz -->
   <url>
-    <loc>https://theshieldit.com/phishing-quiz.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/certificate-decoder.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Privacy Score Calculator -->
+  <url>
+    <loc>https://theshieldit.com/email-analyzer.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/whois-lookup.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/dns-leak-test.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/webrtc-leak-test.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/browser-fingerprint.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/ip-lookup.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/link-safety-checker.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/exif-remover.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://theshieldit.com/privacy-score.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Data Breach Timeline -->
+  <!-- Cryptography Tools -->
   <url>
-    <loc>https://theshieldit.com/breach-timeline.html</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://theshieldit.com/message-encryptor.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/rsa-key-generator.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/hash-generator.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/jwt-decoder.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Developer Tools -->
+  <url>
+    <loc>https://theshieldit.com/dev-tools.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/base64.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/json-formatter.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/regex-tester.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/text-diff.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/url-encoder.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/uuid-generator.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/timestamp-converter.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/port-scanner.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/subnet-calculator.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/qr-code.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Password Tools -->
+  <url>
+    <loc>https://theshieldit.com/password-generator.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/password-cracking-simulator.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Educational Games -->
+  <url>
+    <loc>https://theshieldit.com/social-engineering-escape-room.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/network-defense-game.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/phishing-quiz.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/security-trivia.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/password-quest.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/privacy-rpg.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Assessments -->
+  <url>
+    <loc>https://theshieldit.com/breach-timeline.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/vendor-lock-in.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- User Features -->
+  <url>
+    <loc>https://theshieldit.com/tool-history.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://theshieldit.com/favorites.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
 </urlset>

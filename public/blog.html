@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security & Privacy Blog | The Shield IT</title>
+    <meta name="description" content="Latest cybersecurity news, privacy guides, and security tips from The Shield IT. Stay informed about threats, breaches, and how to protect yourself.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #94a3b8; }
+        .layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; }
+        @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } }
+        .main-col {}
+        .sidebar {}
+        .featured { background: rgba(30,41,59,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .featured-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; background: rgba(99,102,241,0.2); color: #a5b4fc; margin-bottom: 14px; }
+        .featured h2 { font-size: 1.5rem; font-weight: 800; color: #f1f5f9; margin-bottom: 10px; line-height: 1.4; }
+        .featured-meta { font-size: 0.78rem; color: #64748b; margin-bottom: 14px; display: flex; gap: 14px; flex-wrap: wrap; }
+        .featured-body { font-size: 0.9rem; color: #94a3b8; line-height: 1.8; }
+        .read-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; color: #6366f1; text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+        .read-more:hover { color: #818cf8; }
+        .posts-grid { display: flex; flex-direction: column; gap: 16px; }
+        .post-card { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; transition: border-color 0.2s; }
+        .post-card:hover { border-color: rgba(99,102,241,0.3); }
+        .post-header { display: flex; align-items: flex-start; gap: 14px; }
+        .post-cat-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+        .post-cat { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; }
+        .cat-news { background: rgba(239,68,68,0.15); color: #fca5a5; }
+        .cat-guide { background: rgba(34,197,94,0.15); color: #86efac; }
+        .cat-tip { background: rgba(59,130,246,0.15); color: #93c5fd; }
+        .cat-analysis { background: rgba(245,158,11,0.15); color: #fde68a; }
+        .post-title { font-size: 1.05rem; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; line-height: 1.4; }
+        .post-excerpt { font-size: 0.83rem; color: #94a3b8; line-height: 1.7; }
+        .post-footer { display: flex; gap: 14px; margin-top: 12px; font-size: 0.75rem; color: #64748b; flex-wrap: wrap; }
+        .sidebar-card { background: rgba(30,41,59,0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+        .sidebar-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 14px; }
+        .topic-link { display: block; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; color: #94a3b8; text-decoration: none; transition: color 0.2s; }
+        .topic-link:hover { color: #6366f1; }
+        .topic-link:last-child { border-bottom: none; }
+        .topic-count { float: right; background: rgba(255,255,255,0.08); padding: 1px 8px; border-radius: 20px; font-size: 0.72rem; }
+        .newsletter { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+        .newsletter p { font-size: 0.82rem; color: #94a3b8; margin: 8px 0 14px; line-height: 1.6; }
+        .newsletter-input { display: flex; gap: 8px; }
+        .newsletter-input input { flex: 1; padding: 9px 14px; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #e2e8f0; font-size: 0.85rem; min-width: 0; }
+        .newsletter-input button { padding: 9px 14px; background: linear-gradient(135deg, #6366f1, #ec4899); border: none; border-radius: 8px; color: white; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; background: rgba(255,255,255,0.06); color: #64748b; text-decoration: none; transition: all 0.2s; }
+        .tag:hover { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <header>
+        <h1>Security & Privacy Blog</h1>
+        <p class="subtitle">News, guides, and analysis to help you stay safe online</p>
+    </header>
+
+    <div class="layout">
+        <div class="main-col">
+            <div class="featured">
+                <span class="featured-badge">📌 Featured</span>
+                <h2>The 2025 Data Breach Report: What You Need to Know</h2>
+                <div class="featured-meta">
+                    <span>📅 February 2026</span>
+                    <span>✍️ The Shield IT</span>
+                    <span>⏱️ 8 min read</span>
+                    <span class="post-cat cat-analysis">Analysis</span>
+                </div>
+                <div class="featured-body">
+                    2025 set new records for the scale and sophistication of data breaches. The year saw an unprecedented increase in supply chain attacks, AI-assisted phishing campaigns, and ransomware targeting critical infrastructure. We break down the biggest incidents, what data was exposed, and what it means for your personal security.<br><br>
+                    Key findings: over 3 billion records exposed in the top 10 breaches alone, with healthcare, finance, and government sectors most targeted. The average time-to-detection for breaches was 197 days — meaning attackers operated undetected for over 6 months in many cases.
+                </div>
+                <a href="#" class="read-more">Read Full Article →</a>
+            </div>
+
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-cat-icon">🔑</div>
+                        <div>
+                            <span class="post-cat cat-guide">Guide</span>
+                            <div class="post-title">Passkeys Explained: Why They're Replacing Passwords</div>
+                            <div class="post-excerpt">Passkeys are the future of authentication — phishing-resistant, passwordless, and built on open standards. We explain how they work using public-key cryptography, which platforms support them, and how to start using them today on Google, Apple, and Microsoft accounts.</div>
+                        </div>
+                    </div>
+                    <div class="post-footer"><span>📅 January 2026</span><span>⏱️ 6 min read</span><span>🏷️ Authentication, FIDO2</span></div>
+                </div>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-cat-icon">🚨</div>
+                        <div>
+                            <span class="post-cat cat-news">News</span>
+                            <div class="post-title">Major Telecom Breach Exposes Call Records of Millions</div>
+                            <div class="post-excerpt">A sophisticated nation-state actor compromised multiple major US telecommunications providers, gaining access to call records, SMS metadata, and in some cases, live call interception capabilities. What was exposed, who's affected, and what to do if you're a customer.</div>
+                        </div>
+                    </div>
+                    <div class="post-footer"><span>📅 December 2025</span><span>⏱️ 5 min read</span><span>🏷️ Breach, Telecom</span></div>
+                </div>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-cat-icon">🤖</div>
+                        <div>
+                            <span class="post-cat cat-analysis">Analysis</span>
+                            <div class="post-title">How AI Is Making Phishing Attacks Nearly Undetectable</div>
+                            <div class="post-excerpt">AI-generated phishing emails now achieve over 90% success rates in tests — surpassing human-crafted attacks. We analyze how attackers use LLMs to craft perfectly personalized spear-phishing messages, generate convincing voice deepfakes, and automate social media reconnaissance.</div>
+                        </div>
+                    </div>
+                    <div class="post-footer"><span>📅 November 2025</span><span>⏱️ 7 min read</span><span>🏷️ AI, Phishing, Social Engineering</span></div>
+                </div>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-cat-icon">🛡️</div>
+                        <div>
+                            <span class="post-cat cat-guide">Guide</span>
+                            <div class="post-title">The Complete Guide to Securing Your Home Network in 2026</div>
+                            <div class="post-excerpt">Your home router is the gateway to all your devices. This guide walks through WPA3 configuration, guest network setup, DNS filtering with NextDNS, disabling WPS, updating firmware, and securing IoT devices — with step-by-step instructions for the most common router brands.</div>
+                        </div>
+                    </div>
+                    <div class="post-footer"><span>📅 October 2025</span><span>⏱️ 10 min read</span><span>🏷️ WiFi, Router, Home Security</span></div>
+                </div>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-cat-icon">💡</div>
+                        <div>
+                            <span class="post-cat cat-tip">Quick Tip</span>
+                            <div class="post-title">5 Settings to Change in Your Browser Right Now</div>
+                            <div class="post-excerpt">Five browser settings that take under 5 minutes to change but significantly improve your privacy: enabling HTTPS-only mode, blocking third-party cookies, reviewing extension permissions, setting a privacy-respecting search engine, and configuring DNS-over-HTTPS.</div>
+                        </div>
+                    </div>
+                    <div class="post-footer"><span>📅 September 2025</span><span>⏱️ 3 min read</span><span>🏷️ Browser, Privacy</span></div>
+                </div>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-cat-icon">🔐</div>
+                        <div>
+                            <span class="post-cat cat-guide">Guide</span>
+                            <div class="post-title">Zero-Knowledge Encryption: What It Means and Why It Matters</div>
+                            <div class="post-excerpt">Many services claim to "encrypt your data" — but if the company holds the encryption keys, they can read everything. We explain zero-knowledge encryption, which services genuinely implement it (Bitwarden, ProtonMail, Tresorit), and how to verify providers' claims.</div>
+                        </div>
+                    </div>
+                    <div class="post-footer"><span>📅 August 2025</span><span>⏱️ 9 min read</span><span>🏷️ Encryption, Privacy</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="newsletter">
+                <div class="sidebar-title">📬 Newsletter</div>
+                <p>Weekly security digest. No spam, no tracking. Unsubscribe anytime.</p>
+                <div class="newsletter-input">
+                    <input type="email" placeholder="your@email.com" aria-label="Email for newsletter">
+                    <button type="button" onclick="this.textContent='✓'">Subscribe</button>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">📂 Categories</div>
+                <a class="topic-link" href="#">Security News <span class="topic-count">24</span></a>
+                <a class="topic-link" href="#">Privacy Guides <span class="topic-count">18</span></a>
+                <a class="topic-link" href="#">Quick Tips <span class="topic-count">31</span></a>
+                <a class="topic-link" href="#">Tool Reviews <span class="topic-count">12</span></a>
+                <a class="topic-link" href="#">Threat Analysis <span class="topic-count">9</span></a>
+                <a class="topic-link" href="#">Tutorials <span class="topic-count">15</span></a>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">🏷️ Popular Tags</div>
+                <div class="tag-cloud">
+                    <a class="tag" href="#">phishing</a>
+                    <a class="tag" href="#">VPN</a>
+                    <a class="tag" href="#">2FA</a>
+                    <a class="tag" href="#">password</a>
+                    <a class="tag" href="#">encryption</a>
+                    <a class="tag" href="#">ransomware</a>
+                    <a class="tag" href="#">privacy</a>
+                    <a class="tag" href="#">browser</a>
+                    <a class="tag" href="#">AI</a>
+                    <a class="tag" href="#">breach</a>
+                    <a class="tag" href="#">WiFi</a>
+                    <a class="tag" href="#">GDPR</a>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">🔗 Also Read</div>
+                <a class="topic-link" href="/guide-privacy-101.html">Privacy 101 Guide</a>
+                <a class="topic-link" href="/guide-security-basics.html">Security Basics</a>
+                <a class="topic-link" href="/glossary.html">Security Glossary</a>
+                <a class="topic-link" href="/cheat-sheets.html">Cheat Sheets</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

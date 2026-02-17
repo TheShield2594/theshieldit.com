@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Cheat Sheets | The Shield IT</title>
+    <meta name="description" content="Quick reference security cheat sheets: password rules, phishing red flags, incident response, hardening checklists, and more.">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #e2e8f0; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #94a3b8; }
+        .print-btn { padding: 8px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #94a3b8; font-size: 0.85rem; cursor: pointer; float: right; margin-top: -60px; }
+        .print-btn:hover { background: rgba(255,255,255,0.12); }
+        .sheets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .sheet { background: rgba(30,41,59,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .sheet-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .sheet-icon { font-size: 1.5rem; }
+        .sheet-title { font-size: 1.05rem; font-weight: 700; color: #f1f5f9; }
+        .sheet-subtitle { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+        .rule-list { list-style: none; }
+        .rule-item { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.83rem; line-height: 1.5; }
+        .rule-item:last-child { border-bottom: none; }
+        .rule-icon { flex-shrink: 0; width: 18px; text-align: center; }
+        .rule-text { color: #94a3b8; flex: 1; }
+        .rule-text strong { color: #e2e8f0; }
+        .do { color: #22c55e; }
+        .dont { color: #ef4444; }
+        .warn { color: #f59e0b; }
+        .info { color: #3b82f6; }
+        .cmd { font-family: 'Courier New', monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.78rem; color: #e2e8f0; }
+        .section-divider { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #475569; margin: 12px 0 8px; font-weight: 600; }
+        @media print {
+            body { background: white; color: black; padding: 10px; }
+            .back-link, .print-btn { display: none; }
+            .sheets-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .sheet { background: #f8f9fa; border: 1px solid #dee2e6; break-inside: avoid; }
+            .rule-text { color: #333; }
+            h1 { color: #1a1a1a; -webkit-text-fill-color: #1a1a1a; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="back-link">← Back to Tools</a>
+    <button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+    <header>
+        <h1>Security Cheat Sheets</h1>
+        <p class="subtitle">Quick reference cards for security and privacy — print and keep handy</p>
+    </header>
+
+    <div class="sheets-grid">
+        <!-- Password Rules -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">🔐</div><div><div class="sheet-title">Password Rules</div><div class="sheet-subtitle">Creating and managing secure passwords</div></div></div>
+            <div class="section-divider">DO</div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Use <strong>20+ characters</strong> for important accounts</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>Unique password</strong> for every account</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Use a <strong>password manager</strong> (Bitwarden, KeePassXC)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Mix case, numbers, and symbols</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Passphrases: 4+ random words work great</span></li>
+            </ul>
+            <div class="section-divider">DON'T</div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Reuse passwords — ever</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Personal info: name, birthday, pet name</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Keyboard patterns: qwerty, 123456</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Leet speak: P@ssw0rd is NOT secure</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Share passwords via email or chat</span></li>
+            </ul>
+        </div>
+
+        <!-- Phishing Red Flags -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">🎣</div><div><div class="sheet-title">Phishing Red Flags</div><div class="sheet-subtitle">Email, SMS, and phone scam indicators</div></div></div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">Sender domain ≠ company domain</span></li>
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">URGENT / Account suspended / Act now</span></li>
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">Link URL doesn't match display text</span></li>
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">Generic greeting: "Dear Customer"</span></li>
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">Unexpected attachments (.exe, .zip, .docm)</span></li>
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">Requesting credentials, SSN, or payment</span></li>
+                <li class="rule-item"><span class="rule-icon warn">⚠</span><span class="rule-text">Caller asks for OTP / 2FA codes</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Hover links before clicking</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Verify via known phone/website — not from email</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Report suspicious emails to IT</span></li>
+            </ul>
+        </div>
+
+        <!-- Incident Response -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">🚨</div><div><div class="sheet-title">Incident Response</div><div class="sheet-subtitle">What to do when you've been hacked</div></div></div>
+            <div class="section-divider">ACCOUNT COMPROMISED</div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon">1.</span><span class="rule-text">Change password <strong>immediately</strong> from a clean device</span></li>
+                <li class="rule-item"><span class="rule-icon">2.</span><span class="rule-text">Enable 2FA if not already on</span></li>
+                <li class="rule-item"><span class="rule-icon">3.</span><span class="rule-text">Review and revoke active sessions</span></li>
+                <li class="rule-item"><span class="rule-icon">4.</span><span class="rule-text">Check for forwarding rules (email accounts)</span></li>
+                <li class="rule-item"><span class="rule-icon">5.</span><span class="rule-text">Notify contacts if messages sent in your name</span></li>
+            </ul>
+            <div class="section-divider">MALWARE / RANSOMWARE</div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon">1.</span><span class="rule-text">Disconnect from network immediately</span></li>
+                <li class="rule-item"><span class="rule-icon">2.</span><span class="rule-text">Do NOT pay — no guarantee of recovery</span></li>
+                <li class="rule-item"><span class="rule-icon">3.</span><span class="rule-text">Restore from clean backup</span></li>
+                <li class="rule-item"><span class="rule-icon">4.</span><span class="rule-text">Report: FBI IC3 (US), NCSC (UK)</span></li>
+            </ul>
+        </div>
+
+        <!-- 2FA Guide -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">📱</div><div><div class="sheet-title">2FA / MFA Reference</div><div class="sheet-subtitle">Multi-factor authentication methods ranked</div></div></div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon">🥇</span><span class="rule-text"><strong>Hardware key</strong> (YubiKey, Passkey) — phishing-proof</span></li>
+                <li class="rule-item"><span class="rule-icon">🥈</span><span class="rule-text"><strong>TOTP app</strong> (Aegis, Authy, Google Auth)</span></li>
+                <li class="rule-item"><span class="rule-icon">🥉</span><span class="rule-text"><strong>Email code</strong> — use only if no better option</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text"><strong>SMS</strong> — vulnerable to SIM-swap attacks</span></li>
+            </ul>
+            <div class="section-divider">PRIORITY ACCOUNTS FOR 2FA</div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Email (controls password resets for everything)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Banking and financial accounts</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Password manager</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Social media</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Cloud storage (Google Drive, iCloud, Dropbox)</span></li>
+            </ul>
+        </div>
+
+        <!-- Browser Hardening -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">🌐</div><div><div class="sheet-title">Browser Hardening</div><div class="sheet-subtitle">Quick settings to improve browser privacy</div></div></div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Install <strong>uBlock Origin</strong> (blocks ads + trackers)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Enable HTTPS-only mode (all modern browsers)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Block third-party cookies (Settings → Privacy)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Disable browser password saving (use manager instead)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Review and remove unused extensions</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Set DNS over HTTPS in browser settings</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Ignore certificate errors — never click "Advanced → Proceed"</span></li>
+                <li class="rule-item"><span class="rule-icon dont">✗</span><span class="rule-text">Assume Incognito = anonymous (it's not)</span></li>
+            </ul>
+        </div>
+
+        <!-- Backup 3-2-1 -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">💾</div><div><div class="sheet-title">Backup Strategy (3-2-1)</div><div class="sheet-subtitle">Protect against ransomware and hardware failure</div></div></div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon info">3</span><span class="rule-text"><strong>3 copies</strong> of your data total</span></li>
+                <li class="rule-item"><span class="rule-icon info">2</span><span class="rule-text"><strong>2 different media</strong> (e.g. internal + external drive)</span></li>
+                <li class="rule-item"><span class="rule-icon info">1</span><span class="rule-text"><strong>1 offsite copy</strong> (cloud or physical remote location)</span></li>
+            </ul>
+            <div class="section-divider">CRITICAL RULES</div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Keep one backup <strong>offline</strong> (air-gapped from ransomware)</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Test restores regularly — backups you can't restore are worthless</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Automate backups — manual backups get forgotten</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Encrypt backups stored in cloud or sent offsite</span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text">Backup: photos, documents, code, passwords export</span></li>
+            </ul>
+        </div>
+
+        <!-- HTTP Security Headers -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">📋</div><div><div class="sheet-title">HTTP Security Headers</div><div class="sheet-subtitle">Essential headers for web developers</div></div></div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>Content-Security-Policy</strong> — prevents XSS<br><span class="cmd">default-src 'self'</span></span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>Strict-Transport-Security</strong> — forces HTTPS<br><span class="cmd">max-age=31536000; includeSubDomains</span></span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>X-Frame-Options</strong> — prevents clickjacking<br><span class="cmd">DENY</span></span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>X-Content-Type-Options</strong> — prevents MIME sniffing<br><span class="cmd">nosniff</span></span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>Referrer-Policy</strong><br><span class="cmd">strict-origin-when-cross-origin</span></span></li>
+                <li class="rule-item"><span class="rule-icon do">✓</span><span class="rule-text"><strong>Permissions-Policy</strong> — restrict browser features</span></li>
+            </ul>
+        </div>
+
+        <!-- Privacy Quick Wins -->
+        <div class="sheet">
+            <div class="sheet-header"><div class="sheet-icon">🛡️</div><div><div class="sheet-title">Privacy Quick Wins</div><div class="sheet-subtitle">Do these first — max impact, min effort</div></div></div>
+            <ul class="rule-list">
+                <li class="rule-item"><span class="rule-icon do">1</span><span class="rule-text">Install <strong>uBlock Origin</strong> browser extension</span></li>
+                <li class="rule-item"><span class="rule-icon do">2</span><span class="rule-text">Set up <strong>Bitwarden</strong> password manager</span></li>
+                <li class="rule-item"><span class="rule-icon do">3</span><span class="rule-text">Enable <strong>2FA</strong> on email and bank (TOTP app)</span></li>
+                <li class="rule-item"><span class="rule-icon do">4</span><span class="rule-text">Use <strong>Signal</strong> for messaging</span></li>
+                <li class="rule-item"><span class="rule-icon do">5</span><span class="rule-text">Change DNS to <strong>1.1.1.1</strong> or NextDNS</span></li>
+                <li class="rule-item"><span class="rule-icon do">6</span><span class="rule-text">Opt out of <strong>ad tracking</strong> on phone</span></li>
+                <li class="rule-item"><span class="rule-icon do">7</span><span class="rule-text">Review <strong>app permissions</strong> (location, mic, camera)</span></li>
+                <li class="rule-item"><span class="rule-icon do">8</span><span class="rule-text">Enable <strong>full-disk encryption</strong> on all devices</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
