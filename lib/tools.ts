@@ -25,6 +25,7 @@ export type ToolIcon =
   | "lock-keyhole"
   | "mail"
   | "map-pin"
+  | "minimize-2"
   | "network"
   | "newspaper"
   | "pen-line"
