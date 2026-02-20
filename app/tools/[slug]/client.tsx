@@ -68,6 +68,7 @@ const TOOLS_MAP: Record<string, ComponentType> = {
   "phishing-quiz": dynamic(() => import("@/components/tools/phishing-quiz"), { loading }),
   "security-trivia": dynamic(() => import("@/components/tools/security-trivia"), { loading }),
   "dev-tools": dynamic(() => import("@/components/tools/dev-tools"), { loading }),
+  "minify-me": dynamic(() => import("@/components/tools/minify-me"), { loading }),
   // Canvas games — thin iframe wrappers
   "network-defense-game": dynamic(() => import("@/components/tools/network-defense-game"), { loading }),
   "password-cracking-simulator": dynamic(() => import("@/components/tools/password-cracking-simulator"), { loading }),

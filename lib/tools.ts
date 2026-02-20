@@ -333,6 +333,17 @@ export const TOOLS: Tool[] = [
     icon: "fingerprint",
   },
   {
+    title: "Minify Me",
+    description:
+      "Minify CSS, JSON, SQL, and XML in your browser. Strips comments and whitespace to shrink file sizes — nothing leaves your device.",
+    href: "/tools/minify-me",
+    tags: "minify css json sql xml compress whitespace remove comments size reduction developer utility",
+    category: "developer",
+    tagLabel: "Minifier",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "minimize-2",
+  },
+  {
     title: "Favorite Tools",
     description:
       "Bookmark your most-used security tools for quick access. Favorites stored locally in your browser — export and import across devices.",
