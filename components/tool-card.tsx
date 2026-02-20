@@ -2,10 +2,8 @@
 
 import Link from "next/link"
 import {
-  Mail, Search, Lock, Globe, KeyRound, FileDiff, Hash, Code,
-  Braces, Regex, QrCode, CircleHelp, ShieldCheck, Activity,
+  Mail, Lock, KeyRound, Hash, QrCode, CircleHelp, ShieldCheck, Activity,
   Shield, LockKeyhole, ArrowRight,
-  // Previously missing — added to match all icon strings in lib/tools.ts
   Fingerprint, FileKey, PenLine, ShieldAlert,
   Image as ImageIcon, MapPin, Link as LinkIcon, Key,
   FileSearch, KeySquare, ShieldOff, Wifi, Radar, Wrench,
@@ -13,28 +11,20 @@ import {
   LayoutGrid, BookOpen, BookMarked, Book, Newspaper,
   ClipboardList, Trophy, Drama,
 } from "lucide-react"
-import type { Tool } from "@/lib/tools"
+import type { Tool, ToolIcon } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  // Original entries
+const ICON_MAP: Record<ToolIcon, React.ComponentType<{ className?: string }>> = {
   mail: Mail,
-  search: Search,
   lock: Lock,
-  globe: Globe,
   "key-round": KeyRound,
-  "file-diff": FileDiff,
   hash: Hash,
-  code: Code,
-  braces: Braces,
-  regex: Regex,
   "qr-code": QrCode,
   "circle-help": CircleHelp,
   "shield-check": ShieldCheck,
   activity: Activity,
   shield: Shield,
   "lock-keyhole": LockKeyhole,
-  // Previously missing
   fingerprint: Fingerprint,
   "file-certificate": FileKey,
   "pen-line": PenLine,
