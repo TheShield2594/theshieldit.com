@@ -1,131 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-
-const UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
-const NUMBERS = "0123456789";
-const SYMBOLS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-const SIMILAR = "il1Lo0O";
-const AMBIGUOUS = "{}[]()/\\'\"`,;:.<>";
-
-function cryptoPickChar(chars: string): string {
-  const max = Math.floor(0xffffffff / chars.length) * chars.length;
-  const buf = new Uint32Array(1);
-  do { crypto.getRandomValues(buf); } while (buf[0] >= max);
-  return chars[buf[0] % chars.length];
-}
-
-function generatePassword(
-  length: number,
-  useUppercase: boolean,
-  useLowercase: boolean,
-  useNumbers: boolean,
-  useSymbols: boolean,
-  excludeSimilar: boolean,
-  excludeAmbiguous: boolean
-): string | null {
-  if (!useUppercase && !useLowercase && !useNumbers && !useSymbols) {
-    return null;
-  }
-
-  let charset = "";
-  if (useUppercase) charset += UPPERCASE;
-  if (useLowercase) charset += LOWERCASE;
-  if (useNumbers) charset += NUMBERS;
-  if (useSymbols) charset += SYMBOLS;
-
-  if (excludeSimilar) {
-    charset = charset
-      .split("")
-      .filter((c) => !SIMILAR.includes(c))
-      .join("");
-  }
-  if (excludeAmbiguous) {
-    charset = charset
-      .split("")
-      .filter((c) => !AMBIGUOUS.includes(c))
-      .join("");
-  }
-
-  if (charset.length === 0) return null;
-
-  const maxValid =
-    Math.floor(0xffffffff / charset.length) * charset.length;
-  let password = "";
-  while (password.length < length) {
-    const array = new Uint32Array(1);
-    crypto.getRandomValues(array);
-    const value = array[0];
-    if (value < maxValid) {
-      password += charset[value % charset.length];
-    }
-  }
-
-  // Ensure complexity
-  const pass = password.split("");
-  const needsUpper = useUppercase && !/[A-Z]/.test(password);
-  const needsLower = useLowercase && !/[a-z]/.test(password);
-  const needsNumber = useNumbers && !/[0-9]/.test(password);
-  const needsSymbol =
-    useSymbols && !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password);
-
-  let index = 0;
-  if (needsUpper) {
-    let chars = UPPERCASE;
-    if (excludeSimilar)
-      chars = chars.split("").filter((c) => !SIMILAR.includes(c)).join("");
-    pass[index++] = cryptoPickChar(chars);
-  }
-  if (needsLower) {
-    let chars = LOWERCASE;
-    if (excludeSimilar)
-      chars = chars.split("").filter((c) => !SIMILAR.includes(c)).join("");
-    pass[index++] = cryptoPickChar(chars);
-  }
-  if (needsNumber) {
-    let chars = NUMBERS;
-    if (excludeSimilar)
-      chars = chars.split("").filter((c) => !SIMILAR.includes(c)).join("");
-    pass[index++] = cryptoPickChar(chars);
-  }
-  if (needsSymbol) {
-    let chars = SYMBOLS;
-    if (excludeAmbiguous)
-      chars = chars.split("").filter((c) => !AMBIGUOUS.includes(c)).join("");
-    pass[index++] = cryptoPickChar(chars);
-  }
-
-  // Fisher-Yates shuffle so required chars land at random positions
-  for (let i = pass.length - 1; i > 0; i--) {
-    const buf = new Uint32Array(1);
-    crypto.getRandomValues(buf);
-    const j = buf[0] % (i + 1);
-    [pass[i], pass[j]] = [pass[j], pass[i]];
-  }
-
-  return pass.join("");
-}
-
-function calcStrength(password: string): {
-  percent: number;
-  color: string;
-  label: string;
-} {
-  let strength = 0;
-  if (password.length >= 8) strength += 20;
-  if (password.length >= 12) strength += 20;
-  if (password.length >= 16) strength += 10;
-  if (/[a-z]/.test(password)) strength += 12.5;
-  if (/[A-Z]/.test(password)) strength += 12.5;
-  if (/[0-9]/.test(password)) strength += 12.5;
-  if (/[^a-zA-Z0-9]/.test(password)) strength += 12.5;
-
-  if (strength < 40) return { percent: strength, color: "#ef4444", label: "Weak" };
-  if (strength < 60) return { percent: strength, color: "#f59e0b", label: "Fair" };
-  if (strength < 80) return { percent: strength, color: "#eab308", label: "Good" };
-  return { percent: strength, color: "#22c55e", label: "Strong" };
-}
+import { generatePassword, type PasswordOptions } from "@/lib/crypto/password";
+import { calcStrength } from "@/lib/crypto/strength";
 
 export default function PasswordGenerator() {
   const [password, setPassword] = useState("");
@@ -140,15 +17,8 @@ export default function PasswordGenerator() {
   const [error, setError] = useState("");
 
   const generate = useCallback(() => {
-    const result = generatePassword(
-      length,
-      useUppercase,
-      useLowercase,
-      useNumbers,
-      useSymbols,
-      excludeSimilar,
-      excludeAmbiguous
-    );
+    const opts: PasswordOptions = { length, useUppercase, useLowercase, useNumbers, useSymbols, excludeSimilar, excludeAmbiguous };
+    const result = generatePassword(opts);
     if (result === null) {
       setError("Please select at least one character type.");
       return;

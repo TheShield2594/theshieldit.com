@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useMemo, useRef, useEffect } from "react"
+import { useState, useMemo, useRef } from "react"
 import { Search, X, SlidersHorizontal } from "lucide-react"
 import { TOOLS, CATEGORIES, CATEGORY_COUNTS } from "@/lib/tools"
 import { ToolCard } from "@/components/tool-card"
 import { cn } from "@/lib/utils"
+import { useSearchShortcut } from "@/hooks/useSearchShortcut"
 
 export function ToolsGrid() {
   const [query, setQuery] = useState("")
@@ -27,17 +28,7 @@ export function ToolsGrid() {
 
   const hasFilters = query.length > 0 || activeCategory !== "all"
 
-  // Keyboard shortcut: / to focus search
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "/" && !["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName)) {
-        e.preventDefault()
-        inputRef.current?.focus()
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [])
+  useSearchShortcut(inputRef)
 
   function clearAll() {
     setQuery("")

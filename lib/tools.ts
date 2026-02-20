@@ -1,5 +1,46 @@
 export type ToolCategory = "security" | "developer" | "education"
 
+/** All icon names that map to a Lucide component in tool-card.tsx ICON_MAP. */
+export type ToolIcon =
+  | "activity"
+  | "book"
+  | "book-marked"
+  | "book-open"
+  | "circle-help"
+  | "clipboard-list"
+  | "clock"
+  | "drama"
+  | "file-certificate"
+  | "file-search"
+  | "fingerprint"
+  | "hash"
+  | "history"
+  | "image"
+  | "key"
+  | "key-round"
+  | "key-square"
+  | "layout-grid"
+  | "link"
+  | "lock"
+  | "lock-keyhole"
+  | "mail"
+  | "map-pin"
+  | "minimize-2"
+  | "network"
+  | "newspaper"
+  | "pen-line"
+  | "qr-code"
+  | "radar"
+  | "scan-search"
+  | "shield"
+  | "shield-alert"
+  | "shield-check"
+  | "shield-off"
+  | "star"
+  | "trophy"
+  | "wifi"
+  | "wrench"
+
 export interface Tool {
   title: string
   description: string
@@ -8,7 +49,7 @@ export interface Tool {
   category: ToolCategory
   tagLabel: string
   iconColor: string
-  icon: string
+  icon: ToolIcon
 }
 
 export const CATEGORIES: { value: string; label: string }[] = [
