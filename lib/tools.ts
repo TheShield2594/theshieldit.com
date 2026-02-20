@@ -60,8 +60,6 @@ export const CATEGORIES: { value: string; label: string }[] = [
 ]
 
 export const TOOLS: Tool[] = [
-  // ─── Security ────────────────────────────────────────────────────────
-
   {
     title: "Browser Fingerprint Test",
     description:
@@ -74,6 +72,17 @@ export const TOOLS: Tool[] = [
     icon: "fingerprint",
   },
   {
+    title: "Browser Privacy Comparison",
+    description:
+      "Compare privacy and security features across popular browsers. Find the most private browser for your needs.",
+    href: "/tools/browser-comparison",
+    tags: "browser comparison privacy security features firefox chrome brave safari edge",
+    category: "education",
+    tagLabel: "Comparison",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "layout-grid",
+  },
+  {
     title: "Certificate Decoder",
     description:
       "Decode and analyze SSL/TLS certificates. View certificate details, validity dates, subject information, and extensions.",
@@ -83,6 +92,28 @@ export const TOOLS: Tool[] = [
     tagLabel: "Crypto",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "file-certificate",
+  },
+  {
+    title: "Data Breach Timeline",
+    description:
+      "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
+    href: "/tools/breach-timeline",
+    tags: "data breach timeline history visualization cybersecurity incidents",
+    category: "education",
+    tagLabel: "Timeline",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "activity",
+  },
+  {
+    title: "Developer Swiss Army Knife",
+    description:
+      "All-in-one developer toolkit. Base64 encoding, JSON formatting, hash generation, regex testing, and text diff in one place.",
+    href: "/tools/dev-tools",
+    tags: "base64 encoder decoder json formatter validator hash generator md5 sha256 regex tester text diff compare developer tools",
+    category: "developer",
+    tagLabel: "Developer",
+    iconColor: "text-primary bg-primary/10",
+    icon: "wrench",
   },
   {
     title: "Digital Signature Verifier",
@@ -129,6 +160,28 @@ export const TOOLS: Tool[] = [
     icon: "image",
   },
   {
+    title: "Favorite Tools",
+    description:
+      "Bookmark your most-used security tools for quick access. Favorites stored locally in your browser — export and import across devices.",
+    href: "/tools/favorites",
+    tags: "favorites bookmarks saved tools localStorage quick access",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "star",
+  },
+  {
+    title: "Hash Generator & Verifier",
+    description:
+      "Generate and verify cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512). Check file integrity and verify checksums.",
+    href: "/tools/hash-generator",
+    tags: "hash generator md5 sha1 sha256 sha512 checksum integrity verifier",
+    category: "developer",
+    tagLabel: "Crypto",
+    iconColor: "text-primary bg-primary/10",
+    icon: "hash",
+  },
+  {
     title: "IP Address Lookup",
     description:
       "Look up detailed information about any IP address including location, ISP, and network details.",
@@ -138,6 +191,17 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analysis",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "map-pin",
+  },
+  {
+    title: "JWT Decoder & Validator",
+    description:
+      "Decode and validate JSON Web Tokens. Inspect header, payload, signature, and check expiration dates.",
+    href: "/tools/jwt-decoder",
+    tags: "jwt json web token decoder validator auth authentication bearer",
+    category: "developer",
+    tagLabel: "Decoder",
+    iconColor: "text-primary bg-primary/10",
+    icon: "key-round",
   },
   {
     title: "Link Safety Checker",
@@ -160,6 +224,39 @@ export const TOOLS: Tool[] = [
     tagLabel: "Crypto",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "lock",
+  },
+  {
+    title: "Minify Me",
+    description:
+      "Minify CSS, JSON, SQL, and XML in your browser. Strips comments and whitespace to shrink file sizes — nothing leaves your device.",
+    href: "/tools/minify-me",
+    tags: "minify css json sql xml compress whitespace remove comments size reduction developer utility",
+    category: "developer",
+    tagLabel: "Minifier",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "minimize-2",
+  },
+  {
+    title: "Network Defense Game",
+    description:
+      "Defend your network from waves of cyber attacks. Patch, firewall, and isolate nodes under attack in this educational security management game.",
+    href: "/tools/network-defense-game",
+    tags: "network defense game cyber attack waves firewall patch security educational",
+    category: "education",
+    tagLabel: "Game",
+    iconColor: "text-primary bg-primary/10",
+    icon: "shield",
+  },
+  {
+    title: "Password Cracking Simulator",
+    description:
+      "See how long it takes to crack any password using dictionary attacks, GPU brute force, and bcrypt. Educational — nothing is sent to any server.",
+    href: "/tools/password-cracking-simulator",
+    tags: "password cracking simulator brute force dictionary gpu strength entropy educational",
+    category: "education",
+    tagLabel: "Simulator",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "key",
   },
   {
     title: "Password Generator",
@@ -195,117 +292,15 @@ export const TOOLS: Tool[] = [
     icon: "key-round",
   },
   {
-    title: "Privacy Policy Analyzer",
+    title: "Phishing Email Quiz",
     description:
-      "Analyze any privacy policy for red flags, data selling, tracking, retention practices, and user rights. Get an instant risk score.",
-    href: "/tools/privacy-policy-analyzer",
-    tags: "privacy policy analyzer gdpr ccpa data selling tracking cookies red flags risk score",
-    category: "security",
-    tagLabel: "Analyzer",
+      "Test your ability to spot phishing emails with 20 realistic scenarios and detailed explanations.",
+    href: "/tools/phishing-quiz",
+    tags: "phishing quiz test email scam awareness training spot phishing",
+    category: "education",
+    tagLabel: "Quiz",
     iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "file-search",
-  },
-  {
-    title: "RSA Key Pair Generator",
-    description:
-      "Generate RSA key pairs for encryption and digital signatures. Create public and private keys with customizable key sizes.",
-    href: "/tools/rsa-key-generator",
-    tags: "rsa key pair generator public private encryption signature crypto pgp",
-    category: "security",
-    tagLabel: "Crypto",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "key-square",
-  },
-  {
-    title: "Tracker Blocker Test",
-    description:
-      "Test if your ad blocker or privacy extension is blocking known trackers. Check protection against Google Analytics, Facebook Pixel, and more.",
-    href: "/tools/tracker-blocker-test",
-    tags: "tracker blocker test ad block ublock privacy extension google analytics facebook pixel protection",
-    category: "security",
-    tagLabel: "Privacy",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "shield-off",
-  },
-  {
-    title: "VPN Comparison Matrix",
-    description:
-      "Compare leading VPN services on privacy, logging policy, jurisdiction, features, and price. Includes Mullvad, ProtonVPN, NordVPN, and more.",
-    href: "/tools/vpn-comparison",
-    tags: "vpn comparison matrix mullvad protonvpn nordvpn wireguard no-logs jurisdiction privacy",
-    category: "security",
-    tagLabel: "Comparison",
-    iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "shield-check",
-  },
-  {
-    title: "WebRTC Leak Test",
-    description:
-      "Test if WebRTC is leaking your real IP address. Check if your VPN can be bypassed by WebRTC.",
-    href: "/tools/webrtc-leak-test",
-    tags: "webrtc leak test vpn privacy ip address real local",
-    category: "security",
-    tagLabel: "Privacy",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "wifi",
-  },
-  {
-    title: "Website Security Analyzer",
-    description:
-      "Comprehensive website security analysis. Check DNS records, SSL/TLS certificates, security headers, and infrastructure all in one place.",
-    href: "/tools/web-checker",
-    tags: "website checker dns ssl tls certificate security headers https infrastructure analysis web-check expiry grade",
-    category: "security",
-    tagLabel: "Analysis",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "radar",
-  },
-  {
-    title: "WiFi Security Analyzer",
-    description:
-      "Assess your wireless network security settings. Check WPA3 encryption, router configuration, and get actionable recommendations.",
-    href: "/tools/wifi-security-analyzer",
-    tags: "wifi security analyzer wpa3 wpa2 router encryption wireless network security assessment",
-    category: "security",
-    tagLabel: "Analyzer",
-    iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "wifi",
-  },
-
-  // ─── Developer ───────────────────────────────────────────────────────
-
-  {
-    title: "Developer Swiss Army Knife",
-    description:
-      "All-in-one developer toolkit. Base64 encoding, JSON formatting, hash generation, regex testing, and text diff in one place.",
-    href: "/tools/dev-tools",
-    tags: "base64 encoder decoder json formatter validator hash generator md5 sha256 regex tester text diff compare developer tools",
-    category: "developer",
-    tagLabel: "Developer",
-    iconColor: "text-primary bg-primary/10",
-    icon: "wrench",
-  },
-  {
-    title: "Hash Generator & Verifier",
-    description:
-      "Generate and verify cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512). Check file integrity and verify checksums.",
-    href: "/tools/hash-generator",
-    tags: "hash generator md5 sha1 sha256 sha512 checksum integrity verifier",
-    category: "developer",
-    tagLabel: "Crypto",
-    iconColor: "text-primary bg-primary/10",
-    icon: "hash",
-  },
-  {
-    title: "JWT Decoder & Validator",
-    description:
-      "Decode and validate JSON Web Tokens. Inspect header, payload, signature, and check expiration dates.",
-    href: "/tools/jwt-decoder",
-    tags: "jwt json web token decoder validator auth authentication bearer",
-    category: "developer",
-    tagLabel: "Decoder",
-    iconColor: "text-primary bg-primary/10",
-    icon: "key-round",
+    icon: "circle-help",
   },
   {
     title: "Port Scanner",
@@ -317,152 +312,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Scanner",
     iconColor: "text-chart-5 bg-chart-5/10",
     icon: "scan-search",
-  },
-  {
-    title: "QR Code Generator",
-    description:
-      "Generate QR codes from text, URLs, WiFi credentials, and more. Download as PNG or SVG.",
-    href: "/tools/qr-code",
-    tags: "qr code generator encode barcode",
-    category: "developer",
-    tagLabel: "Generator",
-    iconColor: "text-primary bg-primary/10",
-    icon: "qr-code",
-  },
-  {
-    title: "Subnet Calculator",
-    description:
-      "Calculate subnet masks, network addresses, broadcast addresses, and host ranges for IPv4 networks.",
-    href: "/tools/subnet-calculator",
-    tags: "subnet calculator network cidr ip address mask networking",
-    category: "developer",
-    tagLabel: "Calculator",
-    iconColor: "text-primary bg-primary/10",
-    icon: "network",
-  },
-  {
-    title: "Unix Timestamp Converter",
-    description:
-      "Convert between Unix timestamps and human-readable dates. Supports seconds and milliseconds with multiple output formats including UTC, local, and ISO 8601.",
-    href: "/tools/timestamp-converter",
-    tags: "unix timestamp converter epoch date time utc iso 8601 developer utility",
-    category: "developer",
-    tagLabel: "Converter",
-    iconColor: "text-primary bg-primary/10",
-    icon: "clock",
-  },
-  {
-    title: "URL Encoder / Decoder",
-    description:
-      "Encode and decode URLs and URL components. Supports encodeURI, decodeURI, and encodeURIComponent modes for safe URL handling.",
-    href: "/tools/url-encoder",
-    tags: "url encoder decoder encodeURI decodeURI encodeURIComponent percent encoding developer utility",
-    category: "developer",
-    tagLabel: "Encoder",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "link",
-  },
-  {
-    title: "UUID Generator",
-    description:
-      "Generate universally unique identifiers (UUIDs). Supports v1 (timestamp-based) and v4 (random) with batch generation and multiple format options.",
-    href: "/tools/uuid-generator",
-    tags: "uuid generator v1 v4 guid unique identifier random batch developer utility",
-    category: "developer",
-    tagLabel: "Generator",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "fingerprint",
-  },
-  {
-    title: "Minify Me",
-    description:
-      "Minify CSS, JSON, SQL, and XML in your browser. Strips comments and whitespace to shrink file sizes — nothing leaves your device.",
-    href: "/tools/minify-me",
-    tags: "minify css json sql xml compress whitespace remove comments size reduction developer utility",
-    category: "developer",
-    tagLabel: "Minifier",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "minimize-2",
-  },
-  {
-    title: "Favorite Tools",
-    description:
-      "Bookmark your most-used security tools for quick access. Favorites stored locally in your browser — export and import across devices.",
-    href: "/tools/favorites",
-    tags: "favorites bookmarks saved tools localStorage quick access",
-    category: "developer",
-    tagLabel: "Utility",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "star",
-  },
-  {
-    title: "Tool History",
-    description:
-      "View your recently used tools. History stored entirely in your browser's localStorage — nothing is sent to any server.",
-    href: "/tools/tool-history",
-    tags: "tool history recent visited localStorage browser privacy",
-    category: "developer",
-    tagLabel: "Utility",
-    iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "history",
-  },
-
-  // ─── Education ───────────────────────────────────────────────────────
-
-  {
-    title: "Browser Privacy Comparison",
-    description:
-      "Compare privacy and security features across popular browsers. Find the most private browser for your needs.",
-    href: "/tools/browser-comparison",
-    tags: "browser comparison privacy security features firefox chrome brave safari edge",
-    category: "education",
-    tagLabel: "Comparison",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "layout-grid",
-  },
-  {
-    title: "Data Breach Timeline",
-    description:
-      "Interactive timeline of major data breaches with records affected, types, and lessons learned.",
-    href: "/tools/breach-timeline",
-    tags: "data breach timeline history visualization cybersecurity incidents",
-    category: "education",
-    tagLabel: "Timeline",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "activity",
-  },
-  {
-    title: "Network Defense Game",
-    description:
-      "Defend your network from waves of cyber attacks. Patch, firewall, and isolate nodes under attack in this educational security management game.",
-    href: "/tools/network-defense-game",
-    tags: "network defense game cyber attack waves firewall patch security educational",
-    category: "education",
-    tagLabel: "Game",
-    iconColor: "text-primary bg-primary/10",
-    icon: "shield",
-  },
-  {
-    title: "Password Cracking Simulator",
-    description:
-      "See how long it takes to crack any password using dictionary attacks, GPU brute force, and bcrypt. Educational — nothing is sent to any server.",
-    href: "/tools/password-cracking-simulator",
-    tags: "password cracking simulator brute force dictionary gpu strength entropy educational",
-    category: "education",
-    tagLabel: "Simulator",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "key",
-  },
-  {
-    title: "Phishing Email Quiz",
-    description:
-      "Test your ability to spot phishing emails with 20 realistic scenarios and detailed explanations.",
-    href: "/tools/phishing-quiz",
-    tags: "phishing quiz test email scam awareness training spot phishing",
-    category: "education",
-    tagLabel: "Quiz",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "circle-help",
   },
   {
     title: "Privacy 101 Guide",
@@ -487,6 +336,17 @@ export const TOOLS: Tool[] = [
     icon: "shield",
   },
   {
+    title: "Privacy Policy Analyzer",
+    description:
+      "Analyze any privacy policy for red flags, data selling, tracking, retention practices, and user rights. Get an instant risk score.",
+    href: "/tools/privacy-policy-analyzer",
+    tags: "privacy policy analyzer gdpr ccpa data selling tracking cookies red flags risk score",
+    category: "security",
+    tagLabel: "Analyzer",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "file-search",
+  },
+  {
     title: "Privacy Score Calculator",
     description:
       "Rate your digital privacy habits and get personalized recommendations to improve.",
@@ -496,6 +356,28 @@ export const TOOLS: Tool[] = [
     tagLabel: "Assessment",
     iconColor: "text-accent bg-accent/10",
     icon: "shield-check",
+  },
+  {
+    title: "QR Code Generator",
+    description:
+      "Generate QR codes from text, URLs, WiFi credentials, and more. Download as PNG or SVG.",
+    href: "/tools/qr-code",
+    tags: "qr code generator encode barcode",
+    category: "developer",
+    tagLabel: "Generator",
+    iconColor: "text-primary bg-primary/10",
+    icon: "qr-code",
+  },
+  {
+    title: "RSA Key Pair Generator",
+    description:
+      "Generate RSA key pairs for encryption and digital signatures. Create public and private keys with customizable key sizes.",
+    href: "/tools/rsa-key-generator",
+    tags: "rsa key pair generator public private encryption signature crypto pgp",
+    category: "security",
+    tagLabel: "Crypto",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "key-square",
   },
   {
     title: "Security & Privacy Glossary",
@@ -564,6 +446,72 @@ export const TOOLS: Tool[] = [
     icon: "drama",
   },
   {
+    title: "Subnet Calculator",
+    description:
+      "Calculate subnet masks, network addresses, broadcast addresses, and host ranges for IPv4 networks.",
+    href: "/tools/subnet-calculator",
+    tags: "subnet calculator network cidr ip address mask networking",
+    category: "developer",
+    tagLabel: "Calculator",
+    iconColor: "text-primary bg-primary/10",
+    icon: "network",
+  },
+  {
+    title: "Tool History",
+    description:
+      "View your recently used tools. History stored entirely in your browser's localStorage — nothing is sent to any server.",
+    href: "/tools/tool-history",
+    tags: "tool history recent visited localStorage browser privacy",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "history",
+  },
+  {
+    title: "Tracker Blocker Test",
+    description:
+      "Test if your ad blocker or privacy extension is blocking known trackers. Check protection against Google Analytics, Facebook Pixel, and more.",
+    href: "/tools/tracker-blocker-test",
+    tags: "tracker blocker test ad block ublock privacy extension google analytics facebook pixel protection",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "shield-off",
+  },
+  {
+    title: "Unix Timestamp Converter",
+    description:
+      "Convert between Unix timestamps and human-readable dates. Supports seconds and milliseconds with multiple output formats including UTC, local, and ISO 8601.",
+    href: "/tools/timestamp-converter",
+    tags: "unix timestamp converter epoch date time utc iso 8601 developer utility",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-primary bg-primary/10",
+    icon: "clock",
+  },
+  {
+    title: "URL Encoder / Decoder",
+    description:
+      "Encode and decode URLs and URL components. Supports encodeURI, decodeURI, and encodeURIComponent modes for safe URL handling.",
+    href: "/tools/url-encoder",
+    tags: "url encoder decoder encodeURI decodeURI encodeURIComponent percent encoding developer utility",
+    category: "developer",
+    tagLabel: "Encoder",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "link",
+  },
+  {
+    title: "UUID Generator",
+    description:
+      "Generate universally unique identifiers (UUIDs). Supports v1 (timestamp-based) and v4 (random) with batch generation and multiple format options.",
+    href: "/tools/uuid-generator",
+    tags: "uuid generator v1 v4 guid unique identifier random batch developer utility",
+    category: "developer",
+    tagLabel: "Generator",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "fingerprint",
+  },
+  {
     title: "Vendor Lock-In Score",
     description:
       "Score your vendor lock-in risk across 9 dimensions. Track services and plan your exit strategy.",
@@ -573,6 +521,50 @@ export const TOOLS: Tool[] = [
     tagLabel: "Assessment",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "lock-keyhole",
+  },
+  {
+    title: "VPN Comparison Matrix",
+    description:
+      "Compare leading VPN services on privacy, logging policy, jurisdiction, features, and price. Includes Mullvad, ProtonVPN, NordVPN, and more.",
+    href: "/tools/vpn-comparison",
+    tags: "vpn comparison matrix mullvad protonvpn nordvpn wireguard no-logs jurisdiction privacy",
+    category: "security",
+    tagLabel: "Comparison",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "shield-check",
+  },
+  {
+    title: "WebRTC Leak Test",
+    description:
+      "Test if WebRTC is leaking your real IP address. Check if your VPN can be bypassed by WebRTC.",
+    href: "/tools/webrtc-leak-test",
+    tags: "webrtc leak test vpn privacy ip address real local",
+    category: "security",
+    tagLabel: "Privacy",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "wifi",
+  },
+  {
+    title: "Website Security Analyzer",
+    description:
+      "Comprehensive website security analysis. Check DNS records, SSL/TLS certificates, security headers, and infrastructure all in one place.",
+    href: "/tools/web-checker",
+    tags: "website checker dns ssl tls certificate security headers https infrastructure analysis web-check expiry grade",
+    category: "security",
+    tagLabel: "Analysis",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "radar",
+  },
+  {
+    title: "WiFi Security Analyzer",
+    description:
+      "Assess your wireless network security settings. Check WPA3 encryption, router configuration, and get actionable recommendations.",
+    href: "/tools/wifi-security-analyzer",
+    tags: "wifi security analyzer wpa3 wpa2 router encryption wireless network security assessment",
+    category: "security",
+    tagLabel: "Analyzer",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "wifi",
   },
 ]
 
