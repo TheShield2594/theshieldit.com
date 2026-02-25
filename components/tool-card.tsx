@@ -3,7 +3,7 @@
 import Link from "next/link"
 import {
   Mail, Lock, KeyRound, Hash, QrCode, CircleHelp, ShieldCheck, Activity,
-  Shield, LockKeyhole, ArrowRight,
+  Shield, LockKeyhole,
   Fingerprint, FileKey, PenLine, ShieldAlert,
   Image as ImageIcon, MapPin, Link as LinkIcon, Key,
   FileSearch, KeySquare, ShieldOff, Wifi, Radar, Wrench,
@@ -55,52 +55,54 @@ const ICON_MAP: Record<ToolIcon, React.ComponentType<{ className?: string }>> = 
   drama: Drama,
 }
 
-export function ToolCard({ tool, index }: { tool: Tool; index: number }) {
+export function ToolCard({
+  tool,
+  index,
+  selected,
+  onHover,
+}: {
+  tool: Tool
+  index: number
+  selected: boolean
+  onHover: () => void
+}) {
   const Icon = ICON_MAP[tool.icon] || Shield
 
   return (
     <Link
       href={tool.href}
+      onMouseEnter={onHover}
+      onFocus={onHover}
       className={cn(
-        "group relative flex flex-col gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-300",
-        "hover:border-primary/40 hover:bg-card/80 hover:shadow-[0_0_30px_-6px_hsl(var(--primary)/0.15)]",
+        "group relative block aspect-square min-w-36 rounded-2xl border p-4 transition-all duration-300 sm:min-w-44 md:min-w-48",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        "animate-fade-in-up"
+        "animate-fade-in-up",
+        selected
+          ? "border-primary/70 bg-card shadow-[0_25px_45px_-25px_hsl(var(--primary)/0.8)]"
+          : "border-border/70 bg-card/70 hover:-translate-y-1 hover:border-primary/40 hover:bg-card"
       )}
-      style={{ animationDelay: `${index * 40}ms` }}
+      style={{ animationDelay: `${index * 45}ms` }}
     >
-      {/* Top accent line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-transparent to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
 
-      {/* Icon + tag row */}
-      <div className="flex items-start justify-between">
+      <div className="relative flex h-full flex-col justify-between">
         <div
           className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
+            "flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
             tool.iconColor
           )}
         >
           <Icon className="h-5 w-5" />
         </div>
-        <span className="rounded-md bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-          {tool.tagLabel}
-        </span>
-      </div>
 
-      {/* Title */}
-      <h3 className="text-[15px] font-semibold text-foreground leading-snug group-hover:text-primary transition-colors duration-200">
-        {tool.title}
-      </h3>
-
-      {/* Description */}
-      <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
-        {tool.description}
-      </p>
-
-      {/* CTA row */}
-      <div className="mt-auto flex items-center gap-1.5 text-xs font-medium text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1">
-        <span>Open tool</span>
-        <ArrowRight className="h-3.5 w-3.5" />
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            {tool.tagLabel}
+          </p>
+          <h3 className="mt-1 text-sm font-semibold leading-tight text-foreground line-clamp-2">
+            {tool.title}
+          </h3>
+        </div>
       </div>
     </Link>
   )

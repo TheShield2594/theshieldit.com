@@ -1,4 +1,4 @@
-import { Shield, Zap, Lock, Globe } from "lucide-react"
+import { Zap, Lock, Globe } from "lucide-react"
 import { TOOLS } from "@/lib/tools"
 
 const STATS = [
@@ -9,8 +9,7 @@ const STATS = [
 
 export function Hero() {
   return (
-    <section className="relative py-16 text-center md:py-24">
-      {/* Badge */}
+    <section className="relative py-14 text-center md:py-18">
       <div className="animate-fade-in-up mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-4 py-1.5 text-xs font-medium text-muted-foreground">
         <span className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
@@ -19,20 +18,16 @@ export function Hero() {
         Open source &middot; Privacy first
       </div>
 
-      {/* Headline */}
       <h1 className="animate-fade-in-up stagger-1 mx-auto max-w-3xl text-balance text-4xl font-extrabold tracking-tight text-foreground md:text-6xl leading-[1.1]">
-        IT & Privacy Tools{" "}
-        <span className="text-primary">You Can Trust</span>
+        Browse Security Tools
+        <span className="text-primary"> Like a Home Screen</span>
       </h1>
 
-      {/* Subhead */}
-      <p className="animate-fade-in-up stagger-2 mx-auto mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-        Free, open-source utilities that run entirely in your browser.
-        No accounts, no data collection, no compromises.
+      <p className="animate-fade-in-up stagger-2 mx-auto mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+        Jump between categories, slide through tools, and get instant details below each selection—fast, clean, and made for focus.
       </p>
 
-      {/* Stats row */}
-      <div className="animate-fade-in-up stagger-3 mx-auto mt-10 flex max-w-md items-center justify-center gap-8 md:gap-12">
+      <div className="animate-fade-in-up stagger-3 mx-auto mt-9 flex max-w-md items-center justify-center gap-8 md:gap-12">
         {STATS.map((stat) => (
           <div key={stat.label} className="flex flex-col items-center gap-1.5">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
