@@ -59,7 +59,7 @@ export function ToolsGrid() {
 
         <div
           className="animate-fade-in-up mt-5 flex flex-wrap items-center justify-center gap-2"
-          role="tablist"
+          role="group"
           aria-label="Filter by category"
         >
           {CATEGORIES.map((cat) => {
@@ -68,10 +68,10 @@ export function ToolsGrid() {
 
             return (
               <button
+                type="button"
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
-                role="tab"
-                aria-selected={isActive}
+                aria-pressed={isActive}
                 className={cn(
                   "flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200",
                   isActive
@@ -114,6 +114,7 @@ export function ToolsGrid() {
             <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
               {query && (
                 <button
+                  type="button"
                   onClick={() => {
                     setQuery("")
                     inputRef.current?.focus()
@@ -173,6 +174,7 @@ export function ToolsGrid() {
               Showing <span className="font-semibold text-foreground">{filtered.length}</span> of {TOOLS.length} tools
               {hasFilters && (
                 <button
+                  type="button"
                   onClick={clearAll}
                   className="ml-2 inline-flex items-center gap-1 text-primary transition-colors hover:text-accent"
                 >
@@ -192,6 +194,7 @@ export function ToolsGrid() {
               Try a different search term or clear your filters to reload your tool carousel.
             </p>
             <button
+              type="button"
               onClick={clearAll}
               className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
