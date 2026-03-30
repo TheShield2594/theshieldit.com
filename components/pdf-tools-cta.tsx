@@ -1,4 +1,4 @@
-import { FileText, ArrowRight, Shield, Lock } from "lucide-react"
+import { FileText, Shield, Lock } from "lucide-react"
 
 const HIGHLIGHTS = [
   "Merge & Split",
@@ -11,12 +11,13 @@ export function PdfToolsCta() {
   return (
     <section aria-label="PDF Tools" className="py-10">
       <div className="mx-auto max-w-5xl">
-        <a
-          href="https://pdf.theshieldit.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative block overflow-hidden rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-8 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_-6px_hsl(var(--primary)/0.15)]"
+        <div
+          className="group relative block overflow-hidden rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-8"
         >
+          {/* Coming Soon banner */}
+          <div className="absolute top-4 right-4 z-10 rounded-full bg-primary px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-lg">
+            Coming Soon
+          </div>
           {/* Subtle gradient accent */}
           <div
             aria-hidden="true"
@@ -56,13 +57,10 @@ export function PdfToolsCta() {
               </div>
             </div>
 
-            {/* Right icon + arrow */}
+            {/* Right icon */}
             <div className="flex items-center gap-4 self-start sm:self-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <FileText className="h-7 w-7" />
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowRight className="h-5 w-5" />
               </div>
             </div>
           </div>
@@ -74,7 +72,7 @@ export function PdfToolsCta() {
               Powered by <span className="font-semibold text-foreground">The Shield IT</span> — same privacy promise, zero server uploads
             </span>
           </div>
-        </a>
+        </div>
       </div>
     </section>
   )
