@@ -5,7 +5,7 @@
   "scripts": {
     "gen:tools": "node scripts/gen-tools-map.mjs",
     "predev": "node scripts/gen-tools-map.mjs",
-    "prebuild": "node scripts/gen-tools-map.mjs",
+    "prebuild": "node scripts/gen-tools-map.mjs && node scripts/gen-og-image.mjs",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start"
@@ -20,10 +20,12 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "satori": "^0.26.0",
     "tailwindcss": "^4",
     "typescript": "^5.7"
   }

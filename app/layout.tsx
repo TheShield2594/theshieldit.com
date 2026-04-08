@@ -22,6 +22,14 @@ export const metadata: Metadata = {
       "Free online tools for IT and privacy. QR codes, password testing, and more. No sign-up, runs in your browser.",
     siteName: "The Shield IT",
     locale: "en_US",
+    images: [
+      {
+        url: "https://theshieldit.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "The Shield IT — Free IT & Privacy Tools",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
