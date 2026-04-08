@@ -15,29 +15,31 @@ import { fileURLToPath } from "url"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, "..")
 
-// Load fonts for satori — prefer system Liberation, fall back to fetching Inter from Google
-async function loadFonts() {
+// Load fonts for satori — prefer system Liberation, fall back to vendored copy
+function loadFonts() {
   const systemRegular = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
   const systemBold = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
+  const localRegular = join(ROOT, "assets/fonts/LiberationSans-Regular.ttf")
+  const localBold = join(ROOT, "assets/fonts/LiberationSans-Bold.ttf")
   try {
     return {
       regular: readFileSync(systemRegular),
       bold: readFileSync(systemBold),
     }
   } catch {
-    const [regular, bold] = await Promise.all([
-      fetch("https://fonts.gstatic.com/s/inter/v18/UcCo3FwrK3iLTcviYwY.ttf").then((r) => r.arrayBuffer()),
-      fetch("https://fonts.gstatic.com/s/inter/v18/UcCo3FwrK3iLTcviBhY.ttf").then((r) => r.arrayBuffer()),
-    ])
-    return { regular: Buffer.from(regular), bold: Buffer.from(bold) }
+    return {
+      regular: readFileSync(localRegular),
+      bold: readFileSync(localBold),
+    }
   }
 }
 
-const { regular: fontRegular, bold: fontBold } = await loadFonts()
+const { regular: fontRegular, bold: fontBold } = loadFonts()
 
-// Count tools from tools.ts
+// Count tools from the TOOLS array only (skip the Tool interface definition)
 const toolsSrc = readFileSync(join(ROOT, "lib/tools.ts"), "utf8")
-const toolCount = (toolsSrc.match(/^\s+title:/gm) || []).length
+const toolsArraySrc = toolsSrc.slice(toolsSrc.indexOf("export const TOOLS"))
+const toolCount = (toolsArraySrc.match(/^\s+title:/gm) || []).length
 
 const svg = await satori(
   {

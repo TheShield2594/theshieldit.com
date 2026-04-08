@@ -7,8 +7,7 @@
     "predev": "node scripts/gen-tools-map.mjs",
     "prebuild": "node scripts/gen-tools-map.mjs && node scripts/gen-og-image.mjs",
     "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start"
+    "build": "next build"
   },
   "dependencies": {
     "clsx": "^2.1.1",
