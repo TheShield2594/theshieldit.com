@@ -20,9 +20,9 @@ This repo is now a **Next.js static export** and should be deployed with **GitHu
 2. In GitHub, go to **Settings → Pages**.
 3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
 4. The included workflow (`.github/workflows/deploy-pages.yml`) will:
-   - run `pnpm install --frozen-lockfile`
-   - run `pnpm run build` (exports static files to `out/`)
-   - publish `out/` to Pages
+   - auto-detect your lockfile (`pnpm-lock.yaml`, `package-lock.json`, or `yarn.lock`)
+   - install dependencies with the matching package manager
+   - run the build and publish `out/` to Pages
 
 
 ### Troubleshooting

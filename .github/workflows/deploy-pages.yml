@@ -21,22 +21,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build static export
-        run: pnpm run build
+      - name: Install dependencies and build static export
+        run: |
+          set -euo pipefail
+          if [ -f pnpm-lock.yaml ]; then
+            corepack enable
+            pnpm install --frozen-lockfile
+            pnpm run build
+          elif [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+            npm run build
+          elif [ -f yarn.lock ]; then
+            corepack enable
+            yarn install --frozen-lockfile
+            yarn build
+          else
+            echo "No supported lockfile found (pnpm-lock.yaml, package-lock.json, npm-shrinkwrap.json, yarn.lock)."
+            exit 1
+          fi
 
       - name: Disable Jekyll
         run: touch out/.nojekyll
