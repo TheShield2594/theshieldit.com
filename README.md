@@ -14,55 +14,32 @@ Modern, privacy-focused website for [theshieldit.com](https://theshieldit.com)
 
 ## 🚀 Deployment to GitHub Pages
 
-1. **Create a new repository** on GitHub (e.g., `theshieldit-website`)
+This repo is now a **Next.js static export** and should be deployed with **GitHub Actions** (not “Deploy from branch”).
 
-2. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/theshieldit-website.git
-   cd theshieldit-website
-   ```
+1. Push to `main`.
+2. In GitHub, go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. The included workflow (`.github/workflows/deploy-pages.yml`) will:
+   - run `pnpm install --frozen-lockfile`
+   - run `pnpm run build` (exports static files to `out/`)
+   - publish `out/` to Pages
 
-3. **Add the index.html file** to the repository
 
-4. **Commit and push**:
-   ```bash
-   git add .
-   git commit -m "Initial commit: Modern privacy-focused website"
-   git push origin main
-   ```
+### Troubleshooting
 
-5. **Enable GitHub Pages**:
-   - Go to your repository settings
-   - Navigate to "Pages" in the left sidebar
-   - Under "Source", select "main" branch and "/ (root)" folder
-   - Click "Save"
-   - Your site will be available at `https://yourusername.github.io/theshieldit-website/`
+- If your GitHub Pages URL is rendering the repository README instead of the website, Pages is still set to **Deploy from a branch**.
+- Go to **Settings → Pages → Build and deployment → Source** and switch to **GitHub Actions**.
+- Then re-run the `Deploy static Next.js site to GitHub Pages` workflow (or push a commit).
 
-6. **Custom Domain Setup** (for theshieldit.com):
-   - In repository settings → Pages, add `theshieldit.com` under "Custom domain"
-   - In your domain registrar (Carrd, GoDaddy, etc.), add these DNS records:
-     ```
-     Type: A
-     Name: @
-     Value: 185.199.108.153
-     
-     Type: A
-     Name: @
-     Value: 185.199.109.153
-     
-     Type: A
-     Name: @
-     Value: 185.199.110.153
-     
-     Type: A
-     Name: @
-     Value: 185.199.111.153
-     
-     Type: CNAME
-     Name: www
-     Value: yourusername.github.io
-     ```
+### Custom Domain Setup (theshieldit.com)
 
+- Keep `CNAME` in the repo root (already present).
+- In your DNS provider, point the root domain to GitHub Pages with these `A` records:
+  - `185.199.108.153`
+  - `185.199.109.153`
+  - `185.199.110.153`
+  - `185.199.111.153`
+- Add `www` as a CNAME to `<your-github-username>.github.io`.
 ## 🎨 Customization
 
 ### Updating Social Links
