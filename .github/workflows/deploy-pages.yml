@@ -46,7 +46,9 @@ jobs:
           fi
 
       - name: Disable Jekyll
-        run: touch out/.nojekyll
+        run: |
+          test -d out || { echo "Build did not produce ./out (check next.config output: 'export')"; exit 1; }
+          touch out/.nojekyll
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
