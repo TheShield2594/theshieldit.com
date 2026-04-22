@@ -12,6 +12,8 @@ export type ToolIcon =
   | "drama"
   | "file-certificate"
   | "file-search"
+  | "file-text"
+  | "files"
   | "fingerprint"
   | "hash"
   | "history"
@@ -31,7 +33,9 @@ export type ToolIcon =
   | "pen-line"
   | "qr-code"
   | "radar"
+  | "rotate-cw"
   | "scan-search"
+  | "scissors"
   | "shield"
   | "shield-alert"
   | "shield-check"
@@ -576,6 +580,61 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analyzer",
     iconColor: "text-chart-1 bg-chart-1/10",
     icon: "wifi",
+  },
+  {
+    title: "PDF Merger",
+    description:
+      "Combine multiple PDF files into one. Drag and drop to reorder pages, then download the merged result — all in your browser.",
+    href: "/tools/pdf-merge",
+    tags: "pdf merge combine join files documents browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "files",
+  },
+  {
+    title: "PDF Splitter",
+    description:
+      "Extract a page range from a PDF or split it into individual single-page files. No uploads required.",
+    href: "/tools/pdf-split",
+    tags: "pdf split extract pages range separate documents browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "scissors",
+  },
+  {
+    title: "PDF Metadata Viewer",
+    description:
+      "Inspect a PDF's hidden metadata: title, author, creator, producer, creation date, modification date, and page count.",
+    href: "/tools/pdf-metadata",
+    tags: "pdf metadata viewer title author creator producer creation date page count info properties",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "file-search",
+  },
+  {
+    title: "PDF Page Rotator",
+    description:
+      "Rotate all pages or a specific page range in a PDF by 90°, 180°, or 270°. Download the corrected file instantly.",
+    href: "/tools/pdf-rotate",
+    tags: "pdf rotate pages orientation fix landscape portrait browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "rotate-cw",
+  },
+  {
+    title: "Image to PDF",
+    description:
+      "Convert JPEG, PNG, WebP, GIF, or BMP images into a single PDF. Choose A4, Letter, or fit-to-image page size.",
+    href: "/tools/image-to-pdf",
+    tags: "image to pdf convert jpeg png webp gif bmp pictures photos browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "image",
   },
 ]
 

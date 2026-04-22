@@ -1,23 +1,18 @@
+import Link from "next/link"
 import { FileText, Shield, Lock } from "lucide-react"
 
-const HIGHLIGHTS = [
-  "Merge & Split",
-  "Encrypt & Sign",
-  "Convert & Compress",
-  "OCR & Redact",
+const TOOLS = [
+  { label: "Merge & Split", href: "/tools/pdf-merge" },
+  { label: "Rotate Pages", href: "/tools/pdf-rotate" },
+  { label: "Image to PDF", href: "/tools/image-to-pdf" },
+  { label: "View Metadata", href: "/tools/pdf-metadata" },
 ]
 
 export function PdfToolsCta() {
   return (
     <section aria-label="PDF Tools" className="py-10">
       <div className="mx-auto max-w-5xl">
-        <div
-          className="group relative block overflow-hidden rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-8"
-        >
-          {/* Coming Soon banner */}
-          <div className="absolute top-4 right-4 z-10 rounded-full bg-primary px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-lg">
-            Coming Soon
-          </div>
+        <div className="group relative block overflow-hidden rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-8">
           {/* Subtle gradient accent */}
           <div
             aria-hidden="true"
@@ -41,18 +36,19 @@ export function PdfToolsCta() {
               </h2>
 
               <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                100+ PDF tools running entirely in your browser. Merge, split, encrypt, sign, convert, compress, redact, and more — your files never leave your device.
+                5 PDF tools running entirely in your browser. Merge, split, rotate, convert, and inspect metadata — your files never leave your device.
               </p>
 
-              {/* Feature pills */}
+              {/* Tool links */}
               <div className="mt-4 flex flex-wrap gap-2">
-                {HIGHLIGHTS.map((label) => (
-                  <span
+                {TOOLS.map(({ label, href }) => (
+                  <Link
                     key={label}
-                    className="rounded-full border border-border/70 bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground"
+                    href={href}
+                    className="rounded-full border border-border/70 bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground hover:border-primary/50 hover:text-foreground transition-colors"
                   >
                     {label}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>

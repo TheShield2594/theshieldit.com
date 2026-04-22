@@ -10,6 +10,7 @@ import {
   ScanSearch, Network, Clock, Star, History,
   LayoutGrid, BookOpen, BookMarked, Book, Newspaper,
   ClipboardList, Trophy, Drama, Minimize2,
+  FileText, Files, RotateCw, Scissors,
 } from "lucide-react"
 import type { Tool, ToolIcon } from "@/lib/tools"
 import { cn } from "@/lib/utils"
@@ -53,6 +54,10 @@ const ICON_MAP: Record<ToolIcon, React.ComponentType<{ className?: string }>> = 
   "clipboard-list": ClipboardList,
   trophy: Trophy,
   drama: Drama,
+  "file-text": FileText,
+  files: Files,
+  "rotate-cw": RotateCw,
+  scissors: Scissors,
 }
 
 export function ToolCard({
