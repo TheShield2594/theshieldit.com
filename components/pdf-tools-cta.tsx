@@ -2,7 +2,8 @@ import Link from "next/link"
 import { FileText, Shield, Lock } from "lucide-react"
 
 const TOOLS = [
-  { label: "Merge & Split", href: "/tools/pdf-merge" },
+  { label: "Merge PDFs", href: "/tools/pdf-merge" },
+  { label: "Split Pages", href: "/tools/pdf-split" },
   { label: "Rotate Pages", href: "/tools/pdf-rotate" },
   { label: "Image to PDF", href: "/tools/image-to-pdf" },
   { label: "View Metadata", href: "/tools/pdf-metadata" },

@@ -22,7 +22,7 @@ export default function PdfMerge() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function addFiles(incoming: FileList | File[]) {
-    const pdfs = Array.from(incoming).filter((f) => f.type === "application/pdf" || f.name.endsWith(".pdf"));
+    const pdfs = Array.from(incoming).filter((f) => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
     if (pdfs.length === 0) { setError("Please select PDF files only."); return; }
     setError("");
     setFiles((prev) => [
@@ -65,8 +65,10 @@ export default function PdfMerge() {
       const a = document.createElement("a");
       a.href = url;
       a.download = "merged.pdf";
+      a.style.display = "none";
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a); }, 100);
     } catch (e: unknown) {
       setError("Failed to merge PDFs: " + (e instanceof Error ? e.message : String(e)));
     } finally {
@@ -80,10 +82,14 @@ export default function PdfMerge() {
         {/* Drop zone */}
         <div className="rounded-xl border border-border/50 bg-card p-6">
           <div
-            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${
+            role="button"
+            tabIndex={0}
+            aria-label="Upload PDF files"
+            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${
               isDragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary hover:bg-primary/5"
             }`}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInputRef.current?.click(); } }}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={(e) => { e.preventDefault(); setIsDragOver(false); addFiles(e.dataTransfer.files); }}
@@ -106,7 +112,7 @@ export default function PdfMerge() {
           {files.length > 0 && (
             <div className="mt-5 space-y-2">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-                Files ({files.length}) — drag to reorder
+                Files ({files.length}) — use arrows to reorder
               </p>
               {files.map(({ id, file }, idx) => (
                 <div key={id} className="flex items-center gap-3 rounded-lg border border-border/50 bg-background/40 px-4 py-3">

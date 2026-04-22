@@ -24,7 +24,9 @@ export default function PdfRotate() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function loadFile(f: File) {
-    if (!f.type.includes("pdf") && !f.name.endsWith(".pdf")) {
+    if (!f.type.includes("pdf") && !f.name.toLowerCase().endsWith(".pdf")) {
+      setFile(null);
+      setPageCount(0);
       setError("Please select a PDF file.");
       return;
     }
@@ -36,6 +38,8 @@ export default function PdfRotate() {
       setPageCount(doc.getPageCount());
       setFile(f);
     } catch {
+      setFile(null);
+      setPageCount(0);
       setError("Could not read the PDF. It may be encrypted or corrupted.");
     } finally {
       setLoadingInfo(false);
@@ -45,14 +49,16 @@ export default function PdfRotate() {
   function parseIndices(input: string, total: number): number[] | null {
     const result: number[] = [];
     for (const part of input.split(",").map((s) => s.trim()).filter(Boolean)) {
-      if (part.includes("-")) {
-        const [a, b] = part.split("-").map((s) => parseInt(s.trim(), 10));
-        if (isNaN(a) || isNaN(b) || a < 1 || b > total || a > b) return null;
+      if (/^\d+-\d+$/.test(part)) {
+        const [a, b] = part.split("-").map(Number);
+        if (a < 1 || b > total || a > b) return null;
         for (let i = a; i <= b; i++) result.push(i - 1);
-      } else {
-        const n = parseInt(part, 10);
-        if (isNaN(n) || n < 1 || n > total) return null;
+      } else if (/^\d+$/.test(part)) {
+        const n = Number(part);
+        if (n < 1 || n > total) return null;
         result.push(n - 1);
+      } else {
+        return null;
       }
     }
     return [...new Set(result)];
@@ -109,10 +115,14 @@ export default function PdfRotate() {
         <div className="rounded-xl border border-border/50 bg-card p-6">
           {/* Drop zone */}
           <div
-            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${
+            role="button"
+            tabIndex={0}
+            aria-label="Upload PDF"
+            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${
               isDragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary hover:bg-primary/5"
             }`}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInputRef.current?.click(); } }}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={(e) => { e.preventDefault(); setIsDragOver(false); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); }}

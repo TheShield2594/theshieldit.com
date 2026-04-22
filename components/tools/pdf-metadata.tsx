@@ -54,7 +54,8 @@ export default function PdfMetadata() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function loadFile(f: File) {
-    if (!f.type.includes("pdf") && !f.name.endsWith(".pdf")) {
+    if (!f.type.includes("pdf") && !f.name.toLowerCase().endsWith(".pdf")) {
+      setInfo(null);
       setError("Please select a PDF file.");
       return;
     }
@@ -96,6 +97,8 @@ export default function PdfMetadata() {
     navigator.clipboard.writeText(`File: ${fileName}\n${lines}`).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+    }).catch((err) => {
+      console.error("Clipboard write failed:", err);
     });
   }
 
@@ -104,10 +107,14 @@ export default function PdfMetadata() {
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="rounded-xl border border-border/50 bg-card p-6">
           <div
-            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${
+            role="button"
+            tabIndex={0}
+            aria-label="Upload PDF"
+            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${
               isDragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary hover:bg-primary/5"
             }`}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInputRef.current?.click(); } }}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={(e) => { e.preventDefault(); setIsDragOver(false); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); }}

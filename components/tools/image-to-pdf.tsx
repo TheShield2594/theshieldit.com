@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PDFDocument, PageSizes } from "pdf-lib";
 
 function formatSize(bytes: number): string {
@@ -30,6 +30,12 @@ export default function ImageToPdf() {
   const [converting, setConverting] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return () => {
+      images.forEach((img) => URL.revokeObjectURL(img.preview));
+    };
+  }, [images]);
 
   const ACCEPTED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp"];
 
@@ -148,10 +154,14 @@ export default function ImageToPdf() {
         <div className="rounded-xl border border-border/50 bg-card p-6">
           {/* Drop zone */}
           <div
-            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${
+            role="button"
+            tabIndex={0}
+            aria-label="Upload images"
+            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${
               isDragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary hover:bg-primary/5"
             }`}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInputRef.current?.click(); } }}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={(e) => { e.preventDefault(); setIsDragOver(false); addImages(e.dataTransfer.files); }}

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { PDFDocument } from "pdf-lib";
+import JSZip from "jszip";
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return bytes + " B";
@@ -11,16 +12,17 @@ function formatSize(bytes: number): string {
 
 function parsePageRange(input: string, total: number): number[] | null {
   const indices: number[] = [];
-  const parts = input.split(",").map((s) => s.trim()).filter(Boolean);
-  for (const part of parts) {
-    if (part.includes("-")) {
-      const [a, b] = part.split("-").map((s) => parseInt(s.trim(), 10));
-      if (isNaN(a) || isNaN(b) || a < 1 || b > total || a > b) return null;
+  for (const part of input.split(",").map((s) => s.trim()).filter(Boolean)) {
+    if (/^\d+-\d+$/.test(part)) {
+      const [a, b] = part.split("-").map(Number);
+      if (a < 1 || b > total || a > b) return null;
       for (let i = a; i <= b; i++) indices.push(i - 1);
-    } else {
-      const n = parseInt(part, 10);
-      if (isNaN(n) || n < 1 || n > total) return null;
+    } else if (/^\d+$/.test(part)) {
+      const n = Number(part);
+      if (n < 1 || n > total) return null;
       indices.push(n - 1);
+    } else {
+      return null;
     }
   }
   return [...new Set(indices)].sort((a, b) => a - b);
@@ -38,7 +40,9 @@ export default function PdfSplit() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function loadFile(f: File) {
-    if (!f.type.includes("pdf") && !f.name.endsWith(".pdf")) {
+    if (!f.type.includes("pdf") && !f.name.toLowerCase().endsWith(".pdf")) {
+      setFile(null);
+      setPageCount(0);
       setError("Please select a PDF file.");
       return;
     }
@@ -50,6 +54,8 @@ export default function PdfSplit() {
       setPageCount(doc.getPageCount());
       setFile(f);
     } catch {
+      setFile(null);
+      setPageCount(0);
       setError("Could not read the PDF. It may be encrypted or corrupted.");
     } finally {
       setLoadingInfo(false);
@@ -65,19 +71,24 @@ export default function PdfSplit() {
       const src = await PDFDocument.load(bytes);
 
       if (mode === "all") {
+        const zip = new JSZip();
         for (let i = 0; i < src.getPageCount(); i++) {
           const single = await PDFDocument.create();
           const [page] = await single.copyPages(src, [i]);
           single.addPage(page);
           const out = await single.save();
-          const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `page-${i + 1}.pdf`;
-          a.click();
-          URL.revokeObjectURL(url);
+          zip.file(`page-${i + 1}.pdf`, new Uint8Array(out));
         }
+        const zipBytes = await zip.generateAsync({ type: "uint8array" });
+        const blob = new Blob([new Uint8Array(zipBytes)], { type: "application/zip" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "pages.zip";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a); }, 100);
       } else {
         const indices = parsePageRange(rangeInput, src.getPageCount());
         if (!indices || indices.length === 0) {
@@ -94,8 +105,10 @@ export default function PdfSplit() {
         const a = document.createElement("a");
         a.href = url;
         a.download = "extracted-pages.pdf";
+        a.style.display = "none";
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
+        setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a); }, 100);
       }
     } catch (e: unknown) {
       setError("Failed to split PDF: " + (e instanceof Error ? e.message : String(e)));
@@ -110,10 +123,14 @@ export default function PdfSplit() {
         <div className="rounded-xl border border-border/50 bg-card p-6">
           {/* File drop */}
           <div
-            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${
+            role="button"
+            tabIndex={0}
+            aria-label="Upload PDF"
+            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${
               isDragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary hover:bg-primary/5"
             }`}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInputRef.current?.click(); } }}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={(e) => { e.preventDefault(); setIsDragOver(false); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); }}
@@ -157,7 +174,7 @@ export default function PdfSplit() {
                         : "bg-card border-border text-muted-foreground hover:border-primary hover:text-foreground"
                     }`}
                   >
-                    {m === "range" ? "Extract page range" : `Split into ${pageCount} single pages`}
+                    {m === "range" ? "Extract page range" : `Split into ${pageCount} pages (ZIP)`}
                   </button>
                 ))}
               </div>
@@ -184,7 +201,7 @@ export default function PdfSplit() {
             disabled={!file || splitting}
             className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50 w-full justify-center"
           >
-            {splitting ? "Splitting…" : mode === "all" ? `Download ${pageCount} pages` : "Extract pages"}
+            {splitting ? "Splitting…" : mode === "all" ? `Download ${pageCount} pages as ZIP` : "Extract pages"}
           </button>
 
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
