@@ -446,6 +446,17 @@ export const TOOLS: Tool[] = [
     icon: "drama",
   },
   {
+    title: "SSL Certificate Checker",
+    description:
+      "Check SSL/TLS certificate details, expiration date, issuer, and security grade for any website. Fetches live certificate data via a public API.",
+    href: "/tools/ssl-checker",
+    tags: "ssl tls certificate checker expiry expiration issuer security grade https domain",
+    category: "security",
+    tagLabel: "Security",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "shield-check",
+  },
+  {
     title: "Subnet Calculator",
     description:
       "Calculate subnet masks, network addresses, broadcast addresses, and host ranges for IPv4 networks.",
