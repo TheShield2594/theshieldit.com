@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-accent="blue" data-density="cozy" data-grid="subtle">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Password Generator · The Shield IT</title>
+<style>
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: "Geist Mono"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.1.0/files/geist-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Geist Mono"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.1.0/files/geist-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+</style>
+<link rel="stylesheet" href="src/styles.css"/>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="src/tools-data.js"></script>
+<script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
+<script type="text/babel" src="src/icons.jsx"></script>
+<script type="text/babel" src="src/components.jsx"></script>
+<script type="text/babel" src="src/tool-uis.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+function getSlug() {
+  const p = new URLSearchParams(window.location.search);
+  return p.get('slug') || 'password-generator';
+}
+
+function PasswordDemo() {
+  const [length, setLength] = useState(20);
+  const [opts, setOpts] = useState({ upper: true, lower: true, nums: true, symbols: true });
+  const [pw, setPw] = useState('');
+  const toggle = (k) => setOpts(o => ({ ...o, [k]: !o[k] }));
+  const generate = () => {
+    let set = '';
+    if (opts.lower) set += 'abcdefghijklmnopqrstuvwxyz';
+    if (opts.upper) set += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (opts.nums)  set += '0123456789';
+    if (opts.symbols) set += '!@#$%^&*()_+-={}[]<>?';
+    if (!set) { setPw(''); return; }
+    const arr = new Uint32Array(length);
+    crypto.getRandomValues(arr);
+    let out = '';
+    for (let i = 0; i < length; i++) out += set[arr[i] % set.length];
+    setPw(out);
+  };
+  useEffect(generate, [length, opts]);
+  const entropy = Math.round(length * Math.log2(Math.max(1, (opts.lower?26:0)+(opts.upper?26:0)+(opts.nums?10:0)+(opts.symbols?21:0))));
+  const bars = Math.min(6, Math.floor(entropy / 24));
+  return (
+    <>
+      <div className="demo-pw-row">
+        <span className="pw">{pw || '—'}</span>
+        <button onClick={generate}><ShieldIcon name="sparkles" size={13}/> Regenerate</button>
+        <button onClick={() => navigator.clipboard?.writeText(pw)}><ShieldIcon name="copy" size={13}/> Copy</button>
+      </div>
+      <div className="demo-strength">
+        {Array.from({length: 6}).map((_,i) => <div key={i} className={i < bars ? (bars >= 5 ? 'ok' : bars >= 3 ? 'on' : 'warn') : ''}/>)}
+      </div>
+      <div className="muted tiny" style={{marginTop:8,fontFamily:'var(--font-mono)'}}>
+        ~{entropy} bits of entropy · all generation happens locally via Web Crypto
+      </div>
+      <div className="demo-controls">
+        <div className="demo-slider-row">
+          <label>Length</label>
+          <input type="range" min="6" max="64" value={length} onChange={e => setLength(+e.target.value)}/>
+          <span className="val">{length}</span>
+        </div>
+        <div className="demo-checks">
+          {[['upper','A–Z'],['lower','a–z'],['nums','0–9'],['symbols','!@#$']].map(([k,l]) => (
+            <label key={k} className={`demo-chk ${opts[k]?'on':''}`} onClick={() => toggle(k)}>
+              <ShieldIcon name={opts[k]?'check':'plus'} size={12}/> {l}
+            </label>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function renderToolUI(slug, tool, catColor) {
+  const map = {
+    'password-generator': <PasswordDemo/>,
+    'hash-generator': <HashGenerator/>,
+    'jwt-decoder': <JWTDecoder/>,
+    'url-encoder': <EncoderTool/>,
+    'dev-tools': <EncoderTool/>,
+    'timestamp-converter': <TimestampConverter/>,
+    'uuid-generator': <UUIDGenerator/>,
+    'password-quest': <PasswordStrengthTester/>,
+    'qr-code': <QRGenerator/>,
+  };
+  if (map[slug]) return map[slug];
+  return (
+    <div style={{textAlign:'center', padding:'80px 20px', color:'var(--fg-muted)'}}>
+      <ShieldIcon name={window.toolIcon(tool.icon)} size={40} style={{color:catColor, marginBottom: 16}}/>
+      <h3 style={{margin:'0 0 6px', color:'var(--fg)', fontSize:18}}>Interface in the works</h3>
+      <p style={{margin:0,fontSize:13, maxWidth:360, marginLeft:'auto', marginRight:'auto', lineHeight:1.55}}>
+        The <strong style={{color:'var(--fg)'}}>{tool.title}</strong> surface is queued — it will follow the same shell and privacy contract as the live tools.
+      </p>
+      <div style={{marginTop:20, display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap'}}>
+        {['password-generator','hash-generator','jwt-decoder','timestamp-converter','uuid-generator','qr-code','password-quest','url-encoder'].map(s => (
+          <a key={s} href={`tool.html?slug=${s}`} className="pill" style={{fontSize:12}}>
+            Try {(window.SHIELD_TOOLS.find(t => t.slug===s)||{}).title || s}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ToolPage() {
+  const slug = getSlug();
+  const tool = window.SHIELD_TOOLS.find(t => t.slug === slug) || window.SHIELD_TOOLS[0];
+  const related = window.SHIELD_TOOLS.filter(t => t.category === tool.category && t.slug !== tool.slug).slice(0, 5);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
+  useEffect(() => {
+    const h = (e) => {
+      if ((e.metaKey||e.ctrlKey) && e.key === 'k') { e.preventDefault(); setPaletteOpen(o=>!o); }
+    };
+    window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h);
+  }, []);
+
+  const catColor = `var(--c-${tool.category === 'developer' ? 'dev' : tool.category === 'education' ? 'edu' : 'security'})`;
+
+  return (
+    <>
+      <div className="app-bg"><div className="glow" /><div className="grid-layer" /></div>
+      <SiteHeader onOpenPalette={() => setPaletteOpen(true)} theme={theme} setTheme={setTheme}/>
+      <main>
+        <div className="wrap tool-page">
+          <nav className="tool-page-crumbs">
+            <a href="index.html">Home</a>
+            <ShieldIcon name="chevronRight" size={12}/>
+            <a href="index.html#tools">{tool.category === 'developer' ? 'Developer' : tool.category === 'education' ? 'Education' : 'Security'}</a>
+            <ShieldIcon name="chevronRight" size={12}/>
+            <span>{tool.title}</span>
+          </nav>
+
+          <header className="tool-page-head" style={{'--cat-color': catColor}}>
+            <div className="tool-page-icon">
+              <ShieldIcon name={window.toolIcon(tool.icon)} size={28}/>
+            </div>
+            <div className="tool-page-titles">
+              <h1>{tool.title}</h1>
+              <p>{tool.blurb}</p>
+              <div className="tool-page-tags">
+                <span className="pill" style={{color: catColor, borderColor: `color-mix(in oklch, ${catColor} 40%, transparent)`, background: `color-mix(in oklch, ${catColor} 12%, transparent)`}}>
+                  <span className="dot" style={{width:6,height:6,borderRadius:'50%',background:catColor,display:'inline-block',marginRight:6}}/>
+                  {tool.category}
+                </span>
+                <span className="pill">{tool.tag}</span>
+                <span className="pill"><ShieldIcon name="lock" size={10} style={{marginRight:4,verticalAlign:'-1px'}}/> Local-only</span>
+                <span className="pill"><ShieldIcon name="zap" size={10} style={{marginRight:4,verticalAlign:'-1px'}}/> No account</span>
+              </div>
+            </div>
+            <a className="btn-ghost" href="#"><ShieldIcon name="star" size={14}/> Favorite</a>
+          </header>
+
+          <div className="tool-page-body">
+            <div className="tool-pane" style={{'--cat-color': catColor}}>
+              <div className="tool-pane-chrome">
+                <span className="dot dot-r"/><span className="dot dot-y"/><span className="dot dot-g"/>
+                <span style={{marginLeft:10}}>shieldit://tools/{tool.slug}</span>
+                <span className="status"><span className="dot"/> Running locally</span>
+              </div>
+              <div className="tool-pane-body">
+                {renderToolUI(slug, tool, catColor)}
+              </div>
+            </div>
+
+            <aside className="tool-side">
+              <div className="tool-side-card">
+                <h4>How it works</h4>
+                <ul>
+                  <li><ShieldIcon name="check" size={14}/><span><strong>Runs entirely in your browser.</strong> No inputs leave this tab.</span></li>
+                  <li><ShieldIcon name="check" size={14}/><span><strong>Uses the Web Crypto API</strong> for cryptographic primitives.</span></li>
+                  <li><ShieldIcon name="check" size={14}/><span><strong>Works offline.</strong> Load once, use forever.</span></li>
+                </ul>
+              </div>
+              <div className="tool-side-card">
+                <h4>Related {tool.category} tools</h4>
+                <div className="tool-related">
+                  {related.map(r => (
+                    <a key={r.slug} href={`tool.html?slug=${r.slug}`}>
+                      <span className="tool-related-dot" style={{background: catColor}}/>
+                      <span>{r.title}</span>
+                      <ShieldIcon name="arrowRight" size={12} style={{color:'var(--fg-dim)'}}/>
+                    </a>
+                  ))}
+                </div>
+              </div>
+              <div className="tool-side-card">
+                <h4>Source</h4>
+                <a href="#" style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:13,color:'var(--primary)'}}>
+                  <ShieldIcon name="code" size={14}/> View on GitHub <ShieldIcon name="arrowUpRight" size={12}/>
+                </a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </main>
+      <SiteFooter/>
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)}/>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ToolPage/>);
+</script>
+</body>
+</html>

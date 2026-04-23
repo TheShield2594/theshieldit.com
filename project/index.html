@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-accent="blue" data-density="cozy" data-grid="subtle">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The Shield IT · v2.0 — Security tools without the surveillance</title>
+<link rel="preconnect" href="https://rsms.me/"/>
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css"/>
+<style>
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.1.0/files/geist-sans-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: "Geist Mono"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.1.0/files/geist-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Geist Mono"; src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.1.0/files/geist-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+</style>
+<link rel="stylesheet" href="src/styles.css"/>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="src/tools-data.js"></script>
+<script type="text/babel" src="src/icons.jsx"></script>
+<script type="text/babel" src="src/components.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+// ── Tweakable defaults ──
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "hero": "minimal",
+  "theme": "dark",
+  "accent": "teal",
+  "density": "cozy",
+  "grid": "subtle"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  const setTweak = (k, v) => setTweaks(t => {
+    const n = { ...t, [k]: v };
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [k]: v } }, '*');
+    return n;
+  });
+
+  // Apply tweaks to <html>
+  useEffect(() => {
+    const h = document.documentElement;
+    h.dataset.theme = tweaks.theme;
+    h.dataset.accent = tweaks.accent;
+    h.dataset.density = tweaks.density;
+    h.dataset.grid = tweaks.grid;
+  }, [tweaks]);
+
+  // Edit-mode bridge
+  useEffect(() => {
+    const handler = (e) => {
+      if (!e.data || typeof e.data !== 'object') return;
+      if (e.data.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  // ⌘K palette
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setPaletteOpen(o => !o); }
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+        const tools = document.getElementById('tools');
+        if (tools) { e.preventDefault(); tools.scrollIntoView({ behavior: 'smooth' }); setTimeout(() => document.querySelector('.search input')?.focus(), 500); }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  return (
+    <>
+      <div className="app-bg"><div className="glow" /><div className="grid-layer" /></div>
+      <SiteHeader onOpenPalette={() => setPaletteOpen(true)} theme={tweaks.theme} setTheme={v => setTweak('theme', v)} />
+      <main>
+        <div className="wrap">
+          <Hero variant={tweaks.hero} />
+          <ToolsSection />
+          <Pillars />
+          <PdfCta />
+        </div>
+      </main>
+      <SiteFooter />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      <TweaksPanel open={tweaksOpen} tweaks={tweaks} setTweak={setTweak} />
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
