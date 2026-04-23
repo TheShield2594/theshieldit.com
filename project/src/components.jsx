@@ -64,7 +64,7 @@ function HeroWorkshop() {
             <span className="hero-title-accent">you can actually trust.</span>
           </h1>
           <p className="hero-sub">
-            46 security, developer, and education tools. Nothing leaves your browser —
+            47 security, developer, and education tools. Nothing leaves your browser —
             no accounts, no telemetry, no dark patterns. Built by one IT pro, used by thousands.
           </p>
           <div className="hero-cta">
@@ -76,7 +76,7 @@ function HeroWorkshop() {
             </a>
           </div>
           <dl className="hero-stats">
-            <div><dt>46</dt><dd>free tools</dd></div>
+            <div><dt>{window.SHIELD_TOOLS.length}</dt><dd>free tools</dd></div>
             <div><dt>0</dt><dd>accounts required</dd></div>
             <div><dt>100%</dt><dd>in-browser</dd></div>
             <div><dt>MIT</dt><dd>open source</dd></div>
@@ -122,7 +122,7 @@ function HeroPanel({ featured }) {
 function HeroTerminal() {
   const lines = [
     { p: "$", t: "shieldit --list --category=security" },
-    { p: ">", t: "46 tools loaded · 0 trackers · 0 external calls", cls: "muted" },
+    { p: ">", t: `${window.SHIELD_TOOLS.length} tools loaded · 0 trackers · 0 external calls`, cls: "muted" },
     { p: "$", t: "open password-generator" },
     { p: "✓", t: "launched in-browser · nothing sent to server", cls: "ok" },
   ];
@@ -156,7 +156,7 @@ function HeroMinimal() {
         Security tools<br/>
         <span className="hero-title-accent">without the surveillance.</span>
       </h1>
-      <p className="hero-sub">46 tools. Zero accounts. Everything in your browser.</p>
+      <p className="hero-sub">{window.SHIELD_TOOLS.length} tools. Zero accounts. Everything in your browser.</p>
       <div className="hero-cta"><a className="btn-primary" href="#tools">Browse library <ShieldIcon name="arrowRight" size={16} /></a></div>
     </section>
   );
@@ -294,19 +294,30 @@ function ToolCard({ tool, index, onHover, featured }) {
 
 // ── PDF Kit CTA ─────────────────────────────────────────────────────
 function PdfCta() {
-  const items = ["Merge & Split", "Encrypt & Sign", "Convert & Compress", "OCR & Redact", "Form-fill", "Watermark"];
+  const tools = [
+    { slug: "pdf-merge",    label: "Merge PDFs" },
+    { slug: "pdf-split",    label: "Split Pages" },
+    { slug: "pdf-rotate",   label: "Rotate Pages" },
+    { slug: "image-to-pdf", label: "Image to PDF" },
+    { slug: "pdf-metadata", label: "View Metadata" },
+  ];
   return (
     <section id="pdf" className="pdf-cta">
       <div className="pdf-cta-inner">
         <div className="pdf-cta-left">
           <div className="badge-soft"><ShieldIcon name="lock" size={11}/> Privacy first</div>
-          <span className="coming-soon">Coming soon</span>
-          <h2>A 100-tool PDF kit.<br/>Never touches a server.</h2>
-          <p>Every operation — merge, split, OCR, encrypt, redact, fill — runs locally via WebAssembly. Drop a file, get a file.</p>
+          <h2>PDF Toolkit.<br/>Never touches a server.</h2>
+          <p>Five PDF tools running entirely in your browser via WebAssembly. Drop a file, get a file — your documents never leave your device.</p>
           <div className="pdf-pills">
-            {items.map(i => <span key={i} className="pill">{i}</span>)}
+            {tools.map(t => (
+              <a key={t.slug} href={`tool.html?slug=${t.slug}`} className="pill pdf-pill-link">
+                {t.label} <ShieldIcon name="arrowRight" size={11}/>
+              </a>
+            ))}
           </div>
-          <a className="btn-primary" href="#">Get notified <ShieldIcon name="arrowRight" size={14}/></a>
+          <a className="btn-primary" href="tools.html?cat=developer">
+            Browse all tools <ShieldIcon name="arrowRight" size={14}/>
+          </a>
         </div>
         <div className="pdf-cta-right">
           <PdfVisual />

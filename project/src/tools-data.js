@@ -55,6 +55,12 @@ window.SHIELD_TOOLS = [
   { slug: "webrtc-leak-test", title: "WebRTC Leak Test", blurb: "Detect whether WebRTC is revealing your real IP behind VPN.", category: "security", tag: "Privacy", icon: "wifi" },
   { slug: "web-checker", title: "Website Security Analyzer", blurb: "DNS, SSL/TLS, headers, infrastructure — graded.", category: "security", tag: "Analysis", icon: "radar" },
   { slug: "wifi-security-analyzer", title: "WiFi Security Analyzer", blurb: "Score WPA3, router config — get actionable hardening.", category: "security", tag: "Analyzer", icon: "wifi" },
+  { slug: "ssl-checker",   title: "SSL Certificate Checker", blurb: "Check any domain's SSL cert — expiry, issuer, TLS version, and cipher grade.", category: "security",   tag: "Analysis",   icon: "certificate" },
+  { slug: "pdf-merge",     title: "PDF Merger",              blurb: "Combine multiple PDF files into one — reorder before download.",                     category: "developer", tag: "Utility",    icon: "files" },
+  { slug: "pdf-split",     title: "PDF Splitter",            blurb: "Extract a page range or split into individual pages — download as ZIP.",             category: "developer", tag: "Utility",    icon: "scissors" },
+  { slug: "pdf-rotate",    title: "PDF Page Rotator",        blurb: "Rotate all pages or a range by 90°, 180°, or 270°.",                                 category: "developer", tag: "Utility",    icon: "rotate-cw" },
+  { slug: "pdf-metadata",  title: "PDF Metadata Viewer",     blurb: "Inspect a PDF's hidden metadata — title, author, creator, dates, page count.",       category: "developer", tag: "Utility",    icon: "file-search" },
+  { slug: "image-to-pdf",  title: "Image to PDF",            blurb: "Convert JPEG, PNG, WebP images to a single PDF — drag to reorder.",                  category: "developer", tag: "Converter",  icon: "image" },
 ];
 
 window.LIVE_SLUGS = new Set([

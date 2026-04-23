@@ -25,13 +25,17 @@ export type ToolIcon =
   | "lock-keyhole"
   | "mail"
   | "map-pin"
+  | "file-text"
+  | "files"
   | "minimize-2"
   | "network"
   | "newspaper"
   | "pen-line"
   | "qr-code"
   | "radar"
+  | "rotate-cw"
   | "scan-search"
+  | "scissors"
   | "shield"
   | "shield-alert"
   | "shield-check"
@@ -565,6 +569,72 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analyzer",
     iconColor: "text-chart-1 bg-chart-1/10",
     icon: "wifi",
+  },
+  {
+    title: "SSL Certificate Checker",
+    description:
+      "Check any domain's SSL/TLS certificate — expiry date, issuer, TLS version, cipher suite grade, and hostname match. All checks run client-side.",
+    href: "/tools/ssl-checker",
+    tags: "ssl tls certificate checker expiry issuer cipher grade https domain security validator",
+    category: "security",
+    tagLabel: "Analysis",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "file-certificate",
+  },
+  {
+    title: "PDF Merger",
+    description:
+      "Combine multiple PDF files into one. Reorder pages with up/down controls before downloading the merged file — everything runs in your browser.",
+    href: "/tools/pdf-merge",
+    tags: "pdf merge combine join files documents local browser privacy",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "files",
+  },
+  {
+    title: "PDF Splitter",
+    description:
+      "Extract a page range from a PDF or split it into individual pages. Download as a single PDF or a ZIP archive — no uploads required.",
+    href: "/tools/pdf-split",
+    tags: "pdf split extract pages range zip download browser local privacy",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "scissors",
+  },
+  {
+    title: "PDF Page Rotator",
+    description:
+      "Rotate all pages or a specific range in a PDF by 90°, 180°, or 270°. Download the corrected file immediately — runs entirely in-browser.",
+    href: "/tools/pdf-rotate",
+    tags: "pdf rotate pages 90 180 270 degrees fix orientation browser local privacy",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "rotate-cw",
+  },
+  {
+    title: "PDF Metadata Viewer",
+    description:
+      "Inspect a PDF's hidden metadata: title, author, creator, producer, creation and modification dates, page count, and PDF version.",
+    href: "/tools/pdf-metadata",
+    tags: "pdf metadata viewer title author creator producer dates page count version inspect",
+    category: "developer",
+    tagLabel: "Utility",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "file-search",
+  },
+  {
+    title: "Image to PDF",
+    description:
+      "Convert JPEG, PNG, WebP, GIF, or BMP images into a single PDF. Drag to reorder, choose page sizing — all processing stays in your browser.",
+    href: "/tools/image-to-pdf",
+    tags: "image to pdf convert jpeg png webp gif bmp photo picture local browser privacy",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "image",
   },
 ]
 

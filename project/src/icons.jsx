@@ -67,6 +67,10 @@
     palette:    <><path d="M12 3a9 9 0 0 0 0 18c1.7 0 2-1.5 2-3s1-2.5 3-2.5h1.5a3.5 3.5 0 0 0 3.5-3.5A9 9 0 0 0 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="16.5" cy="10.5" r="1"/></>,
     rocket:     <path d="M14 4c4 0 6 2 6 6l-7 7-3-3 7-7M4 20l4-4M9 15l-5 5v-5zM4 15l-2 2M10 10 6 6"/>,
     layers:     <><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5M3 18l9 5 9-5"/></>,
+    "file-text": <><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></>,
+    files:       <><path d="M20 7h-3a2 2 0 0 1-2-2V2"/><path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z"/><path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8"/></>,
+    "rotate-cw": <><path d="M21 2v6h-6"/><path d="M21 13a9 9 0 1 1-3-7.7L21 8"/></>,
+    scissors:    <><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="m20 4-8.12 8.12M14.47 14.48 20 20"/></>,
   };
 
   function ShieldIcon({ name, size = 20, className = "", style = {}, strokeWidth }) {
@@ -102,6 +106,7 @@
     "shield-check": "shield-check", qr: "qr", news: "news", clipboard: "clipboard",
     trophy: "trophy", theater: "theater", network: "network", clock: "clock",
     "shield-off": "shield-off", wifi: "wifi", radar: "radar", scan: "scan",
+    "file-text": "file-text", files: "files", "rotate-cw": "rotate-cw", scissors: "scissors",
   };
   window.toolIcon = (key) => TOOL_ICON_MAP[key] || "shield";
 
