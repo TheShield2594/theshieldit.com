@@ -1,25 +1,88 @@
-# CODING AGENTS: READ THIS FIRST
+# The Shield IT Website
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+Modern, privacy-focused website for [theshieldit.com](https://theshieldit.com)
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+## 🛡️ Features
 
-## What you should do — IMPORTANT
+- **Modern Design**: Clean, gradient-based design with smooth animations
+- **Privacy-First**: Minimal tracking, uses privacy-friendly Umami analytics
+- **Responsive**: Fully responsive design that works on all devices
+- **Fast Loading**: Pure HTML/CSS with no external dependencies (except analytics)
+- **Animated Background**: Subtle floating gradient animation
+- **Interactive Cards**: Hover effects and smooth transitions
+- **SEO Optimized**: Proper meta tags and semantic HTML
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+## 🚀 Deployment to GitHub Pages
 
-**Find the primary design file under `project/` and read it top to bottom.** The chat transcripts will tell you which file the user was last iterating on. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+This repo is now a **Next.js static export** and should be deployed with **GitHub Actions** (not “Deploy from branch”).
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+1. Push to `main`.
+2. In GitHub, go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. The included workflow (`.github/workflows/deploy-pages.yml`) will:
+   - run `npm ci`
+   - run `npm run build` (exports static files to `out/`)
+   - publish `out/` to Pages
 
-## About the design files
+### Custom Domain Setup (theshieldit.com)
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+- Keep `CNAME` in the repo root (already present).
+- In your DNS provider, point the root domain to GitHub Pages with these `A` records:
+  - `185.199.108.153`
+  - `185.199.109.153`
+  - `185.199.110.153`
+  - `185.199.111.153`
+- Add `www` as a CNAME to `<your-github-username>.github.io`.
+## 🎨 Customization
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+### Updating Social Links
+Edit the social links in the HTML file around line 550:
+```html
+<a href="https://linkedin.com/in/theshieldit" class="social-btn">
+<a href="mailto:brandon@theshieldit.com" class="social-btn">
+<a href="https://instagram.com/theshieldit" class="social-btn">
+```
 
-## Bundle contents
+Note: Substack link is included in the "Educational Content" card, not in the top social links.
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Shields IT 2.0` project files (HTML prototypes, assets, components)
+### Changing Colors
+The color scheme uses CSS variables defined at the top of the `<style>` section:
+```css
+:root {
+  --primary: #3b82f6;      /* Blue */
+  --secondary: #8b5cf6;    /* Purple */
+  --accent: #06b6d4;       /* Cyan */
+  --bg-dark: #0f172a;      /* Dark blue */
+  --bg-darker: #020617;    /* Almost black */
+}
+```
+
+### Analytics
+The Umami analytics script is already integrated. Your website ID is configured in the HTML head:
+```html
+<script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+```
+
+## 📁 Adding More Pages
+
+To add additional pages (like `/tools`, `/about`, etc.):
+
+1. Create new HTML files in the same directory
+2. Link to them from the main page
+3. Maintain consistent styling by copying the CSS section
+
+## 🔧 Local Development
+
+Simply open `index.html` in your browser. No build process needed!
+
+## 📝 License
+
+Feel free to use this as a template for your own privacy-focused website.
+
+## 🤝 Contributing
+
+This is a personal website, but suggestions are welcome! Open an issue if you spot any problems.
+
+---
+
+Built with privacy in mind 🛡️
