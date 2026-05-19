@@ -75,7 +75,7 @@ export default function JwtDecoder() {
       Expired
     </div>
   ) : validity?.status === "valid" ? (
-    <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold mb-4 bg-green-500/20 text-green-400 border border-green-500/50">
+    <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold mb-4 bg-accent/20 text-accent border border-accent/50">
       Valid ({validity.daysRemaining} days remaining)
     </div>
   ) : null;
@@ -121,8 +121,8 @@ export default function JwtDecoder() {
 
               {/* Payload */}
               <div className="rounded-xl border border-border/50 bg-card p-4">
-                <h3 className="text-sm font-semibold text-purple-400 mb-3">Payload</h3>
-                <div className="bg-purple-500/5 border-l-2 border-purple-500 rounded p-3">
+                <h3 className="text-sm font-semibold text-chart-4 mb-3">Payload</h3>
+                <div className="bg-chart-4/5 border-l-2 border-chart-4 rounded p-3">
                   <pre className="font-mono text-xs text-foreground whitespace-pre-wrap break-all max-h-[300px] overflow-y-auto">
                     {JSON.stringify(decoded.payload, null, 2)}
                   </pre>
@@ -131,8 +131,8 @@ export default function JwtDecoder() {
 
               {/* Signature */}
               <div className="rounded-xl border border-border/50 bg-card p-4">
-                <h3 className="text-sm font-semibold text-cyan-400 mb-3">Signature</h3>
-                <div className="bg-cyan-500/5 border-l-2 border-cyan-500 rounded p-3">
+                <h3 className="text-sm font-semibold text-accent mb-3">Signature</h3>
+                <div className="bg-accent/5 border-l-2 border-accent rounded p-3">
                   <code className="font-mono text-xs text-foreground break-all">{decoded.signature}</code>
                 </div>
               </div>

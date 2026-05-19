@@ -174,8 +174,8 @@ export default function HashGenerator() {
             <p className="mt-3 text-sm text-destructive">{error}</p>
           )}
 
-          <div className="flex items-start gap-2 mt-4 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/20 text-xs text-muted-foreground">
-            <svg className="shrink-0 mt-0.5 text-cyan-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <div className="flex items-start gap-2 mt-4 p-3 rounded-lg bg-accent/5 border border-accent/20 text-xs text-muted-foreground">
+            <svg className="shrink-0 mt-0.5 text-accent" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
             <span>All hashing is done locally in your browser using the Web Crypto API. No data leaves your device.</span>
@@ -228,7 +228,7 @@ export default function HashGenerator() {
                 <div
                   className={`mt-3 px-3 py-2 rounded-lg text-sm font-medium ${
                     verifyResult.type === "match"
-                      ? "bg-green-500/10 border border-green-500/30 text-green-400"
+                      ? "bg-accent/10 border border-accent/30 text-accent"
                       : "bg-destructive/10 border border-destructive/30 text-destructive"
                   }`}
                 >
