@@ -22,10 +22,10 @@ const STRENGTH_RULES: Array<(p: string) => number> = [
 ];
 
 const STRENGTH_LEVELS: ReadonlyArray<{ min: number; color: string; label: string }> = [
-  { min: 80, color: "#22c55e", label: "Strong" },
-  { min: 60, color: "#eab308", label: "Good"   },
-  { min: 40, color: "#f59e0b", label: "Fair"   },
-  { min:  0, color: "#ef4444", label: "Weak"   },
+  { min: 80, color: "hsl(var(--accent))",      label: "Strong" },
+  { min: 60, color: "hsl(var(--chart-4))",     label: "Good"   },
+  { min: 40, color: "hsl(var(--chart-4))",     label: "Fair"   },
+  { min:  0, color: "hsl(var(--destructive))", label: "Weak"   },
 ];
 
 export function calcStrength(password: string): StrengthResult {

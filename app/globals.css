@@ -12,8 +12,7 @@
   --popover: 220 20% 6%;
   --popover-foreground: 210 20% 95%;
 
-  /* teal accent is now primary */
-  --primary: 174 72% 46%;
+  --primary: 210 100% 56%;
   --primary-foreground: 220 20% 4%;
 
   --secondary: 220 14% 14%;
@@ -28,18 +27,13 @@
   --destructive: 0 72% 51%;
   --destructive-foreground: 210 20% 98%;
 
-  --border: 220 14% 18%;
+  --border: 220 14% 14%;
   --input: 220 14% 14%;
-  --ring: 174 72% 46%;
+  --ring: 210 100% 56%;
 
   --radius: 0.75rem;
 
-  /* category palette */
-  --c-security: 15 76% 57%;
-  --c-dev: 216 68% 56%;
-  --c-edu: 160 58% 52%;
-
-  --chart-1: 174 72% 46%;
+  --chart-1: 210 100% 56%;
   --chart-2: 216 68% 56%;
   --chart-3: 152 60% 52%;
   --chart-4: 30 90% 56%;
