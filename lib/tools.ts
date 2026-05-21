@@ -54,6 +54,7 @@ export interface Tool {
   tagLabel: string
   iconColor: string
   icon: ToolIcon
+  new?: boolean
 }
 
 export const CATEGORIES: { value: string; label: string }[] = [
@@ -580,6 +581,7 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analyzer",
     iconColor: "text-chart-1 bg-chart-1/10",
     icon: "wifi",
+    new: true,
   },
   {
     title: "PDF Merger",
@@ -591,6 +593,7 @@ export const TOOLS: Tool[] = [
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "files",
+    new: true,
   },
   {
     title: "PDF Splitter",
@@ -602,6 +605,7 @@ export const TOOLS: Tool[] = [
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "scissors",
+    new: true,
   },
   {
     title: "PDF Metadata Viewer",
@@ -613,6 +617,7 @@ export const TOOLS: Tool[] = [
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "file-search",
+    new: true,
   },
   {
     title: "PDF Page Rotator",
@@ -624,6 +629,7 @@ export const TOOLS: Tool[] = [
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "rotate-cw",
+    new: true,
   },
   {
     title: "Image to PDF",
@@ -635,6 +641,7 @@ export const TOOLS: Tool[] = [
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "image",
+    new: true,
   },
 ]
 

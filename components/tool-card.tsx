@@ -65,17 +65,22 @@ export function ToolCard({
   index,
   selected,
   onHover,
+  isFavorited,
+  onFavorite,
 }: {
   tool: Tool
   index: number
   selected: boolean
   onHover: () => void
+  isFavorited?: boolean
+  onFavorite?: () => void
 }) {
   const Icon = ICON_MAP[tool.icon] || Shield
 
   return (
     <Link
       href={tool.href}
+      data-tool-href={tool.href}
       onMouseEnter={onHover}
       onFocus={onHover}
       className={cn(
@@ -89,6 +94,37 @@ export function ToolCard({
       style={{ animationDelay: `${index * 45}ms` }}
     >
       <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-transparent to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
+
+      {/* NEW badge */}
+      {tool.new && (
+        <span className="absolute right-2 top-2 z-10 rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-primary-foreground">
+          New
+        </span>
+      )}
+
+      {/* Favorites button — overlays the NEW badge on hover, always visible when favorited */}
+      {onFavorite && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onFavorite()
+          }}
+          aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+          className={cn(
+            "absolute right-2 top-2 z-20 flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150",
+            isFavorited
+              ? "text-amber-400"
+              : "text-transparent group-hover:bg-secondary/80 group-hover:text-muted-foreground hover:!text-amber-400"
+          )}
+        >
+          <Star
+            className="h-3.5 w-3.5"
+            fill={isFavorited ? "currentColor" : "none"}
+          />
+        </button>
+      )}
 
       <div className="relative flex h-full flex-col justify-between">
         <div
