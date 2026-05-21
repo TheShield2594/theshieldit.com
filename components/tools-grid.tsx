@@ -16,18 +16,22 @@ export function ToolsGrid() {
   const [showFavorites, setShowFavorites] = useState(false)
   const [activeToolHref, setActiveToolHref] = useState(TOOLS[0]?.href ?? "")
   const [viewMode, setViewMode] = useState<ViewMode>("carousel")
+  // Tracks whether the persisted view mode has been read from localStorage.
+  // Gates carousel-only chrome to avoid a flash for stored-grid users.
+  const [restored, setRestored] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const { favorites, toggle: toggleFavorite } = useFavorites()
 
-  // Restore view mode preference
+  // Restore view mode preference, then mark as restored
   useEffect(() => {
     try {
       const stored = localStorage.getItem("shield-view-mode")
       if (stored === "grid" || stored === "carousel") setViewMode(stored)
     } catch {}
+    setRestored(true)
   }, [])
 
   const filtered = useMemo(() => {
@@ -64,8 +68,8 @@ export function ToolsGrid() {
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
   }, [])
 
+  // Mount-only: bind scroll listener and ResizeObserver once
   useEffect(() => {
-    updateScrollState()
     const el = scrollRef.current
     if (!el) return
     el.addEventListener("scroll", updateScrollState, { passive: true })
@@ -75,15 +79,27 @@ export function ToolsGrid() {
       el.removeEventListener("scroll", updateScrollState)
       ro.disconnect()
     }
+  }, [updateScrollState])
+
+  // Re-check scroll state after filter changes (without re-binding listeners)
+  useEffect(() => {
+    updateScrollState()
   }, [filtered, updateScrollState])
 
   // Keyboard navigation (carousel only)
   useEffect(() => {
     if (viewMode === "grid") return
     function onKeyDown(e: KeyboardEvent) {
-      if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName)) return
+      // Only handle when focus is inside the carousel scroll container
+      if (!scrollRef.current?.contains(e.target as Node)) return
+      // Skip interactive elements
+      const target = e.target as HTMLElement
+      if (
+        ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) ||
+        target.contentEditable === "true"
+      ) return
       if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return
-      e.preventDefault()
+      // Guard before preventDefault: ensure there's actually somewhere to go
       const idx = filtered.findIndex((t) => t.href === activeToolHref)
       if (idx === -1) return
       const next =
@@ -91,9 +107,9 @@ export function ToolsGrid() {
           ? Math.min(idx + 1, filtered.length - 1)
           : Math.max(idx - 1, 0)
       if (next === idx) return
+      e.preventDefault()
       const nextHref = filtered[next].href
       setActiveToolHref(nextHref)
-      // Scroll active card into view
       requestAnimationFrame(() => {
         const el = scrollRef.current?.querySelector(`[data-tool-href="${nextHref}"]`)
         el?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
@@ -261,33 +277,35 @@ export function ToolsGrid() {
         {filtered.length > 0 ? (
           <>
             {viewMode === "carousel" ? (
-              /* Carousel view with scroll arrows */
+              /* Carousel view */
               <div className="relative mt-8">
-                {/* Left arrow */}
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel(-1)}
-                  aria-label="Scroll left"
-                  className={cn(
-                    "absolute -left-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-card",
-                    canScrollLeft ? "opacity-100" : "pointer-events-none opacity-0"
-                  )}
-                >
-                  <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-                </button>
-
-                {/* Right arrow */}
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel(1)}
-                  aria-label="Scroll right"
-                  className={cn(
-                    "absolute -right-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-card",
-                    canScrollRight ? "opacity-100" : "pointer-events-none opacity-0"
-                  )}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </button>
+                {/* Scroll arrows — gated by restored to avoid hydration flash */}
+                {restored && (
+                  <button
+                    type="button"
+                    onClick={() => scrollCarousel(-1)}
+                    aria-label="Scroll left"
+                    className={cn(
+                      "absolute -left-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-card",
+                      canScrollLeft ? "opacity-100" : "pointer-events-none opacity-0"
+                    )}
+                  >
+                    <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                )}
+                {restored && (
+                  <button
+                    type="button"
+                    onClick={() => scrollCarousel(1)}
+                    aria-label="Scroll right"
+                    className={cn(
+                      "absolute -right-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-card",
+                      canScrollRight ? "opacity-100" : "pointer-events-none opacity-0"
+                    )}
+                  >
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                )}
 
                 <div
                   ref={scrollRef}
@@ -309,13 +327,15 @@ export function ToolsGrid() {
                   </div>
                 </div>
 
-                {/* Keyboard nav hint */}
-                <p className="mt-2 text-center text-[10px] text-muted-foreground/50">
-                  <kbd className="rounded border border-border/50 bg-secondary px-1 py-0.5 font-mono">←</kbd>
-                  {" "}
-                  <kbd className="rounded border border-border/50 bg-secondary px-1 py-0.5 font-mono">→</kbd>
-                  {" "}to navigate
-                </p>
+                {/* Keyboard nav hint — gated by restored */}
+                {restored && (
+                  <p className="mt-2 text-center text-[10px] text-muted-foreground/50">
+                    <kbd className="rounded border border-border/50 bg-secondary px-1 py-0.5 font-mono">←</kbd>
+                    {" "}
+                    <kbd className="rounded border border-border/50 bg-secondary px-1 py-0.5 font-mono">→</kbd>
+                    {" "}to navigate
+                  </p>
+                )}
               </div>
             ) : (
               /* Grid view */
@@ -334,8 +354,8 @@ export function ToolsGrid() {
               </div>
             )}
 
-            {/* Selected tool preview (carousel only) */}
-            {viewMode === "carousel" && activeTool && (
+            {/* Selected tool preview — carousel only, gated by restored */}
+            {restored && viewMode === "carousel" && activeTool && (
               <div className="animate-fade-in-up mt-7 rounded-2xl border border-border/70 bg-card/70 p-5 sm:p-7">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>

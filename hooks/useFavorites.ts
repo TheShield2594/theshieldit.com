@@ -12,6 +12,16 @@ export function useFavorites() {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) setFavorites(new Set(JSON.parse(stored) as string[]))
     } catch {}
+
+    function onStorage(e: StorageEvent) {
+      if (e.key !== STORAGE_KEY) return
+      try {
+        setFavorites(e.newValue ? new Set(JSON.parse(e.newValue) as string[]) : new Set())
+      } catch {}
+    }
+
+    window.addEventListener("storage", onStorage)
+    return () => window.removeEventListener("storage", onStorage)
   }, [])
 
   const toggle = useCallback((href: string) => {

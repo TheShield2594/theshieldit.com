@@ -2,12 +2,19 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { TOOLS, type Tool } from "@/lib/tools"
 
+const STOPLIST = new Set(["security", "privacy", "browser", "developer"])
+
 function getRelated(current: Tool, count = 3): Tool[] {
-  const currentTags = new Set(current.tags.split(" "))
+  const currentTags = new Set(
+    current.tags.split(" ").filter((t) => !STOPLIST.has(t))
+  )
   return TOOLS
     .filter((t) => t.href !== current.href)
     .map((t) => {
-      const tagOverlap = t.tags.split(" ").filter((tag) => currentTags.has(tag)).length
+      const candidateTags = new Set(t.tags.split(" "))
+      const tagOverlap = [...candidateTags].filter(
+        (tag) => !STOPLIST.has(tag) && currentTags.has(tag)
+      ).length
       const categoryBonus = t.category === current.category ? 2 : 0
       return { tool: t, score: tagOverlap + categoryBonus }
     })
