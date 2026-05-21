@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react"
 import { TOOLS } from "@/lib/tools"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { RelatedTools } from "@/components/related-tools"
 import { ToolClientContent } from "./client"
 
 function hrefToSlug(href: string): string {
@@ -76,6 +77,7 @@ export default async function ToolPage({
 
       <main className="flex flex-1 flex-col">
         <ToolClientContent slug={slug} />
+        <RelatedTools tool={tool!} />
       </main>
 
       <SiteFooter />
