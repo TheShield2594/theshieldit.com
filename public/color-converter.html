@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Code Converter | The Shield IT</title>
+  <meta name="description" content="Convert colors between HEX, RGB, RGBA, HSL, HSLA and more. Includes contrast checker, tints, shades, and complementary color — instantly.">
+  <link rel="icon" href="/favicon.ico">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <script src="/shared-shell.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+    input, select, textarea { width: 100%; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s ease; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    input::placeholder, textarea::placeholder { color: var(--text-gray); }
+    textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+    .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .case-card { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .case-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; min-width: 140px; }
+    .case-value { font-family: monospace; font-size: 0.9rem; color: var(--text-light); flex: 1; word-break: break-all; }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .copy-btn.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
+    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .color-preview { width: 100%; height: 100px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; transition: background-color 0.2s ease; }
+    .color-formats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .format-card { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; }
+    .format-name { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
+    .format-value { font-family: monospace; font-size: 0.9rem; color: var(--text-light); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    @media (max-width: 600px) { .color-formats { grid-template-columns: 1fr; } .case-label { min-width: 100px; } }
+
+    /* Input row */
+    .input-row { display: flex; gap: 0.75rem; align-items: stretch; }
+    .input-row input[type="color"] {
+      width: 56px; min-width: 56px; height: 48px; padding: 4px 6px;
+      border-radius: 8px; cursor: pointer; background: rgba(15,23,42,0.6);
+      border: 1px solid var(--border); flex-shrink: 0;
+    }
+    .input-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    .input-row input[type="color"]::-webkit-color-swatch { border-radius: 4px; border: none; }
+    .input-row .text-input-wrap { flex: 1; }
+    .input-row .text-input-wrap input { height: 48px; }
+
+    /* Alpha slider */
+    .alpha-row { margin-top: 1rem; }
+    .alpha-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-gray); margin-bottom: 0.5rem; }
+    .alpha-label span { color: var(--text-light); font-weight: 600; }
+    input[type="range"] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 8px; border-radius: 4px; outline: none; cursor: pointer;
+      border: none; padding: 0; background: transparent;
+    }
+    .alpha-track { position: relative; height: 8px; border-radius: 4px;
+      background: linear-gradient(to right, transparent, #fff);
+      border: 1px solid var(--border); overflow: hidden; }
+    .alpha-track-checker {
+      position: absolute; inset: 0; border-radius: 4px;
+      background-image: linear-gradient(45deg, #444 25%, transparent 25%),
+        linear-gradient(-45deg, #444 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #444 75%),
+        linear-gradient(-45deg, transparent 75%, #444 75%);
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+      z-index: 0;
+    }
+    .alpha-track-gradient { position: absolute; inset: 0; border-radius: 4px; z-index: 1; }
+    input[type="range"].alpha-slider {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: pointer; z-index: 2;
+    }
+    .slider-thumb-overlay {
+      position: absolute; inset: 0; border-radius: 4px; z-index: 3; pointer-events: none;
+    }
+    .alpha-wrapper { position: relative; height: 24px; display: flex; align-items: center; }
+    input[type="range"].styled-alpha {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 8px; border-radius: 4px; outline: none; cursor: pointer;
+      border: none; padding: 0;
+    }
+    input[type="range"].styled-alpha::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: white; border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5); cursor: pointer;
+    }
+    input[type="range"].styled-alpha::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: white; border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5); cursor: pointer; border: none;
+    }
+
+    /* Error state */
+    .input-error { border-color: var(--red) !important; }
+    .error-msg { font-size: 0.8rem; color: var(--red); margin-top: 0.35rem; display: none; }
+    .error-msg.visible { display: block; }
+
+    /* Contrast checker */
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .contrast-card { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .contrast-bg { border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; font-size: 0.95rem; font-weight: 600; text-align: center; }
+    .contrast-ratio { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .badge { font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; letter-spacing: 0.04em; }
+    .badge-pass { background: rgba(34,197,94,0.2); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .badge-fail { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+    /* Complementary */
+    .comp-row { display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem; }
+    .comp-swatch { width: 64px; height: 64px; border-radius: 10px; border: 1px solid var(--border); flex-shrink: 0; }
+    .comp-info { flex: 1; }
+    .comp-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
+    .comp-hex { font-family: monospace; font-size: 1rem; color: var(--text-light); display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Tints & Shades */
+    .swatch-strip { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .swatch-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; cursor: pointer; }
+    .swatch-box { width: 48px; height: 48px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.15s; }
+    .swatch-box:hover { transform: scale(1.1); }
+    .swatch-hex { font-family: monospace; font-size: 0.65rem; color: var(--text-gray); }
+
+    /* Empty / placeholder */
+    .empty-state { text-align: center; padding: 2rem; color: var(--text-gray); font-size: 0.9rem; }
+    .empty-state svg { margin: 0 auto 0.75rem; opacity: 0.3; display: block; }
+
+    @media (max-width: 600px) {
+      .contrast-grid { grid-template-columns: 1fr; }
+      .swatch-box { width: 40px; height: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <!-- Hidden canvas for named color parsing -->
+  <canvas id="colorCanvas" width="1" height="1" style="display:none;"></canvas>
+
+  <div class="container">
+    <header style="text-align:center; padding-top:1.5rem; margin-bottom:2rem;">
+      <h1>Color Code Converter</h1>
+      <p class="subtitle">Convert any color between HEX, RGB, HSL, and more — with contrast ratios and palettes</p>
+    </header>
+
+    <!-- Input panel -->
+    <div class="tool-panel">
+      <div class="panel-title">Color Input</div>
+      <div class="input-row">
+        <input type="color" id="colorPicker" value="#3b82f6" oninput="onPickerChange(this.value)" title="Pick a color">
+        <div class="text-input-wrap">
+          <input type="text" id="colorText" placeholder="#3b82f6  or  rgb(59,130,246)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)">
+        </div>
+      </div>
+      <div class="error-msg" id="errorMsg">Could not parse color. Try: #3b82f6, rgb(59,130,246), hsl(217,91%,60%), or a named color like "blue".</div>
+
+      <!-- Alpha slider -->
+      <div class="alpha-row">
+        <div class="alpha-label">Alpha (Opacity) <span id="alphaVal">100%</span></div>
+        <input type="range" class="styled-alpha" id="alphaSlider" min="0" max="100" value="100"
+          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #3b82f6);">
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="tool-panel" id="previewPanel">
+      <div class="panel-title">Preview</div>
+      <div class="color-preview" id="colorPreview" style="background:#3b82f6;"></div>
+      <div class="color-formats" id="formatsGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- Contrast checker -->
+    <div class="tool-panel" id="contrastPanel">
+      <div class="panel-title">Contrast Checker (WCAG)</div>
+      <div class="contrast-grid" id="contrastGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- Complementary -->
+    <div class="tool-panel" id="complementPanel">
+      <div class="panel-title">Complementary Color</div>
+      <div class="comp-row">
+        <div class="comp-swatch" id="compSwatch"></div>
+        <div class="comp-info">
+          <div class="comp-label">Opposite hue on the color wheel</div>
+          <div class="comp-hex" id="compHex">
+            <span id="compHexVal">—</span>
+            <button class="copy-btn" id="compCopyBtn" onclick="copyComplement()">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tints & Shades -->
+    <div class="tool-panel" id="tintsPanel">
+      <div class="panel-title">Tints &amp; Shades</div>
+      <div style="font-size:0.8rem; color:var(--text-gray); margin-bottom:0.75rem;">Click any swatch to copy its hex value</div>
+      <div class="swatch-strip" id="swatchStrip">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div class="info-note">
+      Accepts any CSS color format: hex (#rgb, #rrggbb), rgb(), rgba(), hsl(), hsla(), or named colors (red, blue, cornflowerblue…). Alpha slider updates RGBA &amp; HSLA outputs live.
+    </div>
+  </div>
+
+  <script>
+    // ── Math helpers ──────────────────────────────────────────────────────────────
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      if (hex.length !== 6) return null;
+      const n = parseInt(hex, 16);
+      if (isNaN(n)) return null;
+      return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+    }
+
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s;
+      const l = (max + min) / 2;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    function hslToRgb(h, s, l) {
+      s /= 100; l /= 100;
+      const k = n => (n + h / 30) % 12;
+      const a = s * Math.min(l, 1 - l);
+      const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+      return {
+        r: Math.round(f(0) * 255),
+        g: Math.round(f(8) * 255),
+        b: Math.round(f(4) * 255)
+      };
+    }
+
+    function relativeLuminance(r, g, b) {
+      const s = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * s[0] + 0.7152 * s[1] + 0.0722 * s[2];
+    }
+
+    function contrastRatio(l1, l2) {
+      const bright = Math.max(l1, l2), dark = Math.min(l1, l2);
+      return (bright + 0.05) / (dark + 0.05);
+    }
+
+    // ── Parsing ───────────────────────────────────────────────────────────────────
+
+    function parseColor(input) {
+      if (!input || !input.trim()) return null;
+      const s = input.trim();
+
+      // HEX
+      const hexMatch = s.match(/^#?([0-9a-fA-F]{3,8})$/);
+      if (hexMatch) {
+        const hex = hexMatch[1];
+        if (hex.length === 3 || hex.length === 6) {
+          const rgb = hexToRgb('#' + hex);
+          if (rgb) return { ...rgb, a: 1 };
+        }
+        if (hex.length === 8) {
+          const r = parseInt(hex.slice(0,2), 16);
+          const g = parseInt(hex.slice(2,4), 16);
+          const b = parseInt(hex.slice(4,6), 16);
+          const a = parseInt(hex.slice(6,8), 16) / 255;
+          return { r, g, b, a: parseFloat(a.toFixed(3)) };
+        }
+      }
+
+      // rgb() / rgba()
+      const rgbMatch = s.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/i);
+      if (rgbMatch) {
+        return {
+          r: Math.round(parseFloat(rgbMatch[1])),
+          g: Math.round(parseFloat(rgbMatch[2])),
+          b: Math.round(parseFloat(rgbMatch[3])),
+          a: rgbMatch[4] !== undefined ? parseFloat(rgbMatch[4]) : 1
+        };
+      }
+
+      // hsl() / hsla()
+      const hslMatch = s.match(/^hsla?\(\s*([\d.]+)\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?(?:\s*,\s*([\d.]+))?\s*\)$/i);
+      if (hslMatch) {
+        const { r, g, b } = hslToRgb(parseFloat(hslMatch[1]), parseFloat(hslMatch[2]), parseFloat(hslMatch[3]));
+        return { r, g, b, a: hslMatch[4] !== undefined ? parseFloat(hslMatch[4]) : 1 };
+      }
+
+      // Named color via canvas
+      try {
+        const canvas = document.getElementById('colorCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = 'transparent';
+        ctx.fillStyle = s;
+        const computed = ctx.fillStyle;
+        if (computed === 'transparent') return null;
+        // computed will be hex or rgb()
+        const hexM = computed.match(/^#([0-9a-fA-F]{6})$/);
+        if (hexM) {
+          const rgb = hexToRgb(computed);
+          if (rgb) return { ...rgb, a: 1 };
+        }
+        const rgbM = computed.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/i);
+        if (rgbM) {
+          return {
+            r: parseInt(rgbM[1]),
+            g: parseInt(rgbM[2]),
+            b: parseInt(rgbM[3]),
+            a: rgbM[4] !== undefined ? parseFloat(rgbM[4]) : 1
+          };
+        }
+      } catch (e) { /* canvas not available */ }
+
+      return null;
+    }
+
+    // ── State ─────────────────────────────────────────────────────────────────────
+
+    let currentRgb = { r: 59, g: 130, b: 246 };
+    let currentAlpha = 1.0;
+    let currentCompHex = '';
+
+    // ── UI update ─────────────────────────────────────────────────────────────────
+
+    function updateAll(rgb, alpha) {
+      currentRgb = rgb;
+      currentAlpha = alpha;
+
+      const { r, g, b } = rgb;
+      const hex = rgbToHex(r, g, b);
+      const hsl = rgbToHsl(r, g, b);
+      const hexUpper = hex.toUpperCase();
+      const hexLower = hex.toLowerCase();
+      const alphaStr = parseFloat(alpha.toFixed(2));
+
+      // Update picker (no alpha)
+      document.getElementById('colorPicker').value = hexLower;
+
+      // Update alpha slider gradient
+      const slider = document.getElementById('alphaSlider');
+      slider.style.background = `linear-gradient(to right, rgba(${r},${g},${b},0), rgba(${r},${g},${b},1))`;
+
+      // Preview
+      document.getElementById('colorPreview').style.backgroundColor =
+        `rgba(${r},${g},${b},${alphaStr})`;
+
+      // Formats
+      const formats = [
+        { name: 'HEX',          value: hexUpper },
+        { name: 'HEX (lowercase)', value: hexLower },
+        { name: 'RGB',          value: `rgb(${r}, ${g}, ${b})` },
+        { name: 'RGBA',         value: `rgba(${r}, ${g}, ${b}, ${alphaStr})` },
+        { name: 'HSL',          value: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` },
+        { name: 'HSLA',         value: `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${alphaStr})` },
+        { name: 'CSS Variable', value: `--color: ${hexLower};` },
+        { name: 'HEX8 (w/ Alpha)', value: hex + Math.round(alphaStr * 255).toString(16).padStart(2,'0').toUpperCase() },
+      ];
+
+      document.getElementById('formatsGrid').innerHTML = formats.map((f, i) => `
+        <div class="format-card">
+          <div class="format-name">${f.name}</div>
+          <div class="format-value">
+            <span id="fmt-val-${i}">${escapeHtml(f.value)}</span>
+            <button class="copy-btn" id="fmt-btn-${i}" onclick="copyFormat(${i}, ${JSON.stringify(f.value)})">Copy</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Contrast
+      updateContrast(r, g, b);
+
+      // Complementary
+      const compHsl = { h: (hsl.h + 180) % 360, s: hsl.s, l: hsl.l };
+      const compRgb = hslToRgb(compHsl.h, compHsl.s, compHsl.l);
+      currentCompHex = rgbToHex(compRgb.r, compRgb.g, compRgb.b);
+      document.getElementById('compSwatch').style.backgroundColor = currentCompHex;
+      document.getElementById('compHexVal').textContent = currentCompHex.toUpperCase();
+
+      // Tints & Shades
+      updateTints(hsl);
+    }
+
+    function updateContrast(r, g, b) {
+      const lColor = relativeLuminance(r, g, b);
+      const lWhite = 1.0;
+      const lBlack = 0.0;
+      const ratioWhite = contrastRatio(lColor, lWhite);
+      const ratioBlack = contrastRatio(lColor, lBlack);
+
+      function badgesHtml(ratio) {
+        const aaLarge = ratio >= 3.0;
+        const aaNormal = ratio >= 4.5;
+        const aaaLarge = ratio >= 4.5;
+        const aaaNormal = ratio >= 7.0;
+        return `
+          <span class="badge ${aaNormal ? 'badge-pass' : 'badge-fail'}">AA Normal ${aaNormal ? '✓' : '✗'}</span>
+          <span class="badge ${aaLarge ? 'badge-pass' : 'badge-fail'}">AA Large ${aaLarge ? '✓' : '✗'}</span>
+          <span class="badge ${aaaNormal ? 'badge-pass' : 'badge-fail'}">AAA Normal ${aaaNormal ? '✓' : '✗'}</span>
+          <span class="badge ${aaaLarge ? 'badge-pass' : 'badge-fail'}">AAA Large ${aaaLarge ? '✓' : '✗'}</span>
+        `;
+      }
+
+      document.getElementById('contrastGrid').innerHTML = `
+        <div class="contrast-card">
+          <div class="contrast-bg" style="background:rgb(${r},${g},${b}); color:white;">
+            Aa — on white
+          </div>
+          <div style="background:white; border-radius:8px; padding:0.75rem; margin-bottom:0.75rem;">
+            <span style="color:rgb(${r},${g},${b}); font-weight:700; font-size:0.95rem;">Aa — on white</span>
+          </div>
+          <div class="contrast-ratio">${ratioWhite.toFixed(2)}:1</div>
+          <div class="badge-row">${badgesHtml(ratioWhite)}</div>
+        </div>
+        <div class="contrast-card">
+          <div class="contrast-bg" style="background:rgb(${r},${g},${b}); color:black;">
+            Aa — on black
+          </div>
+          <div style="background:black; border-radius:8px; padding:0.75rem; margin-bottom:0.75rem;">
+            <span style="color:rgb(${r},${g},${b}); font-weight:700; font-size:0.95rem;">Aa — on black</span>
+          </div>
+          <div class="contrast-ratio">${ratioBlack.toFixed(2)}:1</div>
+          <div class="badge-row">${badgesHtml(ratioBlack)}</div>
+        </div>
+      `;
+    }
+
+    function updateTints(hsl) {
+      // 5 tints (lighter) + base + 5 shades (darker)
+      const swatches = [];
+      for (let i = 5; i >= 1; i--) {
+        const l = Math.min(95, hsl.l + i * 8);
+        const rgb = hslToRgb(hsl.h, hsl.s, l);
+        swatches.push({ hex: rgbToHex(rgb.r, rgb.g, rgb.b), label: `+${i*8}` });
+      }
+      // base
+      swatches.push({ hex: rgbToHex(currentRgb.r, currentRgb.g, currentRgb.b), label: 'base', isBase: true });
+      for (let i = 1; i <= 5; i++) {
+        const l = Math.max(5, hsl.l - i * 8);
+        const rgb = hslToRgb(hsl.h, hsl.s, l);
+        swatches.push({ hex: rgbToHex(rgb.r, rgb.g, rgb.b), label: `-${i*8}` });
+      }
+
+      document.getElementById('swatchStrip').innerHTML = swatches.map(sw => `
+        <div class="swatch-item" onclick="copyHex('${sw.hex}', this)" title="${sw.hex.toUpperCase()}">
+          <div class="swatch-box" style="background:${sw.hex};${sw.isBase ? ' box-shadow: 0 0 0 2px var(--primary);' : ''}"></div>
+          <div class="swatch-hex">${sw.hex.toUpperCase()}</div>
+        </div>
+      `).join('');
+    }
+
+    // ── Event handlers ────────────────────────────────────────────────────────────
+
+    function onPickerChange(hexVal) {
+      // Sync text input only if text field is currently a hex (or empty)
+      const textEl = document.getElementById('colorText');
+      textEl.value = hexVal;
+      clearError();
+      const rgb = hexToRgb(hexVal);
+      if (rgb) updateAll(rgb, currentAlpha);
+    }
+
+    function onTextChange(val) {
+      clearError();
+      if (!val.trim()) return;
+      const parsed = parseColor(val.trim());
+      if (!parsed) {
+        showError();
+        document.getElementById('colorText').classList.add('input-error');
+        return;
+      }
+      document.getElementById('colorText').classList.remove('input-error');
+      // If the parsed color has alpha embedded, use it
+      const newAlpha = parsed.a !== undefined ? parsed.a : currentAlpha;
+      currentAlpha = newAlpha;
+      document.getElementById('alphaSlider').value = Math.round(newAlpha * 100);
+      document.getElementById('alphaVal').textContent = Math.round(newAlpha * 100) + '%';
+      updateAll({ r: parsed.r, g: parsed.g, b: parsed.b }, newAlpha);
+    }
+
+    function onAlphaChange(val) {
+      const alpha = parseInt(val) / 100;
+      currentAlpha = alpha;
+      document.getElementById('alphaVal').textContent = val + '%';
+      updateAll(currentRgb, alpha);
+    }
+
+    function clearError() {
+      document.getElementById('errorMsg').classList.remove('visible');
+      document.getElementById('colorText').classList.remove('input-error');
+    }
+
+    function showError() {
+      document.getElementById('errorMsg').classList.add('visible');
+    }
+
+    // ── Copy helpers ──────────────────────────────────────────────────────────────
+
+    function copyFormat(idx, value) {
+      navigator.clipboard.writeText(value).then(() => {
+        const btn = document.getElementById('fmt-btn-' + idx);
+        if (!btn) return;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+      }).catch(() => fallbackCopy(value));
+    }
+
+    function copyComplement() {
+      if (!currentCompHex) return;
+      navigator.clipboard.writeText(currentCompHex.toUpperCase()).then(() => {
+        const btn = document.getElementById('compCopyBtn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+      }).catch(() => fallbackCopy(currentCompHex));
+    }
+
+    function copyHex(hex, el) {
+      navigator.clipboard.writeText(hex.toUpperCase()).then(() => {
+        const hexEl = el.querySelector('.swatch-hex');
+        const orig = hexEl.textContent;
+        hexEl.textContent = 'Copied!';
+        hexEl.style.color = 'var(--green)';
+        setTimeout(() => { hexEl.textContent = orig; hexEl.style.color = ''; }, 1200);
+      }).catch(() => fallbackCopy(hex));
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('colorText').value = '#3b82f6';
+      updateAll({ r: 59, g: 130, b: 246 }, 1.0);
+    });
+  </script>
+</body>
+</html>

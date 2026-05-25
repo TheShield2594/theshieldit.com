@@ -715,6 +715,30 @@ export const TOOLS: Tool[] = [
     icon: "file-search",
     new: true,
   },
+  {
+    title: "Cron Expression Parser",
+    description:
+      "Parse cron expressions into plain-English descriptions and preview the next 8 run times. Supports 5-field and 6-field (with seconds) formats.",
+    href: "/tools/cron-parser",
+    tags: "cron expression parser human readable schedule next run times crontab job developer utility",
+    category: "developer",
+    tagLabel: "Parser",
+    iconColor: "text-primary bg-primary/10",
+    icon: "clock",
+    new: true,
+  },
+  {
+    title: "Color Code Converter",
+    description:
+      "Convert colors between HEX, RGB, RGBA, HSL, and HSLA. Includes a live preview, alpha slider, WCAG contrast checker, complementary color, and tints/shades.",
+    href: "/tools/color-converter",
+    tags: "color converter hex rgb rgba hsl hsla css variable picker contrast wcag accessibility tints shades complementary",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "pen-line",
+    new: true,
+  },
 ]
 
 /** Per-category tool counts, precomputed to avoid repeated TOOLS.filter() calls in render. */
