@@ -160,8 +160,8 @@
     <div class="tool-panel">
       <div class="panel-title">Input</div>
       <div class="tabs">
-        <button class="tab active" id="tab-fetch" onclick="switchTab('fetch')">Fetch by URL</button>
-        <button class="tab" id="tab-paste" onclick="switchTab('paste')">Paste Content</button>
+        <button type="button" class="tab active" id="tab-fetch" onclick="switchTab('fetch')">Fetch by URL</button>
+        <button type="button" class="tab" id="tab-paste" onclick="switchTab('paste')">Paste Content</button>
       </div>
 
       <!-- Fetch pane -->
@@ -176,9 +176,10 @@
             autocapitalize="off"
             spellcheck="false"
             style="flex:1;"
+            aria-label="Website URL"
           />
         </div>
-        <button class="btn btn-full" id="fetch-btn" onclick="fetchRobots()">Fetch &amp; Analyze</button>
+        <button type="button" class="btn btn-full" id="fetch-btn" onclick="fetchRobots()">Fetch &amp; Analyze</button>
         <div class="info-note">
           &#128274; Fetches <code>robots.txt</code> via <a href="https://allorigins.win" target="_blank" rel="noopener" style="color:var(--primary);">AllOrigins</a> proxy. The target domain will see a request from the AllOrigins server.
         </div>
@@ -193,7 +194,7 @@
           spellcheck="false"
           style="resize:vertical; font-family:monospace; font-size:0.82rem; line-height:1.7;"
         ></textarea>
-        <button class="btn btn-full" id="parse-btn" onclick="parsePasted()">Analyze</button>
+        <button type="button" class="btn btn-full" id="parse-btn" onclick="parsePasted()">Analyze</button>
       </div>
     </div>
 
@@ -332,9 +333,19 @@
       hideResults();
 
       try {
-        const resp = await fetch(proxyUrl);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status} — could not fetch robots.txt`);
-        const text = await resp.text();
+        const controller = new AbortController();
+        const fetchTimer = setTimeout(() => controller.abort(), 10000);
+        let text;
+        try {
+          const resp = await fetch(proxyUrl, { signal: controller.signal });
+          clearTimeout(fetchTimer);
+          if (!resp.ok) throw new Error(`HTTP ${resp.status} — could not fetch robots.txt`);
+          text = await resp.text();
+        } catch (fetchErr) {
+          clearTimeout(fetchTimer);
+          if (fetchErr.name === 'AbortError') throw new Error('Request timed out after 10s.');
+          throw fetchErr;
+        }
         if (!text.trim()) throw new Error('The file appears to be empty.');
 
         rawText = text;
@@ -414,7 +425,7 @@
       const wildcardGroup = groups.find(g => g.agents.includes('*'));
       const wildcardBlocksAll = wildcardGroup && wildcardGroup.disallow.some(p => p === '/');
 
-      // +30 if wildcard agent exists
+      // +10 if wildcard agent exists
       if (hasWildcard) { score += 10; reasons.push('Wildcard user-agent (*) present'); }
 
       // +40 if wildcard blocks everything
@@ -525,10 +536,16 @@
         sitemaps.forEach(url => {
           const item = document.createElement('div');
           item.className = 'sitemap-item';
-          item.innerHTML = `
-            <span class="sitemap-url">${escHtml(url)}</span>
-            <button class="copy-btn" onclick="copyText('${escAttr(url)}', this)">Copy</button>
-          `;
+          const urlSpan = document.createElement('span');
+          urlSpan.className = 'sitemap-url';
+          urlSpan.textContent = url;
+          const copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.className = 'copy-btn';
+          copyBtn.textContent = 'Copy';
+          copyBtn.addEventListener('click', () => copyText(url, copyBtn));
+          item.appendChild(urlSpan);
+          item.appendChild(copyBtn);
           smCont.appendChild(item);
         });
       }
@@ -676,22 +693,48 @@
         text = lines.join('\n').trim();
       }
       if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
+      function flashSectionBtns() {
         const btns = document.querySelectorAll(`[onclick="copySection('${section}')"]`);
         btns.forEach(btn => {
           const orig = btn.textContent;
           btn.textContent = 'Copied!';
           setTimeout(() => btn.textContent = orig, 1500);
         });
-      });
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(flashSectionBtns).catch(() => {
+          fallbackCopy(text);
+          flashSectionBtns();
+        });
+      } else {
+        fallbackCopy(text);
+        flashSectionBtns();
+      }
     }
 
     function copyText(text, btn) {
-      navigator.clipboard.writeText(text).then(() => {
+      function flash() {
         const orig = btn.textContent;
         btn.textContent = 'Copied!';
         setTimeout(() => btn.textContent = orig, 1500);
-      });
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(flash).catch(() => { fallbackCopy(text); flash(); });
+      } else {
+        fallbackCopy(text);
+        flash();
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+      document.body.removeChild(ta);
     }
 
     // ── Utilities ────────────────────────────────────────────────────

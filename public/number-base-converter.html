@@ -109,8 +109,8 @@
       </div>
       <div class="field-row">
         <span class="field-prefix">0b</span>
-        <input id="bin-input" class="base-input" type="text" placeholder="e.g. 1010" autocomplete="off" spellcheck="false" data-base="2">
-        <button class="copy-btn" onclick="copyField('bin')">Copy</button>
+        <input id="bin-input" class="base-input" type="text" placeholder="e.g. 1010" autocomplete="off" spellcheck="false" data-base="2" aria-label="Binary">
+        <button type="button" class="copy-btn" onclick="copyField('bin')">Copy</button>
       </div>
       <div class="error-msg hidden" id="bin-error"></div>
     </div>
@@ -123,8 +123,8 @@
       </div>
       <div class="field-row">
         <span class="field-prefix">0o</span>
-        <input id="oct-input" class="base-input" type="text" placeholder="e.g. 12" autocomplete="off" spellcheck="false" data-base="8">
-        <button class="copy-btn" onclick="copyField('oct')">Copy</button>
+        <input id="oct-input" class="base-input" type="text" placeholder="e.g. 12" autocomplete="off" spellcheck="false" data-base="8" aria-label="Octal">
+        <button type="button" class="copy-btn" onclick="copyField('oct')">Copy</button>
       </div>
       <div class="error-msg hidden" id="oct-error"></div>
     </div>
@@ -137,8 +137,8 @@
       </div>
       <div class="field-row">
         <span class="field-prefix" style="visibility:hidden">0d</span>
-        <input id="dec-input" class="base-input" type="text" placeholder="e.g. 10" autocomplete="off" spellcheck="false" data-base="10">
-        <button class="copy-btn" onclick="copyField('dec')">Copy</button>
+        <input id="dec-input" class="base-input" type="text" placeholder="e.g. 10" autocomplete="off" spellcheck="false" data-base="10" aria-label="Decimal">
+        <button type="button" class="copy-btn" onclick="copyField('dec')">Copy</button>
       </div>
       <div class="error-msg hidden" id="dec-error"></div>
     </div>
@@ -151,8 +151,8 @@
       </div>
       <div class="field-row">
         <span class="field-prefix">0x</span>
-        <input id="hex-input" class="base-input" type="text" placeholder="e.g. A" autocomplete="off" spellcheck="false" data-base="16">
-        <button class="copy-btn" onclick="copyField('hex')">Copy</button>
+        <input id="hex-input" class="base-input" type="text" placeholder="e.g. A" autocomplete="off" spellcheck="false" data-base="16" aria-label="Hexadecimal">
+        <button type="button" class="copy-btn" onclick="copyField('hex')">Copy</button>
       </div>
       <div class="error-msg hidden" id="hex-error"></div>
     </div>
@@ -162,17 +162,17 @@
   <div class="tool-panel">
     <div class="panel-title">Quick Values</div>
     <div class="quick-btns">
-      <button class="quick-btn" onclick="setDecimal('0')">0</button>
-      <button class="quick-btn" onclick="setDecimal('1')">1</button>
-      <button class="quick-btn" onclick="setDecimal('255')">255 (2⁸−1)</button>
-      <button class="quick-btn" onclick="setDecimal('256')">256 (2⁸)</button>
-      <button class="quick-btn" onclick="setDecimal('1024')">1024 (2¹⁰)</button>
-      <button class="quick-btn" onclick="setDecimal('65535')">65535 (2¹⁶−1)</button>
-      <button class="quick-btn" onclick="setDecimal('65536')">65536 (2¹⁶)</button>
-      <button class="quick-btn" onclick="setDecimal('2147483647')">2147483647 (2³¹−1)</button>
-      <button class="quick-btn" onclick="setDecimal('4294967295')">4294967295 (2³²−1)</button>
-      <button class="quick-btn" onclick="setDecimal('-1')">−1</button>
-      <button class="quick-btn" onclick="setDecimal('-128')">−128</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('0')">0</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('1')">1</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('255')">255 (2⁸−1)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('256')">256 (2⁸)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('1024')">1024 (2¹⁰)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('65535')">65535 (2¹⁶−1)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('65536')">65536 (2¹⁶)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('2147483647')">2147483647 (2³¹−1)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('4294967295')">4294967295 (2³²−1)</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('-1')">−1</button>
+      <button type="button" class="quick-btn" onclick="setDecimal('-128')">−128</button>
     </div>
   </div>
 
@@ -242,8 +242,6 @@
       if (base === 10) {
         n = BigInt(abs);
       } else {
-        n = BigInt('0x' + parseInt(abs, base).toString(16));
-        // for large numbers, do proper parsing
         n = BigInt(0);
         const chars = abs.split('');
         const bigBase = BigInt(base);
@@ -336,7 +334,6 @@
     } else if (n >= 0n && n < 32n || n === 127n) {
       const code = Number(n);
       const name = ASCII_NAMES[code] || `Control character (${code})`;
-      document.getElementById('ascii-char').textContent = '␣'.replace('␣', code === 32 ? ' ' : '?');
       document.getElementById('ascii-char').textContent = '·';
       document.getElementById('ascii-desc').textContent = name + ` (code point ${code})`;
       asciiPanel.classList.remove('hidden');

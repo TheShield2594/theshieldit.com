@@ -137,6 +137,7 @@
         placeholder="e.g.  0 9 * * 1-5"
         autocomplete="off"
         spellcheck="false"
+        aria-label="Cron schedule expression"
       >
     </div>
     <div class="field-labels" id="field-labels">
@@ -396,30 +397,6 @@ function parseCron(expr) {
   }
 }
 
-// ─── Match helpers ─────────────────────────────────────────────────────────────
-
-function fieldMatches(parsed, value) {
-  switch (parsed.type) {
-    case 'any':   return true;
-    case 'exact': return value === parsed.value;
-    case 'every': {
-      const { min } = FIELD_META[currentFieldKey] || {};
-      // "every n" matches all values that are multiples of step starting from min
-      for (let v = (min || 0); v <= 59; v += parsed.step) {
-        if (v === value) return true;
-      }
-      return false;
-    }
-    case 'range': return value >= parsed.from && value <= parsed.to;
-    case 'rangeStep': {
-      if (value < parsed.from || value > parsed.to) return false;
-      return (value - parsed.from) % parsed.step === 0;
-    }
-    case 'list': return parsed.values.includes(value);
-  }
-  return false;
-}
-
 // ─── Generic field match ───────────────────────────────────────────────────────
 
 function matches(parsed, value, fieldMin) {
@@ -527,7 +504,7 @@ function describeField(parsed, type) {
       }
       if (type === 'minutes') return `at minute ${parsed.value}`;
       if (type === 'dom') return `on the ${ordinal(parsed.value)}`;
-      if (type === 'month') return `in ${MONTH_NAMES[parsed.value - 1]}`;
+      if (type === 'month') return MONTH_NAMES[parsed.value - 1];
       if (type === 'dow') return `on ${DAY_NAMES[parsed.value]}`;
       return `at ${parsed.value}`;
 

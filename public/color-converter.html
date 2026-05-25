@@ -168,9 +168,9 @@
     <div class="tool-panel">
       <div class="panel-title">Color Input</div>
       <div class="input-row">
-        <input type="color" id="colorPicker" value="#3b82f6" oninput="onPickerChange(this.value)" title="Pick a color">
+        <input type="color" id="colorPicker" value="#3b82f6" oninput="onPickerChange(this.value)" title="Pick a color" aria-label="Pick a color">
         <div class="text-input-wrap">
-          <input type="text" id="colorText" placeholder="#3b82f6  or  rgb(59,130,246)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)">
+          <input type="text" id="colorText" placeholder="#3b82f6  or  rgb(59,130,246)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)" aria-label="Color value">
         </div>
       </div>
       <div class="error-msg" id="errorMsg">Could not parse color. Try: #3b82f6, rgb(59,130,246), hsl(217,91%,60%), or a named color like "blue".</div>
@@ -179,7 +179,8 @@
       <div class="alpha-row">
         <div class="alpha-label">Alpha (Opacity) <span id="alphaVal">100%</span></div>
         <input type="range" class="styled-alpha" id="alphaSlider" min="0" max="100" value="100"
-          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #3b82f6);">
+          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #3b82f6);"
+          aria-label="Alpha (opacity)" aria-describedby="alphaVal">
       </div>
     </div>
 
@@ -209,7 +210,7 @@
           <div class="comp-label">Opposite hue on the color wheel</div>
           <div class="comp-hex" id="compHex">
             <span id="compHexVal">—</span>
-            <button class="copy-btn" id="compCopyBtn" onclick="copyComplement()">Copy</button>
+            <button type="button" class="copy-btn" id="compCopyBtn" onclick="copyComplement()">Copy</button>
           </div>
         </div>
       </div>
@@ -407,7 +408,7 @@
           <div class="format-name">${f.name}</div>
           <div class="format-value">
             <span id="fmt-val-${i}">${escapeHtml(f.value)}</span>
-            <button class="copy-btn" id="fmt-btn-${i}" onclick="copyFormat(${i}, ${JSON.stringify(f.value)})">Copy</button>
+            <button type="button" class="copy-btn" id="fmt-btn-${i}" onclick="copyFormat(${i}, ${JSON.stringify(f.value)})">Copy</button>
           </div>
         </div>
       `).join('');

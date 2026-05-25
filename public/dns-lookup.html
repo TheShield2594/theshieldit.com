@@ -127,6 +127,7 @@
           autocorrect="off"
           autocapitalize="off"
           spellcheck="false"
+          aria-label="Domain or URL"
         />
         <select id="record-type">
           <option value="ALL">ALL</option>
@@ -166,7 +167,7 @@
 
   <script>
     const TYPE_MAP = { A:1, NS:2, CNAME:5, SOA:6, MX:15, TXT:16, AAAA:28, PTR:12, CAA:257 };
-    const ALL_TYPES = ['A','AAAA','MX','TXT','CNAME','NS','SOA'];
+    const ALL_TYPES = ['A','AAAA','MX','TXT','CNAME','NS','SOA','PTR','CAA'];
     const DOH_BASE = 'https://cloudflare-dns.com/dns-query';
     const STATUS_LABELS = { 0:'NOERROR', 1:'FORMERR', 2:'SERVFAIL', 3:'NXDOMAIN', 5:'REFUSED' };
 
@@ -185,9 +186,18 @@
 
     async function queryDNS(domain, type) {
       const url = `${DOH_BASE}?name=${encodeURIComponent(domain)}&type=${encodeURIComponent(type)}`;
-      const resp = await fetch(url, { headers: { Accept: 'application/dns-json' } });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      return resp.json();
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        const resp = await fetch(url, { headers: { Accept: 'application/dns-json' }, signal: controller.signal });
+        clearTimeout(timer);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        return resp.json();
+      } catch (err) {
+        clearTimeout(timer);
+        if (err.name === 'AbortError') throw new Error('Request timed out');
+        throw err;
+      }
     }
 
     function formatRecord(rec, type) {
@@ -257,15 +267,37 @@
           const { value, extra, priority } = formatRecord(rec, type);
           const row = document.createElement('div');
           row.className = 'record-row';
-          row.innerHTML = `
-            <div>
-              ${type === 'MX' ? `<span class="record-priority">${priority ?? ''}</span>` : ''}
-              <span class="record-value">${escHtml(value)}</span>
-              ${extra && type !== 'MX' ? `<div class="record-meta">${escHtml(extra)}</div>` : ''}
-              <div class="record-meta">TTL: ${rec.TTL}s</div>
-            </div>
-            <button class="copy-btn" onclick="copyText('${escAttr(value)}', this)">Copy</button>
-          `;
+
+          const left = document.createElement('div');
+          if (type === 'MX') {
+            const pri = document.createElement('span');
+            pri.className = 'record-priority';
+            pri.textContent = priority ?? '';
+            left.appendChild(pri);
+          }
+          const valSpan = document.createElement('span');
+          valSpan.className = 'record-value';
+          valSpan.textContent = value;
+          left.appendChild(valSpan);
+          if (extra && type !== 'MX') {
+            const meta = document.createElement('div');
+            meta.className = 'record-meta';
+            meta.textContent = extra;
+            left.appendChild(meta);
+          }
+          const ttl = document.createElement('div');
+          ttl.className = 'record-meta';
+          ttl.textContent = `TTL: ${rec.TTL}s`;
+          left.appendChild(ttl);
+
+          const copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.className = 'copy-btn';
+          copyBtn.textContent = 'Copy';
+          copyBtn.addEventListener('click', () => copyText(value, copyBtn));
+
+          row.appendChild(left);
+          row.appendChild(copyBtn);
           body.appendChild(row);
         });
       } else if (!isNXDomain && state.status === 'done') {

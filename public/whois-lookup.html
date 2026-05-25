@@ -137,7 +137,7 @@
 
     <!-- Search panel -->
     <div class="tool-panel">
-      <p class="panel-title">Domain Name</p>
+      <label class="panel-title" for="domainInput">Domain Name</label>
       <div class="search-row">
         <input
           type="text"
@@ -456,7 +456,17 @@
 
       try {
         const url = `https://rdap.org/domain/${encodeURIComponent(domain)}`;
-        const res = await fetch(url);
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10000);
+        let res;
+        try {
+          res = await fetch(url, { signal: controller.signal });
+          clearTimeout(timer);
+        } catch (fetchErr) {
+          clearTimeout(timer);
+          if (fetchErr.name === 'AbortError') throw new Error('Request timed out. The RDAP server did not respond in time.');
+          throw fetchErr;
+        }
 
         if (res.status === 404) {
           renderError('Domain not found.', `"${domain}" returned a 404 from the RDAP registry. The domain may not be registered, or its TLD may not support RDAP.`);

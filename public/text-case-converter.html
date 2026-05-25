@@ -82,11 +82,13 @@
     <!-- Input panel -->
     <div class="tool-panel">
       <div class="panel-title">Input</div>
+      <label for="inputText" class="panel-title" style="display:block; margin-bottom:0.5rem;">Input Text</label>
       <textarea
         id="inputText"
         placeholder="hello world foo bar  /  helloWorldFooBar  /  hello_world_foo_bar  /  hello-world-foo-bar"
         oninput="handleInput()"
         rows="4"
+        aria-label="Text to convert"
       ></textarea>
       <div class="stats-bar" id="statsBar">
         <div class="stat-item">Characters: <span id="charCount">0</span></div>
@@ -94,8 +96,8 @@
         <div class="stat-item">Lines: <span id="lineCount">0</span></div>
       </div>
       <div class="toolbar">
-        <button class="btn-sm btn-primary-sm" onclick="copyAll()">Copy All Conversions</button>
-        <button class="btn-sm btn-ghost" onclick="clearInput()">Clear</button>
+        <button type="button" class="btn-sm btn-primary-sm" onclick="copyAll(event)">Copy All Conversions</button>
+        <button type="button" class="btn-sm btn-ghost" onclick="clearInput()">Clear</button>
       </div>
     </div>
 
@@ -249,7 +251,7 @@
           <div class="case-card">
             <div class="case-label">${c.label}</div>
             <div class="case-value" id="val-${c.id}">${val}</div>
-            <button class="copy-btn" id="btn-${c.id}" onclick="copySingle('${c.id}')">Copy</button>
+            <button type="button" class="copy-btn" id="btn-${c.id}" onclick="copySingle('${c.id}')">Copy</button>
           </div>`;
       }).join('');
     }
@@ -279,14 +281,16 @@
       }).catch(() => fallbackCopy(val));
     }
 
-    function copyAll() {
+    function copyAll(event) {
       if (!Object.keys(lastResults).length) return;
       const text = CASES.map(c => `${c.label}:\n${lastResults[c.id]}`).join('\n\n');
+      const btn = event && event.currentTarget;
       navigator.clipboard.writeText(text).then(() => {
-        const btn = event.currentTarget;
-        const orig = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = orig; }, 1500);
+        if (btn) {
+          const orig = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = orig; }, 1500);
+        }
       }).catch(() => fallbackCopy(text));
     }
 
