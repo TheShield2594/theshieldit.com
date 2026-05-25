@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHOIS / Domain Lookup | The Shield IT</title>
+  <meta name="description" content="Look up WHOIS and RDAP registration data for any domain — registrar, creation date, expiry, nameservers, and status codes.">
+  <meta name="keywords" content="WHOIS, domain lookup, RDAP, domain expiry, registrar, nameservers, DNS, domain registration">
+  <meta name="author" content="The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/whois-lookup.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/whois-lookup.html">
+  <meta property="og:title" content="WHOIS / Domain Lookup">
+  <meta property="og:description" content="Look up domain registration data using the public RDAP protocol. No data is stored.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <script src="/shared-shell.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+    input, select { width: 100%; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit;
+      outline: none; transition: border-color 0.2s ease; }
+    input:focus, select:focus { border-color: var(--primary); }
+    input::placeholder { color: var(--text-gray); }
+    .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-full { width: 100%; margin-top: 1rem; padding: 0.875rem; }
+    .result-box { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; }
+    .label { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 0.25rem; }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .badge-green { display: inline-block; background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+    .badge-red { display: inline-block; background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+    .badge-yellow { display: inline-block; background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .flex-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* Search row */
+    .search-row { display: flex; gap: 0.75rem; align-items: stretch; }
+    .search-row input { flex: 1; }
+    .search-row .btn { flex-shrink: 0; white-space: nowrap; margin-top: 0; }
+
+    /* Loading spinner */
+    .spinner-wrap { display: flex; align-items: center; gap: 0.75rem; padding: 1.5rem 0; justify-content: center; }
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-label { color: var(--text-gray); font-size: 0.9rem; }
+
+    /* Error banner */
+    .error-banner { padding: 0.875rem 1.1rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; color: var(--red); font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.6rem; }
+    .error-banner .err-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+    /* Results */
+    .results-panel { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Domain header */
+    .domain-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .domain-name { font-size: 1.3rem; font-weight: 700; font-family: monospace; color: var(--text-light); }
+    .domain-tld { font-size: 0.8rem; color: var(--text-gray); font-family: monospace; }
+
+    /* Info grid */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.875rem; }
+    .info-card { background: rgba(15,23,42,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+    .info-card-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
+    .info-card-value { font-size: 0.95rem; font-weight: 600; color: var(--text-light); word-break: break-word; }
+    .info-card-value.mono { font-family: monospace; font-size: 0.85rem; }
+    .info-card-sub { font-size: 0.78rem; color: var(--text-gray); margin-top: 0.2rem; }
+
+    /* Nameservers */
+    .ns-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem; }
+    .ns-item { font-family: monospace; font-size: 0.85rem; padding: 0.35rem 0.65rem;
+      background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.15); border-radius: 6px; color: var(--accent); }
+
+    /* Status codes */
+    .status-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
+    .status-item { display: flex; align-items: flex-start; gap: 0.6rem; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.42rem; background: var(--primary); }
+    .status-dot.lock { background: #f97316; }
+    .status-dot.active { background: var(--green); }
+    .status-dot.danger { background: var(--red); }
+    .status-code { font-family: monospace; font-size: 0.8rem; color: var(--text-gray); }
+    .status-label { font-size: 0.85rem; color: var(--text-light); }
+
+    /* Expiry color classes on card */
+    .expiry-good .info-card-value { color: var(--green); }
+    .expiry-warn .info-card-value { color: #eab308; }
+    .expiry-danger .info-card-value { color: var(--red); }
+
+    /* DNSSEC */
+    .dnssec-on { color: var(--green); }
+    .dnssec-off { color: var(--text-gray); }
+
+    /* Section divider */
+    .section-sep { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+    /* Example chips */
+    .example-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .chip { font-size: 0.78rem; padding: 0.22rem 0.65rem; background: rgba(30,41,59,0.8); border: 1px solid var(--border); border-radius: 99px; color: var(--text-gray); cursor: pointer; transition: all 0.2s; font-family: monospace; }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: rgba(59,130,246,0.08); }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <h1>WHOIS / Domain Lookup</h1>
+    <p class="subtitle">Query registration data for any domain using the public RDAP protocol.</p>
+
+    <!-- Search panel -->
+    <div class="tool-panel">
+      <label class="panel-title" for="domainInput">Domain Name</label>
+      <div class="search-row">
+        <input
+          type="text"
+          id="domainInput"
+          placeholder="e.g. example.com"
+          autocomplete="off"
+          spellcheck="false"
+          autocapitalize="off"
+        />
+        <button class="btn" id="lookupBtn" onclick="doLookup()">Lookup</button>
+      </div>
+
+      <div class="example-chips">
+        <span class="label" style="align-self:center;">Try:</span>
+        <span class="chip" onclick="fillExample('google.com')">google.com</span>
+        <span class="chip" onclick="fillExample('github.com')">github.com</span>
+        <span class="chip" onclick="fillExample('cloudflare.com')">cloudflare.com</span>
+        <span class="chip" onclick="fillExample('mozilla.org')">mozilla.org</span>
+      </div>
+
+      <div class="info-note">
+        Queries use the public RDAP protocol via <strong>rdap.org</strong>. No data is stored or logged by this tool.
+      </div>
+    </div>
+
+    <!-- Dynamic output area -->
+    <div id="outputArea"></div>
+
+  </div>
+
+  <script>
+    // ─── Status label map ─────────────────────────────────────────────────────
+    const STATUS_LABELS = {
+      'clientTransferProhibited': 'Transfer lock enabled',
+      'clientUpdateProhibited': 'Update lock enabled',
+      'clientDeleteProhibited': 'Delete lock enabled',
+      'serverTransferProhibited': 'Registry transfer lock',
+      'serverUpdateProhibited': 'Registry update lock',
+      'serverDeleteProhibited': 'Registry delete lock',
+      'active': 'Domain is active',
+      'ok': 'Domain is active',
+      'pendingDelete': 'Pending deletion',
+      'pendingTransfer': 'Transfer in progress',
+      'redemptionPeriod': 'In redemption grace period',
+      'addPeriod': 'Registration grace period',
+      'renewPeriod': 'Renewal grace period',
+      'autoRenewPeriod': 'Auto-renew grace period',
+      'transferPeriod': 'Transfer grace period',
+    };
+
+    const LOCK_CODES = new Set(['clientTransferProhibited','clientUpdateProhibited','clientDeleteProhibited','serverTransferProhibited','serverUpdateProhibited','serverDeleteProhibited']);
+    const ACTIVE_CODES = new Set(['active','ok']);
+    const DANGER_CODES = new Set(['pendingDelete','redemptionPeriod']);
+
+    // ─── DOM refs ─────────────────────────────────────────────────────────────
+    const domainInput = document.getElementById('domainInput');
+    const lookupBtn   = document.getElementById('lookupBtn');
+    const outputArea  = document.getElementById('outputArea');
+
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+    function sanitizeDomain(raw) {
+      let d = raw.trim().toLowerCase();
+      // strip protocol
+      d = d.replace(/^https?:\/\//i, '');
+      // strip www.
+      d = d.replace(/^www\./i, '');
+      // strip path/query/hash
+      d = d.split('/')[0].split('?')[0].split('#')[0];
+      return d;
+    }
+
+    function formatDate(isoStr) {
+      if (!isoStr) return '—';
+      try {
+        const d = new Date(isoStr);
+        if (isNaN(d)) return isoStr;
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      } catch(_) { return isoStr; }
+    }
+
+    function daysUntil(isoStr) {
+      if (!isoStr) return null;
+      try {
+        const d = new Date(isoStr);
+        if (isNaN(d)) return null;
+        return Math.round((d - Date.now()) / (1000 * 60 * 60 * 24));
+      } catch(_) { return null; }
+    }
+
+    function expiryClass(days) {
+      if (days === null) return '';
+      if (days > 90) return 'expiry-good';
+      if (days > 30) return 'expiry-warn';
+      return 'expiry-danger';
+    }
+
+    function expiryBadge(days) {
+      if (days === null) return '';
+      if (days < 0) return '<span class="badge-red">Expired</span>';
+      if (days > 90) return '<span class="badge-green">' + days + ' days remaining</span>';
+      if (days > 30) return '<span class="badge-yellow">' + days + ' days remaining</span>';
+      return '<span class="badge-red">' + days + ' days remaining</span>';
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ─── RDAP field extractor ─────────────────────────────────────────────────
+    function extractDate(events, action) {
+      if (!Array.isArray(events)) return null;
+      const ev = events.find(e => e.eventAction === action);
+      return ev ? ev.eventDate : null;
+    }
+
+    function extractRegistrar(entities) {
+      if (!Array.isArray(entities)) return null;
+      for (const ent of entities) {
+        if (Array.isArray(ent.roles) && ent.roles.includes('registrar')) {
+          // try publicIds first
+          if (Array.isArray(ent.publicIds)) {
+            const ianaEntry = ent.publicIds.find(p => p.type === 'IANA Registrar ID');
+            if (ianaEntry && ent.vcardArray) {
+              const vcard = ent.vcardArray[1];
+              const fn = vcard && vcard.find(v => v[0] === 'fn');
+              if (fn) return fn[3];
+            }
+          }
+          // try vcardArray directly
+          if (ent.vcardArray) {
+            const vcard = ent.vcardArray[1];
+            const fn = vcard && vcard.find(v => v[0] === 'fn');
+            if (fn) return fn[3];
+          }
+          if (ent.handle) return ent.handle;
+          if (typeof ent.name === 'string') return ent.name;
+        }
+      }
+      return null;
+    }
+
+    function extractNameservers(data) {
+      if (!Array.isArray(data.nameservers)) return [];
+      return data.nameservers
+        .map(ns => (ns.ldhName || ns.unicodeName || '').toLowerCase())
+        .filter(Boolean);
+    }
+
+    function extractDnssec(data) {
+      if (data.secureDNS) {
+        const sd = data.secureDNS;
+        if (sd.delegationSigned === true) return true;
+        if (sd.delegationSigned === false) return false;
+        if (sd.zoneSigned === true) return true;
+      }
+      return null;
+    }
+
+    function statusDotClass(code) {
+      if (LOCK_CODES.has(code)) return 'lock';
+      if (ACTIVE_CODES.has(code)) return 'active';
+      if (DANGER_CODES.has(code)) return 'danger';
+      return '';
+    }
+
+    // ─── Render helpers ───────────────────────────────────────────────────────
+    function renderLoading(domain) {
+      outputArea.innerHTML = `
+        <div class="tool-panel">
+          <div class="spinner-wrap">
+            <div class="spinner"></div>
+            <span class="spinner-label">Querying RDAP for <strong>${escapeHtml(domain)}</strong>…</span>
+          </div>
+        </div>`;
+    }
+
+    function renderError(msg, detail) {
+      outputArea.innerHTML = `
+        <div class="tool-panel">
+          <div class="error-banner">
+            <span class="err-icon">⚠</span>
+            <div>
+              <strong>${escapeHtml(msg)}</strong>
+              ${detail ? '<div style="margin-top:0.3rem;font-size:0.82rem;opacity:0.8;">' + escapeHtml(detail) + '</div>' : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderResults(domain, data) {
+      const registrar = extractRegistrar(data.entities) || '—';
+      const created   = extractDate(data.events, 'registration') || extractDate(data.events, 'last registration');
+      const expiry    = extractDate(data.events, 'expiration');
+      const updated   = extractDate(data.events, 'last changed');
+      const nameservers = extractNameservers(data);
+      const statuses  = Array.isArray(data.status) ? data.status : [];
+      const dnssec    = extractDnssec(data);
+
+      const days = daysUntil(expiry);
+      const eClass = expiryClass(days);
+      const eBadge = expiryBadge(days);
+
+      const nsHtml = nameservers.length
+        ? `<ul class="ns-list">${nameservers.map(ns => `<li class="ns-item">${escapeHtml(ns)}</li>`).join('')}</ul>`
+        : '<span style="color:var(--text-gray);font-size:0.85rem;">None reported</span>';
+
+      const statusHtml = statuses.length
+        ? `<div class="status-list">${statuses.map(s => {
+            const dotCls = statusDotClass(s);
+            const lbl = STATUS_LABELS[s] || s;
+            return `<div class="status-item">
+              <div class="status-dot ${dotCls}"></div>
+              <div>
+                <div class="status-label">${escapeHtml(lbl)}</div>
+                <div class="status-code">${escapeHtml(s)}</div>
+              </div>
+            </div>`;
+          }).join('')}</div>`
+        : '<span style="color:var(--text-gray);font-size:0.85rem;">None reported</span>';
+
+      let dnssecHtml;
+      if (dnssec === true)  dnssecHtml = '<span class="dnssec-on">Enabled</span>';
+      else if (dnssec === false) dnssecHtml = '<span class="dnssec-off">Not enabled</span>';
+      else dnssecHtml = '<span style="color:var(--text-gray);">Unknown</span>';
+
+      // registrar URL if present
+      const rdapUrl = Array.isArray(data.links)
+        ? (data.links.find(l => l.rel === 'self') || {}).href || ''
+        : '';
+
+      outputArea.innerHTML = `
+        <div class="tool-panel results-panel">
+
+          <div class="domain-header">
+            <span class="domain-name">${escapeHtml(domain)}</span>
+            ${Array.isArray(data.status) && data.status.some(s => ACTIVE_CODES.has(s))
+              ? '<span class="badge-green">Active</span>'
+              : Array.isArray(data.status) && data.status.some(s => DANGER_CODES.has(s))
+                ? '<span class="badge-red">At Risk</span>'
+                : ''}
+          </div>
+
+          <div class="info-grid">
+
+            <div class="info-card">
+              <div class="info-card-label">Registrar</div>
+              <div class="info-card-value">${escapeHtml(registrar)}</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-label">Registered</div>
+              <div class="info-card-value">${escapeHtml(formatDate(created))}</div>
+              ${created ? `<div class="info-card-sub mono">${escapeHtml(created)}</div>` : ''}
+            </div>
+
+            <div class="info-card ${eClass}">
+              <div class="info-card-label">Expires</div>
+              <div class="info-card-value">${escapeHtml(formatDate(expiry))}</div>
+              ${expiry ? `<div class="info-card-sub" style="margin-top:0.4rem;">${eBadge}</div>` : ''}
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-label">Last Updated</div>
+              <div class="info-card-value">${escapeHtml(formatDate(updated))}</div>
+              ${updated ? `<div class="info-card-sub mono">${escapeHtml(updated)}</div>` : ''}
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-label">DNSSEC</div>
+              <div class="info-card-value">${dnssecHtml}</div>
+            </div>
+
+          </div>
+
+          <hr class="section-sep">
+
+          <div style="margin-bottom:1.25rem;">
+            <p class="panel-title">Nameservers</p>
+            ${nsHtml}
+          </div>
+
+          <div>
+            <p class="panel-title">Domain Status</p>
+            ${statusHtml}
+          </div>
+
+          ${rdapUrl ? `<div class="info-note" style="margin-top:1.25rem;">
+            RDAP source: <span style="font-family:monospace;font-size:0.82rem;word-break:break-all;">${escapeHtml(rdapUrl)}</span>
+          </div>` : ''}
+
+        </div>`;
+    }
+
+    // ─── Core lookup ──────────────────────────────────────────────────────────
+    async function doLookup() {
+      const raw = domainInput.value.trim();
+      if (!raw) {
+        renderError('Please enter a domain name.', '');
+        return;
+      }
+
+      const domain = sanitizeDomain(raw);
+
+      if (!domain || !domain.includes('.')) {
+        renderError('Invalid domain name.', 'Enter a fully-qualified domain like example.com');
+        return;
+      }
+
+      lookupBtn.disabled = true;
+      lookupBtn.textContent = 'Looking up…';
+      renderLoading(domain);
+
+      try {
+        const url = `https://rdap.org/domain/${encodeURIComponent(domain)}`;
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10000);
+        let res;
+        try {
+          res = await fetch(url, { signal: controller.signal });
+          clearTimeout(timer);
+        } catch (fetchErr) {
+          clearTimeout(timer);
+          if (fetchErr.name === 'AbortError') throw new Error('Request timed out. The RDAP server did not respond in time.');
+          throw fetchErr;
+        }
+
+        if (res.status === 404) {
+          renderError('Domain not found.', `"${domain}" returned a 404 from the RDAP registry. The domain may not be registered, or its TLD may not support RDAP.`);
+          return;
+        }
+        if (res.status === 429) {
+          renderError('Rate limited.', 'Too many requests. Please wait a moment and try again.');
+          return;
+        }
+        if (!res.ok) {
+          renderError(`RDAP query failed (HTTP ${res.status}).`, 'The registry returned an unexpected response.');
+          return;
+        }
+
+        let data;
+        try {
+          data = await res.json();
+        } catch(_) {
+          renderError('Invalid response from RDAP server.', 'The server returned data that could not be parsed.');
+          return;
+        }
+
+        renderResults(domain, data);
+
+      } catch (err) {
+        if (err && err.name === 'TypeError' && err.message && err.message.includes('fetch')) {
+          renderError('Network error.', 'Could not reach the RDAP server. Check your connection.');
+        } else {
+          renderError('Unexpected error.', err && err.message ? err.message : String(err));
+        }
+      } finally {
+        lookupBtn.disabled = false;
+        lookupBtn.textContent = 'Lookup';
+      }
+    }
+
+    // ─── Example chip helper ──────────────────────────────────────────────────
+    function fillExample(domain) {
+      domainInput.value = domain;
+      domainInput.focus();
+    }
+
+    // ─── Enter key support ────────────────────────────────────────────────────
+    domainInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doLookup();
+    });
+  </script>
+</body>
+</html>
