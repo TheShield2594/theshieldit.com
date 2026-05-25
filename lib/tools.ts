@@ -643,6 +643,78 @@ export const TOOLS: Tool[] = [
     icon: "image",
     new: true,
   },
+  {
+    title: "TOTP / 2FA Code Generator",
+    description:
+      "Generate time-based one-time passwords (TOTP) from any Base32 secret. Test authenticator flows client-side with live 30-second countdown.",
+    href: "/tools/totp-generator",
+    tags: "totp 2fa otp authenticator time-based one-time password base32 hmac sha1 mfa security",
+    category: "security",
+    tagLabel: "Auth",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "key-round",
+    new: true,
+  },
+  {
+    title: "WHOIS / Domain Lookup",
+    description:
+      "Look up domain registration details: registrar, creation and expiry dates, nameservers, status codes, and DNSSEC. Uses the public RDAP protocol.",
+    href: "/tools/whois-lookup",
+    tags: "whois domain lookup rdap registrar expiry nameservers dnssec registration status",
+    category: "security",
+    tagLabel: "Analysis",
+    iconColor: "text-chart-5 bg-chart-5/10",
+    icon: "scan-search",
+    new: true,
+  },
+  {
+    title: "DNS Record Lookup",
+    description:
+      "Query DNS records for any domain — A, AAAA, MX, TXT, CNAME, NS, SOA, and more. Uses Cloudflare's public DNS-over-HTTPS resolver.",
+    href: "/tools/dns-lookup",
+    tags: "dns record lookup a aaaa mx txt cname ns soa doh cloudflare domain resolver query",
+    category: "security",
+    tagLabel: "Analysis",
+    iconColor: "text-primary bg-primary/10",
+    icon: "network",
+    new: true,
+  },
+  {
+    title: "Number Base Converter",
+    description:
+      "Convert numbers between binary, octal, decimal, and hexadecimal instantly. Supports BigInt, negative numbers, and visual bit representations.",
+    href: "/tools/number-base-converter",
+    tags: "number base converter binary octal decimal hexadecimal hex bit representation bigint developer",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "hash",
+    new: true,
+  },
+  {
+    title: "Text Case Converter",
+    description:
+      "Convert text between camelCase, PascalCase, snake_case, kebab-case, SCREAMING_SNAKE, Title Case, and more — all at once with one-click copy.",
+    href: "/tools/text-case-converter",
+    tags: "text case converter camelcase pascalcase snake_case kebab-case screaming title sentence uppercase lowercase developer utility",
+    category: "developer",
+    tagLabel: "Converter",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "file-text",
+    new: true,
+  },
+  {
+    title: "Robots.txt Analyzer",
+    description:
+      "Fetch and analyze any site's robots.txt. See disallowed paths, sitemaps, crawl rules, and flagged sensitive paths that hint at hidden content.",
+    href: "/tools/robots-txt-analyzer",
+    tags: "robots.txt analyzer disallow sitemap crawl-delay seo security sensitive paths hidden content",
+    category: "security",
+    tagLabel: "Analyzer",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "file-search",
+    new: true,
+  },
 ]
 
 /** Per-category tool counts, precomputed to avoid repeated TOOLS.filter() calls in render. */

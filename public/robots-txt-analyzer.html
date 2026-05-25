@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robots.txt Analyzer | The Shield IT</title>
+  <meta name="description" content="Analyze any robots.txt file for user-agent rules, sitemaps, disallowed paths, and security insights. Fetch by URL or paste content directly.">
+  <link rel="icon" href="/favicon.ico">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <script src="/shared-shell.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+    input, select, textarea { width: 100%; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s ease; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    input::placeholder, textarea::placeholder { color: var(--text-gray); }
+    .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-full { width: 100%; margin-top: 1rem; padding: 0.875rem; }
+    .result-box { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; font-size: 0.85rem; }
+    .label { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 0.25rem; }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .badge-green { display: inline-block; background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+    .badge-red { display: inline-block; background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+    .badge-yellow { display: inline-block; background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .flex-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 0; background: rgba(15,23,42,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 1rem; }
+    .tab { flex: 1; padding: 0.5rem 1rem; border-radius: 8px; border: none; background: transparent;
+      color: var(--text-gray); font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: inherit;
+      transition: all 0.2s ease; }
+    .tab.active { background: rgba(59,130,246,0.15); color: var(--primary); border: 1px solid rgba(59,130,246,0.3); }
+    .tab:hover:not(.active) { color: var(--text-light); }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Spinner */
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(59,130,246,0.3);
+      border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Results */
+    #results-area { display: none; }
+    #results-area.visible { display: block; }
+
+    /* Risk meter */
+    .risk-meter-wrap { margin-top: 1rem; }
+    .risk-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .risk-bar-bg { height: 8px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+    .risk-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .risk-low .risk-bar-fill { background: linear-gradient(90deg, var(--green), #16a34a); }
+    .risk-medium .risk-bar-fill { background: linear-gradient(90deg, #eab308, #ca8a04); }
+    .risk-high .risk-bar-fill { background: linear-gradient(90deg, var(--red), #b91c1c); }
+
+    /* Agent group */
+    .agent-group { margin-bottom: 0.75rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .agent-header { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+      background: rgba(15,23,42,0.5); cursor: pointer; user-select: none; transition: background 0.15s; }
+    .agent-header:hover { background: rgba(15,23,42,0.8); }
+    .agent-name-badge { font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 6px;
+      background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); color: var(--secondary);
+      font-family: monospace; }
+    .agent-wildcard { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: var(--red); }
+    .agent-summary { font-size: 0.78rem; color: var(--text-gray); margin-left: auto; }
+    .agent-chevron { color: var(--text-gray); font-size: 0.75rem; transition: transform 0.2s; }
+    .agent-chevron.open { transform: rotate(180deg); }
+    .agent-body { display: none; padding: 0.75rem 1rem; border-top: 1px solid var(--border); }
+    .agent-body.open { display: block; }
+
+    .rule-list { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+    .rule-item { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.82rem; font-family: monospace;
+      padding: 0.35rem 0.6rem; border-radius: 6px; }
+    .rule-allow { background: rgba(34,197,94,0.06); }
+    .rule-disallow { background: rgba(239,68,68,0.06); }
+    .rule-tag { font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; flex-shrink: 0; }
+    .rule-tag-allow { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .rule-tag-disallow { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    .rule-value { color: var(--text-light); word-break: break-all; }
+    .crawl-delay-note { font-size: 0.8rem; color: var(--text-gray); margin-top: 0.5rem; padding: 0.4rem 0.6rem;
+      background: rgba(234,179,8,0.07); border-radius: 6px; border: 1px solid rgba(234,179,8,0.2); display: inline-block; }
+
+    /* Sitemap list */
+    .sitemap-item { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      padding: 0.5rem 0.75rem; background: rgba(15,23,42,0.4); border-radius: 7px; margin-bottom: 0.4rem; }
+    .sitemap-url { font-family: monospace; font-size: 0.82rem; color: var(--accent); word-break: break-all; }
+
+    /* Flagged paths */
+    .flagged-path { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.55rem;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 6px;
+      font-family: monospace; font-size: 0.78rem; color: var(--red); margin: 0.2rem; }
+
+    /* Collapsible raw */
+    .collapsible-toggle { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-gray);
+      font-size: 0.8rem; user-select: none; padding: 0.5rem 0; }
+    .collapsible-toggle:hover { color: var(--text-light); }
+    .collapsible-body { display: none; margin-top: 0.5rem; }
+    .collapsible-body.open { display: block; }
+    .raw-content { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; word-break: break-all;
+      max-height: 300px; overflow-y: auto; color: var(--text-gray); line-height: 1.7; }
+
+    /* Stats row */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .stat-card { background: rgba(15,23,42,0.5); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.85rem 1rem; text-align: center; }
+    .stat-number { font-size: 1.6rem; font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: 0.72rem; color: var(--text-gray); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* Section header row */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+    .section-header .panel-title { margin-bottom: 0; }
+
+    /* Empty state */
+    .empty-state { color: var(--text-gray); font-style: italic; font-size: 0.85rem; padding: 0.5rem 0; }
+
+    /* Error */
+    .error-banner { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px;
+      padding: 1rem 1.25rem; color: var(--red); font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.6rem; }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <h1>Robots.txt Analyzer</h1>
+    <p class="subtitle">Inspect crawler rules, security exposures, and sitemap declarations</p>
+
+    <!-- Input panel -->
+    <div class="tool-panel">
+      <div class="panel-title">Input</div>
+      <div class="tabs">
+        <button class="tab active" id="tab-fetch" onclick="switchTab('fetch')">Fetch by URL</button>
+        <button class="tab" id="tab-paste" onclick="switchTab('paste')">Paste Content</button>
+      </div>
+
+      <!-- Fetch pane -->
+      <div class="tab-pane active" id="pane-fetch">
+        <div class="flex-row">
+          <input
+            type="text"
+            id="url-input"
+            placeholder="e.g. example.com or https://example.com"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            style="flex:1;"
+          />
+        </div>
+        <button class="btn btn-full" id="fetch-btn" onclick="fetchRobots()">Fetch &amp; Analyze</button>
+        <div class="info-note">
+          &#128274; Fetches <code>robots.txt</code> via <a href="https://allorigins.win" target="_blank" rel="noopener" style="color:var(--primary);">AllOrigins</a> proxy. The target domain will see a request from the AllOrigins server.
+        </div>
+      </div>
+
+      <!-- Paste pane -->
+      <div class="tab-pane" id="pane-paste">
+        <textarea
+          id="paste-input"
+          rows="10"
+          placeholder="Paste robots.txt content here…"
+          spellcheck="false"
+          style="resize:vertical; font-family:monospace; font-size:0.82rem; line-height:1.7;"
+        ></textarea>
+        <button class="btn btn-full" id="parse-btn" onclick="parsePasted()">Analyze</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results-area">
+
+      <!-- Stats overview -->
+      <div class="tool-panel" id="stats-panel">
+        <div class="section-header">
+          <div class="panel-title">Overview</div>
+          <span id="source-label" style="font-size:0.75rem; color:var(--text-gray);"></span>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+
+        <!-- Risk score -->
+        <div class="risk-meter-wrap" id="risk-wrap">
+          <div class="risk-label-row">
+            <span style="font-size:0.8rem; color:var(--text-gray); font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Risk Score</span>
+            <span id="risk-label-text"></span>
+          </div>
+          <div class="risk-bar-bg" id="risk-bar-bg">
+            <div class="risk-bar-fill" id="risk-bar-fill" style="width:0%"></div>
+          </div>
+          <div id="risk-details" style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-gray);"></div>
+        </div>
+      </div>
+
+      <!-- Security insights -->
+      <div class="tool-panel" id="security-panel" style="display:none;">
+        <div class="section-header">
+          <div class="panel-title">&#9888; Security Insights</div>
+          <span id="flagged-count-badge"></span>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-gray); margin-bottom:0.75rem;">
+          These disallowed paths suggest sensitive content that is exposed in the sitemap structure:
+        </p>
+        <div id="flagged-paths-container"></div>
+      </div>
+
+      <!-- User-agent groups -->
+      <div class="tool-panel">
+        <div class="section-header">
+          <div class="panel-title">User-Agent Groups</div>
+          <button class="copy-btn" onclick="copySection('agents')">Copy</button>
+        </div>
+        <div id="agents-container">
+          <div class="empty-state">No user-agent groups found.</div>
+        </div>
+      </div>
+
+      <!-- Sitemaps -->
+      <div class="tool-panel">
+        <div class="section-header">
+          <div class="panel-title">Sitemaps</div>
+          <button class="copy-btn" onclick="copySection('sitemaps')">Copy</button>
+        </div>
+        <div id="sitemaps-container">
+          <div class="empty-state">No sitemaps declared.</div>
+        </div>
+      </div>
+
+      <!-- All disallowed paths -->
+      <div class="tool-panel">
+        <div class="section-header">
+          <div class="panel-title">All Disallowed Paths</div>
+          <button class="copy-btn" onclick="copySection('disallowed')">Copy</button>
+        </div>
+        <div id="disallowed-container">
+          <div class="empty-state">No disallowed paths found.</div>
+        </div>
+      </div>
+
+      <!-- Raw content -->
+      <div class="tool-panel">
+        <div class="collapsible-toggle" onclick="toggleRaw()">
+          <span id="raw-chevron">&#9654;</span>
+          <span>Raw robots.txt</span>
+          <span id="raw-size" style="margin-left:auto;"></span>
+        </div>
+        <div class="collapsible-body" id="raw-body">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
+            <button class="copy-btn" onclick="copySection('raw')">Copy Raw</button>
+          </div>
+          <pre class="raw-content" id="raw-content"></pre>
+        </div>
+      </div>
+
+    </div><!-- /results-area -->
+  </div><!-- /container -->
+
+  <script>
+    let currentTab = 'fetch';
+    let parsedData = null;
+    let rawText = '';
+
+    // ── Tab switching ────────────────────────────────────────────────
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-fetch').classList.toggle('active', tab === 'fetch');
+      document.getElementById('tab-paste').classList.toggle('active', tab === 'paste');
+      document.getElementById('pane-fetch').classList.toggle('active', tab === 'fetch');
+      document.getElementById('pane-paste').classList.toggle('active', tab === 'paste');
+    }
+
+    // Enter key support
+    document.getElementById('url-input').addEventListener('keydown', e => { if (e.key === 'Enter') fetchRobots(); });
+
+    // ── URL normalisation ───────────────────────────────────────────
+    function normaliseUrl(raw) {
+      let s = raw.trim();
+      if (!s) return null;
+      if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
+      // Strip path after origin
+      try {
+        const u = new URL(s);
+        return u.origin; // scheme + host + port
+      } catch {
+        return null;
+      }
+    }
+
+    // ── Fetch ───────────────────────────────────────────────────────
+    async function fetchRobots() {
+      const raw = document.getElementById('url-input').value.trim();
+      if (!raw) { document.getElementById('url-input').focus(); return; }
+
+      const origin = normaliseUrl(raw);
+      if (!origin) { showError('Could not parse that URL. Try "example.com" or "https://example.com".'); return; }
+
+      const robotsUrl = origin + '/robots.txt';
+      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(robotsUrl);
+
+      const btn = document.getElementById('fetch-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Fetching…';
+      hideResults();
+
+      try {
+        const resp = await fetch(proxyUrl);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} — could not fetch robots.txt`);
+        const text = await resp.text();
+        if (!text.trim()) throw new Error('The file appears to be empty.');
+
+        rawText = text;
+        const hostname = new URL(origin).hostname;
+        display(parseRobots(text), `Fetched from ${hostname}`);
+      } catch (err) {
+        showError(err.message || 'Failed to fetch robots.txt. The site may not have one, or the proxy is unavailable.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Fetch & Analyze';
+      }
+    }
+
+    function parsePasted() {
+      const text = document.getElementById('paste-input').value;
+      if (!text.trim()) { document.getElementById('paste-input').focus(); return; }
+      rawText = text;
+      hideResults();
+      display(parseRobots(text), 'Pasted content');
+    }
+
+    // ── Parser ──────────────────────────────────────────────────────
+    function parseRobots(text) {
+      const lines = text.split('\n');
+      const groups = [];
+      let current = null;
+      const sitemaps = [];
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('#')) continue;
+
+        const colonIdx = line.indexOf(':');
+        if (colonIdx === -1) continue;
+        const key = line.slice(0, colonIdx).trim().toLowerCase();
+        const value = line.slice(colonIdx + 1).trim();
+
+        if (key === 'user-agent') {
+          if (!current || current.allow.length > 0 || current.disallow.length > 0) {
+            current = { agents: [value], allow: [], disallow: [], crawlDelay: null };
+            groups.push(current);
+          } else {
+            current.agents.push(value);
+          }
+        } else if (key === 'disallow' && current) {
+          if (value) current.disallow.push(value);
+        } else if (key === 'allow' && current) {
+          if (value) current.allow.push(value);
+        } else if (key === 'crawl-delay' && current) {
+          current.crawlDelay = value;
+        } else if (key === 'sitemap') {
+          if (value) sitemaps.push(value);
+        }
+      }
+      return { groups, sitemaps };
+    }
+
+    // ── Sensitive path detection ─────────────────────────────────────
+    const SENSITIVE_PATTERNS = [
+      '/admin', '/api', '/backup', '/config', '/database', '/private',
+      '/secret', '/internal', '/staging', '/dev', '/.env', '/.git',
+      '/wp-admin', '/phpmyadmin', '/dashboard', '/login', '/auth',
+    ];
+
+    function isSensitive(path) {
+      const lower = path.toLowerCase();
+      return SENSITIVE_PATTERNS.some(p => lower === p || lower.startsWith(p + '/') || lower.startsWith(p + '?'));
+    }
+
+    // ── Risk score calculation ────────────────────────────────────────
+    function calcRisk(groups, flaggedPaths) {
+      let score = 0;
+      const reasons = [];
+
+      const allPaths = groups.flatMap(g => g.disallow);
+      const hasWildcard = groups.some(g => g.agents.includes('*'));
+      const wildcardGroup = groups.find(g => g.agents.includes('*'));
+      const wildcardBlocksAll = wildcardGroup && wildcardGroup.disallow.some(p => p === '/');
+
+      // +30 if wildcard agent exists
+      if (hasWildcard) { score += 10; reasons.push('Wildcard user-agent (*) present'); }
+
+      // +40 if wildcard blocks everything
+      if (wildcardBlocksAll) { score += 30; reasons.push('All bots blocked from root (Disallow: /)'); }
+
+      // Path count factor (max +30)
+      const pathScore = Math.min(30, allPaths.length * 2);
+      if (allPaths.length > 0) { score += pathScore; reasons.push(`${allPaths.length} disallowed path${allPaths.length !== 1 ? 's' : ''} (more = higher exposure surface)`); }
+
+      // Sensitive paths
+      if (flaggedPaths.length > 0) {
+        score += Math.min(30, flaggedPaths.length * 6);
+        reasons.push(`${flaggedPaths.length} sensitive path${flaggedPaths.length !== 1 ? 's' : ''} revealed (${SENSITIVE_PATTERNS.slice(0,3).map(p=>p).join(', ')}…)`);
+      }
+
+      score = Math.min(100, score);
+
+      let level, cls;
+      if (score < 35) { level = 'Low'; cls = 'risk-low'; }
+      else if (score < 65) { level = 'Medium'; cls = 'risk-medium'; }
+      else { level = 'High'; cls = 'risk-high'; }
+
+      return { score, level, cls, reasons };
+    }
+
+    // ── Display ──────────────────────────────────────────────────────
+    function display(data, sourceLabel) {
+      parsedData = data;
+      const { groups, sitemaps } = data;
+
+      document.getElementById('source-label').textContent = sourceLabel;
+
+      // All unique disallowed paths
+      const allDisallowed = [...new Set(groups.flatMap(g => g.disallow))];
+
+      // Flagged paths
+      const flagged = [...new Set(allDisallowed.filter(isSensitive))];
+
+      // Stats
+      const statsGrid = document.getElementById('stats-grid');
+      statsGrid.innerHTML = '';
+      const stats = [
+        { n: groups.length, l: 'User-agent groups' },
+        { n: groups.reduce((a,g) => a + g.disallow.length, 0), l: 'Disallow rules' },
+        { n: groups.reduce((a,g) => a + g.allow.length, 0), l: 'Allow rules' },
+        { n: sitemaps.length, l: 'Sitemaps' },
+        { n: flagged.length, l: 'Sensitive paths' },
+      ];
+      stats.forEach(({ n, l }) => {
+        const card = document.createElement('div');
+        card.className = 'stat-card';
+        card.innerHTML = `<div class="stat-number">${n}</div><div class="stat-label">${l}</div>`;
+        statsGrid.appendChild(card);
+      });
+
+      // Risk
+      const risk = calcRisk(groups, flagged);
+      const riskWrap = document.getElementById('risk-bar-bg');
+      riskWrap.className = 'risk-bar-bg ' + risk.cls;
+      document.getElementById('risk-bar-fill').style.width = risk.score + '%';
+
+      let riskBadgeHtml;
+      if (risk.level === 'Low') riskBadgeHtml = `<span class="badge-green">Low — ${risk.score}/100</span>`;
+      else if (risk.level === 'Medium') riskBadgeHtml = `<span class="badge-yellow">Medium — ${risk.score}/100</span>`;
+      else riskBadgeHtml = `<span class="badge-red">High — ${risk.score}/100</span>`;
+      document.getElementById('risk-label-text').innerHTML = riskBadgeHtml;
+
+      const riskDetails = document.getElementById('risk-details');
+      if (risk.reasons.length) {
+        riskDetails.innerHTML = risk.reasons.map(r => `&#8226; ${escHtml(r)}`).join('<br>');
+      } else {
+        riskDetails.textContent = 'No significant risk factors found.';
+      }
+
+      // Security insights
+      const secPanel = document.getElementById('security-panel');
+      if (flagged.length > 0) {
+        secPanel.style.display = 'block';
+        document.getElementById('flagged-count-badge').innerHTML =
+          `<span class="badge-red">&#9888; ${flagged.length} flagged path${flagged.length !== 1 ? 's' : ''}</span>`;
+        const cont = document.getElementById('flagged-paths-container');
+        cont.innerHTML = '';
+        flagged.forEach(p => {
+          const span = document.createElement('span');
+          span.className = 'flagged-path';
+          span.innerHTML = `&#9888; ${escHtml(p)}`;
+          cont.appendChild(span);
+        });
+      } else {
+        secPanel.style.display = 'none';
+      }
+
+      // User-agent groups
+      const agentsCont = document.getElementById('agents-container');
+      agentsCont.innerHTML = '';
+      if (groups.length === 0) {
+        agentsCont.innerHTML = '<div class="empty-state">No user-agent groups found.</div>';
+      } else {
+        groups.forEach((group, idx) => buildAgentGroup(group, idx, agentsCont));
+      }
+
+      // Sitemaps
+      const smCont = document.getElementById('sitemaps-container');
+      smCont.innerHTML = '';
+      if (sitemaps.length === 0) {
+        smCont.innerHTML = '<div class="empty-state">No sitemaps declared.</div>';
+      } else {
+        sitemaps.forEach(url => {
+          const item = document.createElement('div');
+          item.className = 'sitemap-item';
+          item.innerHTML = `
+            <span class="sitemap-url">${escHtml(url)}</span>
+            <button class="copy-btn" onclick="copyText('${escAttr(url)}', this)">Copy</button>
+          `;
+          smCont.appendChild(item);
+        });
+      }
+
+      // Disallowed paths
+      const disCont = document.getElementById('disallowed-container');
+      disCont.innerHTML = '';
+      if (allDisallowed.length === 0) {
+        disCont.innerHTML = '<div class="empty-state">No disallowed paths found.</div>';
+      } else {
+        const box = document.createElement('div');
+        box.style.cssText = 'display:flex; flex-wrap:wrap; gap:0.4rem;';
+        allDisallowed.forEach(p => {
+          const sensitive = isSensitive(p);
+          const chip = document.createElement('span');
+          chip.style.cssText = 'display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.55rem;border-radius:6px;font-family:monospace;font-size:0.78rem;';
+          if (sensitive) {
+            chip.style.cssText += 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:var(--red);';
+            chip.innerHTML = `&#9888; ${escHtml(p)}`;
+          } else {
+            chip.style.cssText += 'background:rgba(15,23,42,0.5);border:1px solid var(--border);color:var(--text-gray);';
+            chip.textContent = p;
+          }
+          box.appendChild(chip);
+        });
+        disCont.appendChild(box);
+      }
+
+      // Raw
+      const lines = rawText.split('\n').length;
+      const bytes = new Blob([rawText]).size;
+      document.getElementById('raw-size').textContent = `${lines} lines · ${formatBytes(bytes)}`;
+      document.getElementById('raw-content').textContent = rawText;
+
+      showResults();
+    }
+
+    function buildAgentGroup(group, idx, container) {
+      const isWild = group.agents.includes('*');
+      const ruleCount = group.allow.length + group.disallow.length;
+      const id = `group-${idx}`;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'agent-group';
+
+      const agentBadges = group.agents.map(a =>
+        `<span class="agent-name-badge ${a === '*' ? 'agent-wildcard' : ''}">${escHtml(a)}</span>`
+      ).join(' ');
+
+      const summaryCounts = [];
+      if (group.disallow.length) summaryCounts.push(`${group.disallow.length} disallow`);
+      if (group.allow.length) summaryCounts.push(`${group.allow.length} allow`);
+      if (group.crawlDelay) summaryCounts.push(`delay: ${group.crawlDelay}s`);
+
+      wrap.innerHTML = `
+        <div class="agent-header" onclick="toggleAgent('${id}')">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">${agentBadges}</div>
+          <span class="agent-summary">${summaryCounts.join(' · ') || 'no rules'}</span>
+          <span class="agent-chevron" id="chevron-${id}">&#9660;</span>
+        </div>
+        <div class="agent-body" id="body-${id}"></div>
+      `;
+
+      container.appendChild(wrap);
+
+      const body = wrap.querySelector(`#body-${id}`);
+
+      if (ruleCount === 0 && !group.crawlDelay) {
+        body.innerHTML = '<span class="empty-state">No rules defined for this group.</span>';
+        return;
+      }
+
+      const list = document.createElement('ul');
+      list.className = 'rule-list';
+
+      group.disallow.forEach(p => {
+        const li = document.createElement('li');
+        li.className = 'rule-item rule-disallow';
+        li.innerHTML = `<span class="rule-tag rule-tag-disallow">Disallow</span><span class="rule-value">${escHtml(p)}</span>`;
+        list.appendChild(li);
+      });
+
+      group.allow.forEach(p => {
+        const li = document.createElement('li');
+        li.className = 'rule-item rule-allow';
+        li.innerHTML = `<span class="rule-tag rule-tag-allow">Allow</span><span class="rule-value">${escHtml(p)}</span>`;
+        list.appendChild(li);
+      });
+
+      body.appendChild(list);
+
+      if (group.crawlDelay) {
+        const note = document.createElement('div');
+        note.innerHTML = `<span class="crawl-delay-note">&#8987; Crawl-delay: ${escHtml(group.crawlDelay)}s</span>`;
+        body.appendChild(note);
+      }
+
+      // Open by default for first group or wildcard
+      if (idx === 0 || group.agents.includes('*')) {
+        body.classList.add('open');
+        const ch = wrap.querySelector(`#chevron-${id}`);
+        if (ch) ch.classList.add('open');
+      }
+    }
+
+    function toggleAgent(id) {
+      const body = document.getElementById('body-' + id);
+      const chev = document.getElementById('chevron-' + id);
+      if (!body) return;
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      if (chev) chev.classList.toggle('open', !isOpen);
+    }
+
+    function toggleRaw() {
+      const body = document.getElementById('raw-body');
+      const chev = document.getElementById('raw-chevron');
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      chev.textContent = isOpen ? '▶' : '▼';
+    }
+
+    // ── Copy helpers ─────────────────────────────────────────────────
+    function copySection(section) {
+      let text = '';
+      if (section === 'raw') {
+        text = rawText;
+      } else if (section === 'sitemaps') {
+        if (!parsedData) return;
+        text = parsedData.sitemaps.join('\n') || '(none)';
+      } else if (section === 'disallowed') {
+        if (!parsedData) return;
+        const all = [...new Set(parsedData.groups.flatMap(g => g.disallow))];
+        text = all.join('\n') || '(none)';
+      } else if (section === 'agents') {
+        if (!parsedData) return;
+        const lines = [];
+        parsedData.groups.forEach(g => {
+          g.agents.forEach(a => lines.push(`User-agent: ${a}`));
+          g.disallow.forEach(p => lines.push(`Disallow: ${p}`));
+          g.allow.forEach(p => lines.push(`Allow: ${p}`));
+          if (g.crawlDelay) lines.push(`Crawl-delay: ${g.crawlDelay}`);
+          lines.push('');
+        });
+        text = lines.join('\n').trim();
+      }
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const btns = document.querySelectorAll(`[onclick="copySection('${section}')"]`);
+        btns.forEach(btn => {
+          const orig = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = orig, 1500);
+        });
+      });
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = orig, 1500);
+      });
+    }
+
+    // ── Utilities ────────────────────────────────────────────────────
+    function showResults() {
+      document.getElementById('results-area').className = 'visible';
+    }
+    function hideResults() {
+      document.getElementById('results-area').className = '';
+    }
+    function showError(msg) {
+      hideResults();
+      // Show inline — reuse results area with error banner
+      const area = document.getElementById('results-area');
+      area.className = 'visible';
+      area.innerHTML = `
+        <div class="error-banner">
+          <span style="font-size:1.2rem;">&#9888;</span>
+          <div><strong>Error</strong><br>${escHtml(msg)}</div>
+        </div>
+      `;
+    }
+
+    function formatBytes(b) {
+      if (b < 1024) return b + ' B';
+      return (b / 1024).toFixed(1) + ' KB';
+    }
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function escAttr(str) {
+      return String(str).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    }
+  </script>
+</body>
+</html>

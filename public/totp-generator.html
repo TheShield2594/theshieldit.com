@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOTP / 2FA Code Generator | The Shield IT</title>
+  <meta name="description" content="Generate TOTP two-factor authentication codes from a Base32 secret. Compatible with Google Authenticator, Authy, and any RFC 6238 TOTP app.">
+  <meta name="keywords" content="TOTP, 2FA, two-factor authentication, authenticator, OTP, one-time password, Base32, RFC 6238">
+  <meta name="author" content="The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/totp-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/totp-generator.html">
+  <meta property="og:title" content="TOTP / 2FA Code Generator">
+  <meta property="og:description" content="Generate TOTP two-factor authentication codes from a Base32 secret. Works offline in your browser.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <script src="/shared-shell.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 680px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+    input, select { width: 100%; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit;
+      outline: none; transition: border-color 0.2s ease; }
+    input:focus, select:focus { border-color: var(--primary); }
+    input::placeholder { color: var(--text-gray); }
+    .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-family: inherit; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .btn-full { width: 100%; margin-top: 1rem; padding: 0.875rem; }
+    .btn-secondary { background: rgba(30,41,59,0.8); border: 1px solid var(--border); color: var(--text-light); }
+    .btn-secondary:hover { border-color: var(--primary); background: rgba(59,130,246,0.1); box-shadow: none; }
+    .result-box { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; }
+    .label { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 0.25rem; }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .flex-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+    /* Secret input area */
+    .input-row { display: flex; gap: 0.75rem; align-items: stretch; }
+    .input-row input { flex: 1; font-family: 'SFMono-Regular', Consolas, monospace; letter-spacing: 0.05em; }
+    .input-row .btn { white-space: nowrap; flex-shrink: 0; }
+
+    /* Big code display */
+    .code-display-wrap { text-align: center; padding: 1.5rem 1rem; }
+    .code-digits { font-size: clamp(2.5rem, 10vw, 3.75rem); font-weight: 800; letter-spacing: 0.15em;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.1; }
+    .code-digits.refreshing { opacity: 0.4; transition: opacity 0.15s ease; }
+    .code-label { font-size: 0.8rem; color: var(--text-gray); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .code-copy-row { margin-top: 1rem; display: flex; justify-content: center; }
+
+    /* Countdown ring */
+    .countdown-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1.25rem; }
+    .ring-container { position: relative; width: 72px; height: 72px; }
+    .ring-bg, .ring-progress { fill: none; stroke-width: 5; }
+    .ring-bg { stroke: var(--border); }
+    .ring-progress { stroke: var(--primary); stroke-linecap: round;
+      transform: rotate(-90deg); transform-origin: 50% 50%;
+      transition: stroke-dashoffset 0.9s linear, stroke 0.5s ease; }
+    .ring-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 700; font-family: monospace; }
+    .countdown-label { font-size: 0.75rem; color: var(--text-gray); }
+
+    /* Progress bar */
+    .progress-bar-wrap { margin-top: 1.25rem; }
+    .progress-bar-track { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.9s linear, background 0.5s ease; }
+    .progress-bar-fill.urgent { background: linear-gradient(90deg, #f97316, var(--red)); }
+
+    /* Algorithm info tags */
+    .algo-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .algo-tag { font-size: 0.75rem; padding: 0.25rem 0.65rem; background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25); border-radius: 99px; color: var(--accent); font-family: monospace; }
+
+    /* Error state */
+    .error-msg { margin-top: 0.75rem; padding: 0.6rem 0.9rem; background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; font-size: 0.85rem; color: var(--red); }
+    .error-msg:empty { display: none; }
+
+    /* Secret display row */
+    .secret-result { margin-top: 1rem; }
+    .secret-mono { font-family: monospace; font-size: 0.85rem; word-break: break-all; color: var(--text-light); }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <h1>TOTP / 2FA Generator</h1>
+    <p class="subtitle">Generate time-based one-time passwords from a Base32 secret — runs entirely in your browser.</p>
+
+    <!-- Secret input panel -->
+    <div class="tool-panel">
+      <p class="panel-title">Secret Key (Base32)</p>
+      <div class="input-row">
+        <input
+          type="text"
+          id="secretInput"
+          placeholder="e.g. JBSWY3DPEHPK3PXP"
+          autocomplete="off"
+          spellcheck="false"
+          autocorrect="off"
+          autocapitalize="characters"
+        />
+        <button class="btn btn-secondary" onclick="generateRandomSecret()" title="Generate a new random secret">
+          Random
+        </button>
+      </div>
+      <div id="errorMsg" class="error-msg"></div>
+      <button class="btn btn-full" onclick="startOrRefresh()">Generate Code</button>
+
+      <div class="info-note">
+        Enter your authenticator app secret. It is never sent to any server — all computation happens locally in your browser using the Web Crypto API.
+      </div>
+    </div>
+
+    <!-- Code display panel -->
+    <div class="tool-panel" id="codePanel" style="display:none;">
+      <div class="flex-between">
+        <p class="panel-title" style="margin-bottom:0;">Current Code</p>
+        <div class="algo-tags">
+          <span class="algo-tag">TOTP</span>
+          <span class="algo-tag">HMAC-SHA1</span>
+          <span class="algo-tag">30s window</span>
+          <span class="algo-tag">6 digits</span>
+        </div>
+      </div>
+
+      <div class="code-display-wrap">
+        <div class="code-digits" id="codeDisplay">------</div>
+        <div class="code-label">One-Time Password</div>
+        <div class="code-copy-row">
+          <button class="copy-btn" id="copyCodeBtn" onclick="copyCode()">Copy Code</button>
+        </div>
+      </div>
+
+      <!-- Countdown ring + progress bar -->
+      <div class="countdown-wrap">
+        <div class="ring-container">
+          <svg viewBox="0 0 72 72" width="72" height="72">
+            <circle class="ring-bg" cx="36" cy="36" r="30" />
+            <circle class="ring-progress" id="ringProgress" cx="36" cy="36" r="30"
+              stroke-dasharray="188.5" stroke-dashoffset="0" />
+          </svg>
+          <div class="ring-text" id="ringText">30</div>
+        </div>
+        <div class="countdown-label">seconds remaining</div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBar" style="width:100%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secret display panel -->
+    <div class="tool-panel" id="secretPanel" style="display:none;">
+      <div class="flex-between" style="margin-bottom:0.75rem;">
+        <p class="panel-title" style="margin-bottom:0;">Active Secret</p>
+        <button class="copy-btn" id="copySecretBtn" onclick="copySecret()">Copy Secret</button>
+      </div>
+      <div class="secret-mono" id="secretDisplay"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ─── Base32 decode ───────────────────────────────────────────────────────
+    function base32Decode(str) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      str = str.replace(/[\s=]/g, '').toUpperCase();
+      if (!str) throw new Error('Secret is empty');
+      const bytes = [];
+      let bits = 0, value = 0;
+      for (let i = 0; i < str.length; i++) {
+        const idx = chars.indexOf(str[i]);
+        if (idx === -1) throw new Error('Invalid Base32 character: "' + str[i] + '"');
+        value = (value << 5) | idx;
+        bits += 5;
+        if (bits >= 8) { bytes.push((value >>> (bits - 8)) & 255); bits -= 8; }
+      }
+      return new Uint8Array(bytes);
+    }
+
+    // ─── Random Base32 secret ────────────────────────────────────────────────
+    function randomBase32(byteLength = 20) {
+      const bytes = crypto.getRandomValues(new Uint8Array(byteLength));
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let result = '';
+      let bits = 0, value = 0;
+      for (const byte of bytes) {
+        value = (value << 8) | byte;
+        bits += 8;
+        while (bits >= 5) { result += chars[(value >>> (bits - 5)) & 31]; bits -= 5; }
+      }
+      if (bits > 0) result += chars[(value << (5 - bits)) & 31];
+      // Format in groups of 4 for readability
+      return result.match(/.{1,4}/g).join(' ');
+    }
+
+    // ─── TOTP (RFC 6238, HMAC-SHA1) ──────────────────────────────────────────
+    async function generateTOTP(secret) {
+      const keyBytes = base32Decode(secret);
+      const counter = BigInt(Math.floor(Date.now() / 1000 / 30));
+      const counterBuf = new ArrayBuffer(8);
+      new DataView(counterBuf).setBigUint64(0, counter, false);
+      const key = await crypto.subtle.importKey(
+        'raw', keyBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']
+      );
+      const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, counterBuf));
+      const offset = sig[19] & 0xf;
+      const code =
+        ((sig[offset]     & 0x7f) << 24) |
+        ( sig[offset + 1]          << 16) |
+        ( sig[offset + 2]          <<  8) |
+          sig[offset + 3];
+      return String(code % 1_000_000).padStart(6, '0');
+    }
+
+    // ─── State ───────────────────────────────────────────────────────────────
+    let activeSecret = '';
+    let tickInterval = null;
+    const RING_CIRCUMFERENCE = 2 * Math.PI * 30; // r=30 → ~188.5
+
+    // ─── DOM refs ────────────────────────────────────────────────────────────
+    const secretInput   = document.getElementById('secretInput');
+    const errorMsg      = document.getElementById('errorMsg');
+    const codePanel     = document.getElementById('codePanel');
+    const secretPanel   = document.getElementById('secretPanel');
+    const codeDisplay   = document.getElementById('codeDisplay');
+    const secretDisplay = document.getElementById('secretDisplay');
+    const ringProgress  = document.getElementById('ringProgress');
+    const ringText      = document.getElementById('ringText');
+    const progressBar   = document.getElementById('progressBar');
+    const copyCodeBtn   = document.getElementById('copyCodeBtn');
+    const copySecretBtn = document.getElementById('copySecretBtn');
+
+    // ─── Countdown helpers ───────────────────────────────────────────────────
+    function secondsRemaining() {
+      return 30 - (Math.floor(Date.now() / 1000) % 30);
+    }
+
+    function updateCountdown() {
+      const rem = secondsRemaining();
+      const fraction = rem / 30;
+
+      // SVG ring
+      const offset = RING_CIRCUMFERENCE * (1 - fraction);
+      ringProgress.style.strokeDashoffset = offset;
+      ringProgress.style.stroke = rem <= 5 ? 'var(--red)' : rem <= 10 ? '#f97316' : 'var(--primary)';
+      ringText.textContent = rem;
+
+      // Progress bar
+      progressBar.style.width = (fraction * 100) + '%';
+      progressBar.classList.toggle('urgent', rem <= 5);
+    }
+
+    // ─── Core refresh logic ──────────────────────────────────────────────────
+    async function refreshCode() {
+      if (!activeSecret) return;
+      codeDisplay.classList.add('refreshing');
+      try {
+        const code = await generateTOTP(activeSecret);
+        // brief fade-in
+        setTimeout(() => {
+          codeDisplay.textContent = code;
+          codeDisplay.classList.remove('refreshing');
+        }, 120);
+      } catch (e) {
+        showError(e.message);
+        stopTicking();
+      }
+    }
+
+    function startTicking() {
+      if (tickInterval) clearInterval(tickInterval);
+      updateCountdown();
+      tickInterval = setInterval(async () => {
+        updateCountdown();
+        // refresh code when we cross into a new 30-second window
+        if (secondsRemaining() === 30) {
+          await refreshCode();
+        }
+      }, 1000);
+    }
+
+    function stopTicking() {
+      if (tickInterval) { clearInterval(tickInterval); tickInterval = null; }
+    }
+
+    // ─── UI helpers ──────────────────────────────────────────────────────────
+    function showError(msg) {
+      errorMsg.textContent = msg;
+    }
+
+    function clearError() {
+      errorMsg.textContent = '';
+    }
+
+    // ─── Actions ─────────────────────────────────────────────────────────────
+    async function startOrRefresh() {
+      const raw = secretInput.value.trim();
+      if (!raw) { showError('Please enter a Base32 secret.'); return; }
+
+      // validate by attempting decode
+      try {
+        base32Decode(raw);
+      } catch (e) {
+        showError(e.message);
+        return;
+      }
+      clearError();
+      activeSecret = raw;
+
+      // show panels
+      codePanel.style.display = '';
+      secretPanel.style.display = '';
+      secretDisplay.textContent = raw.toUpperCase();
+
+      // generate first code immediately
+      await refreshCode();
+      startTicking();
+    }
+
+    function generateRandomSecret() {
+      const secret = randomBase32(20);
+      secretInput.value = secret;
+      clearError();
+    }
+
+    async function copyCode() {
+      const code = codeDisplay.textContent;
+      if (!code || code === '------') return;
+      try {
+        await navigator.clipboard.writeText(code);
+        copyCodeBtn.textContent = 'Copied!';
+        setTimeout(() => { copyCodeBtn.textContent = 'Copy Code'; }, 1500);
+      } catch (_) {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyCodeBtn.textContent = 'Copied!';
+        setTimeout(() => { copyCodeBtn.textContent = 'Copy Code'; }, 1500);
+      }
+    }
+
+    async function copySecret() {
+      const s = activeSecret;
+      if (!s) return;
+      try {
+        await navigator.clipboard.writeText(s);
+        copySecretBtn.textContent = 'Copied!';
+        setTimeout(() => { copySecretBtn.textContent = 'Copy Secret'; }, 1500);
+      } catch (_) {
+        const ta = document.createElement('textarea');
+        ta.value = s; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        copySecretBtn.textContent = 'Copied!';
+        setTimeout(() => { copySecretBtn.textContent = 'Copy Secret'; }, 1500);
+      }
+    }
+
+    // ─── Enter key support ───────────────────────────────────────────────────
+    secretInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') startOrRefresh();
+    });
+
+    // ─── Init ring dasharray ─────────────────────────────────────────────────
+    ringProgress.style.strokeDasharray = RING_CIRCUMFERENCE;
+    ringProgress.style.strokeDashoffset = 0;
+  </script>
+</body>
+</html>

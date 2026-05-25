@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Base Converter - Binary, Octal, Decimal, Hex | The Shield IT</title>
+  <meta name="description" content="Free online number base converter. Convert between binary, octal, decimal, and hexadecimal instantly. Supports negative numbers and shows bit representations.">
+  <meta name="keywords" content="number base converter, binary to decimal, hex converter, octal converter, binary converter, base conversion">
+  <meta name="author" content="Brandon Shields, The Shield IT">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://theshieldit.com/number-base-converter.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theshieldit.com/number-base-converter.html">
+  <meta property="og:title" content="Number Base Converter">
+  <meta property="og:description" content="Convert between binary, octal, decimal, and hexadecimal instantly.">
+  <meta property="og:site_name" content="The Shield IT">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
+  <script src="/shared-shell.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
+      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
+      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite; }
+    @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+    h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; }
+    .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
+    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
+    .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
+    .field-group { margin-bottom: 1rem; }
+    .field-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+    .field-label { font-size: 0.85rem; font-weight: 600; color: var(--text-gray); }
+    .field-badge { font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 20px; font-weight: 600; letter-spacing: 0.04em; }
+    .badge-bin { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .badge-oct { background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.25); }
+    .badge-dec { background: rgba(59,130,246,0.12); color: var(--primary); border: 1px solid rgba(59,130,246,0.25); }
+    .badge-hex { background: rgba(139,92,246,0.12); color: var(--secondary); border: 1px solid rgba(139,92,246,0.25); }
+    .field-row { display: flex; gap: 0.5rem; align-items: center; }
+    .field-prefix { font-family: monospace; font-size: 0.85rem; color: var(--text-gray); padding: 0.75rem 0.6rem 0.75rem 0.75rem;
+      background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-right: none; border-radius: 8px 0 0 8px; white-space: nowrap; }
+    .base-input { flex: 1; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+      border-radius: 0 8px 8px 0; color: var(--text-light); font-size: 0.9rem; font-family: monospace; outline: none; transition: border-color 0.2s ease; }
+    .base-input:focus { border-color: var(--primary); }
+    .base-input::placeholder { color: var(--text-gray); }
+    .base-input.error { border-color: var(--red); }
+    .base-input.active { border-color: var(--primary); }
+    .copy-btn { font-size: 0.75rem; padding: 0.35rem 0.65rem; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .copy-btn.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
+    .error-msg { font-size: 0.78rem; color: var(--red); margin-top: 0.35rem; }
+
+    /* Quick inputs */
+    .quick-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .quick-btn { padding: 0.3rem 0.7rem; background: rgba(30,41,59,0.6); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text-gray); cursor: pointer; font-size: 0.8rem; font-family: monospace; transition: all 0.2s; }
+    .quick-btn:hover { border-color: var(--primary); color: var(--text-light); background: rgba(59,130,246,0.08); }
+
+    /* Bit representation */
+    .bit-section { margin-top: 0; }
+    .bit-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .bit-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; min-width: 42px; }
+    .bits-display { display: flex; gap: 2px; flex-wrap: wrap; }
+    .nibble { display: flex; gap: 2px; margin-right: 4px; }
+    .bit { width: 22px; height: 28px; display: flex; align-items: center; justify-content: center;
+      font-family: monospace; font-size: 0.85rem; font-weight: 700; border-radius: 4px; transition: all 0.15s; }
+    .bit-1 { background: rgba(59,130,246,0.2); color: var(--primary); border: 1px solid rgba(59,130,246,0.3); }
+    .bit-0 { background: rgba(30,41,59,0.5); color: var(--text-gray); border: 1px solid rgba(30,41,59,0.8); }
+
+    /* ASCII */
+    .ascii-display { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem;
+      background: rgba(15,23,42,0.5); border: 1px solid var(--border); border-radius: 10px; }
+    .ascii-char { font-size: 2rem; font-family: monospace; font-weight: 700; color: var(--accent); line-height: 1; min-width: 40px; text-align: center; }
+    .ascii-info { display: flex; flex-direction: column; }
+    .ascii-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); }
+    .ascii-desc { font-size: 0.9rem; color: var(--text-light); }
+
+    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+<div class="bg-animation"></div>
+<div class="container">
+  <h1>Number Base Converter</h1>
+  <p class="subtitle">Convert between Binary, Octal, Decimal, and Hexadecimal instantly</p>
+
+  <!-- Conversion Fields -->
+  <div class="tool-panel">
+    <div class="panel-title">Base Conversion</div>
+
+    <!-- Binary -->
+    <div class="field-group">
+      <div class="field-header">
+        <div class="field-label">Binary</div>
+        <span class="field-badge badge-bin">Base 2</span>
+      </div>
+      <div class="field-row">
+        <span class="field-prefix">0b</span>
+        <input id="bin-input" class="base-input" type="text" placeholder="e.g. 1010" autocomplete="off" spellcheck="false" data-base="2">
+        <button class="copy-btn" onclick="copyField('bin')">Copy</button>
+      </div>
+      <div class="error-msg hidden" id="bin-error"></div>
+    </div>
+
+    <!-- Octal -->
+    <div class="field-group">
+      <div class="field-header">
+        <div class="field-label">Octal</div>
+        <span class="field-badge badge-oct">Base 8</span>
+      </div>
+      <div class="field-row">
+        <span class="field-prefix">0o</span>
+        <input id="oct-input" class="base-input" type="text" placeholder="e.g. 12" autocomplete="off" spellcheck="false" data-base="8">
+        <button class="copy-btn" onclick="copyField('oct')">Copy</button>
+      </div>
+      <div class="error-msg hidden" id="oct-error"></div>
+    </div>
+
+    <!-- Decimal -->
+    <div class="field-group">
+      <div class="field-header">
+        <div class="field-label">Decimal</div>
+        <span class="field-badge badge-dec">Base 10</span>
+      </div>
+      <div class="field-row">
+        <span class="field-prefix" style="visibility:hidden">0d</span>
+        <input id="dec-input" class="base-input" type="text" placeholder="e.g. 10" autocomplete="off" spellcheck="false" data-base="10">
+        <button class="copy-btn" onclick="copyField('dec')">Copy</button>
+      </div>
+      <div class="error-msg hidden" id="dec-error"></div>
+    </div>
+
+    <!-- Hexadecimal -->
+    <div class="field-group" style="margin-bottom:0">
+      <div class="field-header">
+        <div class="field-label">Hexadecimal</div>
+        <span class="field-badge badge-hex">Base 16</span>
+      </div>
+      <div class="field-row">
+        <span class="field-prefix">0x</span>
+        <input id="hex-input" class="base-input" type="text" placeholder="e.g. A" autocomplete="off" spellcheck="false" data-base="16">
+        <button class="copy-btn" onclick="copyField('hex')">Copy</button>
+      </div>
+      <div class="error-msg hidden" id="hex-error"></div>
+    </div>
+  </div>
+
+  <!-- Quick Inputs -->
+  <div class="tool-panel">
+    <div class="panel-title">Quick Values</div>
+    <div class="quick-btns">
+      <button class="quick-btn" onclick="setDecimal('0')">0</button>
+      <button class="quick-btn" onclick="setDecimal('1')">1</button>
+      <button class="quick-btn" onclick="setDecimal('255')">255 (2⁸−1)</button>
+      <button class="quick-btn" onclick="setDecimal('256')">256 (2⁸)</button>
+      <button class="quick-btn" onclick="setDecimal('1024')">1024 (2¹⁰)</button>
+      <button class="quick-btn" onclick="setDecimal('65535')">65535 (2¹⁶−1)</button>
+      <button class="quick-btn" onclick="setDecimal('65536')">65536 (2¹⁶)</button>
+      <button class="quick-btn" onclick="setDecimal('2147483647')">2147483647 (2³¹−1)</button>
+      <button class="quick-btn" onclick="setDecimal('4294967295')">4294967295 (2³²−1)</button>
+      <button class="quick-btn" onclick="setDecimal('-1')">−1</button>
+      <button class="quick-btn" onclick="setDecimal('-128')">−128</button>
+    </div>
+  </div>
+
+  <!-- Bit Representation -->
+  <div class="tool-panel" id="bit-panel">
+    <div class="panel-title">Bit Representation</div>
+    <div class="bit-section" id="bit-section">
+      <div class="bit-row">
+        <span class="bit-label">8-bit</span>
+        <div class="bits-display" id="bits-8"></div>
+      </div>
+      <div class="bit-row">
+        <span class="bit-label">16-bit</span>
+        <div class="bits-display" id="bits-16"></div>
+      </div>
+      <div class="bit-row">
+        <span class="bit-label">32-bit</span>
+        <div class="bits-display" id="bits-32"></div>
+      </div>
+    </div>
+    <div id="bit-placeholder" class="info-note hidden">Enter a valid integer to see its bit representation.</div>
+
+    <!-- ASCII -->
+    <div id="ascii-panel" class="hidden">
+      <div class="divider"></div>
+      <div class="panel-title">ASCII Character</div>
+      <div class="ascii-display">
+        <div class="ascii-char" id="ascii-char"></div>
+        <div class="ascii-info">
+          <span class="ascii-label">ASCII</span>
+          <span class="ascii-desc" id="ascii-desc"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-note">All conversions happen locally in your browser. Negative numbers use two's complement for bit views. Supports values up to 2⁵³ using BigInt.</div>
+</div>
+
+<script>
+  const fields = {
+    bin: { input: document.getElementById('bin-input'), error: document.getElementById('bin-error'), base: 2 },
+    oct: { input: document.getElementById('oct-input'), error: document.getElementById('oct-error'), base: 8 },
+    dec: { input: document.getElementById('dec-input'), error: document.getElementById('dec-error'), base: 10 },
+    hex: { input: document.getElementById('hex-input'), error: document.getElementById('hex-error'), base: 16 },
+  };
+
+  const ASCII_NAMES = {
+    32: 'Space', 8: 'Backspace', 9: 'Tab', 10: 'Line Feed', 13: 'Carriage Return',
+    27: 'Escape', 0: 'Null', 127: 'Delete'
+  };
+
+  let updating = false;
+
+  function parseBigInt(str, base) {
+    if (!str || str.trim() === '') return null;
+    const s = str.trim();
+    const negative = s.startsWith('-');
+    const abs = negative ? s.slice(1) : s;
+    if (abs === '') return null;
+
+    const validChars = { 2: /^[01]+$/, 8: /^[0-7]+$/, 10: /^[0-9]+$/, 16: /^[0-9a-fA-F]+$/ };
+    if (!validChars[base].test(abs)) return null;
+
+    try {
+      let n;
+      if (base === 10) {
+        n = BigInt(abs);
+      } else {
+        n = BigInt('0x' + parseInt(abs, base).toString(16));
+        // for large numbers, do proper parsing
+        n = BigInt(0);
+        const chars = abs.split('');
+        const bigBase = BigInt(base);
+        for (const c of chars) {
+          n = n * bigBase + BigInt(parseInt(c, base));
+        }
+      }
+      return negative ? -n : n;
+    } catch {
+      return null;
+    }
+  }
+
+  function toAllBases(n) {
+    const negative = n < 0n;
+    const abs = negative ? -n : n;
+    return {
+      binary: (negative ? '-' : '') + abs.toString(2),
+      octal:  (negative ? '-' : '') + abs.toString(8),
+      decimal: n.toString(10),
+      hex:    (negative ? '-' : '') + abs.toString(16).toUpperCase(),
+    };
+  }
+
+  function renderBits(container, bitsStr, totalBits) {
+    container.innerHTML = '';
+    // Pad to totalBits
+    let bits = bitsStr.padStart(totalBits, '0');
+    if (bits.length > totalBits) {
+      bits = bits.slice(-totalBits);
+    }
+    for (let i = 0; i < bits.length; i++) {
+      if (i % 4 === 0) {
+        const nibble = document.createElement('div');
+        nibble.className = 'nibble';
+        container.appendChild(nibble);
+      }
+      const bit = document.createElement('div');
+      bit.className = bits[i] === '1' ? 'bit bit-1' : 'bit bit-0';
+      bit.textContent = bits[i];
+      container.lastChild.appendChild(bit);
+    }
+  }
+
+  function updateBits(n) {
+    const bitSection = document.getElementById('bit-section');
+    const bitPlaceholder = document.getElementById('bit-placeholder');
+    const asciiPanel = document.getElementById('ascii-panel');
+
+    // Only show bits for values that fit in 32-bit range (signed or unsigned)
+    if (n === null) {
+      bitSection.classList.add('hidden');
+      bitPlaceholder.classList.remove('hidden');
+      asciiPanel.classList.add('hidden');
+      return;
+    }
+
+    const isSmall = n >= -2147483648n && n <= 4294967295n;
+
+    if (isSmall) {
+      bitSection.classList.remove('hidden');
+      bitPlaceholder.classList.add('hidden');
+
+      let bitsStr;
+      if (n < 0n) {
+        // Two's complement for negative
+        // 32-bit two's complement
+        const mask32 = 0xFFFFFFFFn;
+        const twos = (n + (1n << 32n)) & mask32;
+        bitsStr = twos.toString(2).padStart(32, '0');
+      } else {
+        bitsStr = n.toString(2);
+      }
+
+      renderBits(document.getElementById('bits-8'), bitsStr, 8);
+      renderBits(document.getElementById('bits-16'), bitsStr, 16);
+      renderBits(document.getElementById('bits-32'), bitsStr, 32);
+    } else {
+      bitSection.classList.add('hidden');
+      bitPlaceholder.classList.remove('hidden');
+    }
+
+    // ASCII
+    if (n >= 32n && n <= 126n) {
+      const code = Number(n);
+      const char = String.fromCharCode(code);
+      document.getElementById('ascii-char').textContent = char;
+      document.getElementById('ascii-desc').textContent = `"${char}" (code point ${code})`;
+      asciiPanel.classList.remove('hidden');
+    } else if (n >= 0n && n < 32n || n === 127n) {
+      const code = Number(n);
+      const name = ASCII_NAMES[code] || `Control character (${code})`;
+      document.getElementById('ascii-char').textContent = '␣'.replace('␣', code === 32 ? ' ' : '?');
+      document.getElementById('ascii-char').textContent = '·';
+      document.getElementById('ascii-desc').textContent = name + ` (code point ${code})`;
+      asciiPanel.classList.remove('hidden');
+    } else {
+      asciiPanel.classList.add('hidden');
+    }
+  }
+
+  function handleInput(sourceKey) {
+    if (updating) return;
+    updating = true;
+
+    const field = fields[sourceKey];
+    const rawValue = field.input.value;
+
+    // Clear errors
+    Object.values(fields).forEach(f => {
+      f.error.classList.add('hidden');
+      f.input.classList.remove('error', 'active');
+    });
+    field.input.classList.add('active');
+
+    if (rawValue.trim() === '' || rawValue.trim() === '-') {
+      // Clear all other fields
+      Object.entries(fields).forEach(([k, f]) => {
+        if (k !== sourceKey) f.input.value = '';
+      });
+      updateBits(null);
+      updating = false;
+      return;
+    }
+
+    const n = parseBigInt(rawValue, field.base);
+
+    if (n === null) {
+      field.input.classList.add('error');
+      field.input.classList.remove('active');
+      const baseNames = { 2: 'binary (0-1)', 8: 'octal (0-7)', 10: 'decimal (0-9)', 16: 'hex (0-9, A-F)' };
+      field.error.textContent = `Invalid ${baseNames[field.base]} value`;
+      field.error.classList.remove('hidden');
+      Object.entries(fields).forEach(([k, f]) => {
+        if (k !== sourceKey) f.input.value = '';
+      });
+      updateBits(null);
+      updating = false;
+      return;
+    }
+
+    const result = toAllBases(n);
+    fields.bin.input.value = sourceKey === 'bin' ? rawValue : result.binary;
+    fields.oct.input.value = sourceKey === 'oct' ? rawValue : result.octal;
+    fields.dec.input.value = sourceKey === 'dec' ? rawValue : result.decimal;
+    fields.hex.input.value = sourceKey === 'hex' ? rawValue : result.hex;
+
+    updateBits(n);
+    updating = false;
+  }
+
+  // Wire up inputs
+  Object.entries(fields).forEach(([key, field]) => {
+    field.input.addEventListener('input', () => handleInput(key));
+  });
+
+  function setDecimal(val) {
+    fields.dec.input.value = val;
+    handleInput('dec');
+    fields.dec.input.focus();
+  }
+
+  function copyField(key) {
+    const val = fields[key].input.value;
+    if (!val) return;
+    navigator.clipboard.writeText(val).then(() => {
+      const btn = fields[key].input.closest('.field-row').querySelector('.copy-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+
+  // Init with 255
+  setDecimal('255');
+</script>
+</body>
+</html>
