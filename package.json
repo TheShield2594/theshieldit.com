@@ -11,6 +11,8 @@
     "build": "next build"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
     "clsx": "^2.1.1",
     "geist": "^1.7.0",
     "jszip": "^3.10.1",
@@ -19,7 +21,8 @@
     "pdf-lib": "^1.17.1",
     "react": "^19",
     "react-dom": "^19",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
@@ -27,6 +30,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
     "satori": "^0.26.0",
     "tailwindcss": "^4",
     "typescript": "^5.7"
