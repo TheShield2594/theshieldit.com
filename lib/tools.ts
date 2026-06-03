@@ -739,6 +739,50 @@ export const TOOLS: Tool[] = [
     icon: "pen-line",
     new: true,
   },
+  {
+    title: "Base64 Encoder / Decoder",
+    description:
+      "Encode and decode Base64 strings instantly. Supports plain text and URL-safe Base64 variants with one-click copy.",
+    href: "/tools/base64",
+    tags: "base64 encode decode url-safe string converter developer utility",
+    category: "developer",
+    tagLabel: "Encoder",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "files",
+  },
+  {
+    title: "JSON Formatter & Validator",
+    description:
+      "Format, validate, and minify JSON. Highlights syntax errors and lets you collapse or expand nested objects.",
+    href: "/tools/json-formatter",
+    tags: "json formatter validator minify prettify syntax error developer utility",
+    category: "developer",
+    tagLabel: "Formatter",
+    iconColor: "text-chart-2 bg-chart-2/10",
+    icon: "file-text",
+  },
+  {
+    title: "Regex Tester",
+    description:
+      "Test regular expressions interactively with live match highlighting, group capture display, and common pattern examples.",
+    href: "/tools/regex-tester",
+    tags: "regex regular expression tester pattern match group capture developer utility",
+    category: "developer",
+    tagLabel: "Tester",
+    iconColor: "text-primary bg-primary/10",
+    icon: "scan-search",
+  },
+  {
+    title: "Text Diff / Compare",
+    description:
+      "Compare two blocks of text side-by-side and highlight every addition, deletion, and unchanged line.",
+    href: "/tools/text-diff",
+    tags: "text diff compare difference lines added removed changed developer utility",
+    category: "developer",
+    tagLabel: "Diff",
+    iconColor: "text-chart-4 bg-chart-4/10",
+    icon: "scissors",
+  },
 ]
 
 /** Per-category tool counts, precomputed to avoid repeated TOOLS.filter() calls in render. */
