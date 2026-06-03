@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client"
-import { useRef, useMemo, Suspense } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { useRef, useMemo, useEffect, Suspense } from "react"
+import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls, Stars, Float } from "@react-three/drei"
 import * as THREE from "three"
 import type { SeedData } from "@/hooks/useFingerprint"
@@ -37,6 +36,18 @@ const GeometricPrism = ({ seedData, isLoading }: PrismProps) => {
     return new THREE.WireframeGeometry(geo)
   }, [geometry])
 
+  // Stable clone for the outer shell mesh — avoids re-creating on every render
+  const clonedGeometry = useMemo(() => geometry.clone(), [geometry])
+
+  // Free GPU memory when geometries change or on unmount
+  useEffect(() => {
+    return () => {
+      geometry.dispose()
+      wireframeGeometry.dispose()
+      clonedGeometry.dispose()
+    }
+  }, [geometry, wireframeGeometry, clonedGeometry])
+
   const color = useMemo(
     () => new THREE.Color(`hsl(${seedData.colorHue}, ${seedData.colorSaturation}%, 60%)`),
     [seedData.colorHue, seedData.colorSaturation]
@@ -60,8 +71,8 @@ const GeometricPrism = ({ seedData, isLoading }: PrismProps) => {
       meshRef.current.scale.set(scale, scale, scale)
     }
     if (wireframeRef.current && !isLoading) {
-      wireframeRef.current.rotation.x = meshRef.current?.rotation.x || 0
-      wireframeRef.current.rotation.y = meshRef.current?.rotation.y || 0
+      wireframeRef.current.rotation.x = meshRef.current?.rotation.x ?? 0
+      wireframeRef.current.rotation.y = meshRef.current?.rotation.y ?? 0
     }
   })
 
@@ -91,13 +102,12 @@ const GeometricPrism = ({ seedData, isLoading }: PrismProps) => {
 
         {seedData.wireframe && (
           <lineSegments ref={wireframeRef} geometry={wireframeGeometry}>
-            <lineBasicMaterial color={secondaryColor} linewidth={2} transparent opacity={0.8} />
+            <lineBasicMaterial color={secondaryColor} transparent opacity={0.8} />
           </lineSegments>
         )}
 
         {!seedData.wireframe && (
-          <mesh scale={1.05}>
-            <primitive object={geometry.clone()} />
+          <mesh scale={1.05} geometry={clonedGeometry}>
             <meshBasicMaterial color={secondaryColor} wireframe transparent opacity={0.3} />
           </mesh>
         )}
@@ -150,8 +160,8 @@ const ParticleField = ({ seedData }: { seedData: SeedData }) => {
   return (
     <points ref={particlesRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={particleCount} array={positions} itemSize={3} />
-        <bufferAttribute attach="attributes-color" count={particleCount} array={colors} itemSize={3} />
+        <bufferAttribute args={[positions, 3]} attach="attributes-position" />
+        <bufferAttribute args={[colors, 3]} attach="attributes-color" />
       </bufferGeometry>
       <pointsMaterial size={0.05} vertexColors transparent opacity={0.6} sizeAttenuation />
     </points>

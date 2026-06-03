@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import dynamic from "next/dynamic"
 import {
   Shield,
@@ -293,16 +293,17 @@ export default function BrowserFingerprint() {
   const [showAbout, setShowAbout] = useState(false)
   const [showData, setShowData] = useState(false)
   const [msgIndex, setMsgIndex] = useState(0)
+  const canvasContainerRef = useRef<HTMLDivElement>(null)
 
-  // Cycle scanning messages during load
-  useState(() => {
+  useEffect(() => {
     if (!isLoading) return
     const id = setInterval(() => setMsgIndex((i) => (i + 1) % scanningMessages.length), 200)
     return () => clearInterval(id)
-  })
+  }, [isLoading])
 
   const handleDownload = useCallback(() => {
-    const canvas = document.querySelector("canvas")
+    const container = canvasContainerRef.current
+    const canvas = container?.querySelector("canvas")
     if (canvas) {
       const link = document.createElement("a")
       link.download = `identity-prism-${seedData?.seed ?? "art"}.png`
@@ -334,7 +335,7 @@ export default function BrowserFingerprint() {
         ) : (
           <>
             {/* 3D Canvas */}
-            <div className="absolute inset-0 z-10">
+            <div ref={canvasContainerRef} className="absolute inset-0 z-10">
               <PrismCanvas seedData={seedData} isLoading={isLoading} />
             </div>
 
@@ -374,7 +375,7 @@ export default function BrowserFingerprint() {
             </div>
 
             <p className="absolute bottom-20 left-1/2 z-20 -translate-x-1/2 rounded-full px-4 py-2 text-xs text-slate-500" style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.1)" }}>
-              Drag to rotate • Scroll to zoom
+              Drag to rotate
             </p>
 
             {/* DNA panel */}

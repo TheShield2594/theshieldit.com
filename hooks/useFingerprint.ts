@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client"
 import { useState, useEffect } from "react"
 
@@ -39,6 +38,15 @@ export interface SeedData {
   glowIntensity: number
 }
 
+// Non-standard navigator extensions
+interface NavigatorExtended extends Navigator {
+  getBattery?: () => Promise<{ level: number; charging: boolean }>
+  deviceMemory?: number
+  connection?: { effectiveType?: string }
+  mozConnection?: { effectiveType?: string }
+  webkitConnection?: { effectiveType?: string }
+}
+
 const hashString = (str: string): number => {
   let hash = 0
   for (let i = 0; i < str.length; i++) {
@@ -51,7 +59,8 @@ const hashString = (str: string): number => {
 
 const generateCanvasFingerprint = (): string => {
   const canvas = document.createElement("canvas")
-  const ctx = canvas.getContext("2d")!
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return ""
   canvas.width = 200
   canvas.height = 50
   ctx.textBaseline = "top"
@@ -66,10 +75,16 @@ const generateCanvasFingerprint = (): string => {
 }
 
 const generateAudioFingerprint = async (): Promise<string> => {
+  let audioContext: AudioContext | null = null
+  let oscillator: OscillatorNode | null = null
   try {
-    const audioContext = new (window.AudioContext ||
-      (window as any).webkitAudioContext)()
-    const oscillator = audioContext.createOscillator()
+    const AudioCtx =
+      window.AudioContext ??
+      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+    if (!AudioCtx) return "audio-unavailable"
+
+    audioContext = new AudioCtx()
+    oscillator = audioContext.createOscillator()
     const analyser = audioContext.createAnalyser()
     const gainNode = audioContext.createGain()
     const processor = audioContext.createScriptProcessor(4096, 1, 1)
@@ -82,28 +97,33 @@ const generateAudioFingerprint = async (): Promise<string> => {
     gainNode.connect(audioContext.destination)
     oscillator.start(0)
 
-    const fingerprint = await new Promise<string>((resolve) => {
-      processor.onaudioprocess = (event) => {
-        const data = event.inputBuffer.getChannelData(0)
-        let sum = 0
-        for (let i = 0; i < data.length; i++) sum += Math.abs(data[i])
-        resolve(sum.toString())
-      }
-    })
+    const fingerprint = await Promise.race<string>([
+      new Promise<string>((resolve) => {
+        processor.onaudioprocess = (event) => {
+          processor.onaudioprocess = null
+          const data = event.inputBuffer.getChannelData(0)
+          let sum = 0
+          for (let i = 0; i < data.length; i++) sum += Math.abs(data[i])
+          resolve(sum.toString())
+        }
+      }),
+      new Promise<string>((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), 3000)
+      ),
+    ])
 
-    oscillator.stop()
-    audioContext.close()
     return fingerprint
   } catch {
     return "audio-error"
+  } finally {
+    try { oscillator?.stop() } catch { /* already stopped */ }
+    audioContext?.close()
   }
 }
 
 const getConnectionType = (): string | undefined => {
-  const connection =
-    (navigator as any).connection ||
-    (navigator as any).mozConnection ||
-    (navigator as any).webkitConnection
+  const nav = navigator as NavigatorExtended
+  const connection = nav.connection ?? nav.mozConnection ?? nav.webkitConnection
   return connection?.effectiveType
 }
 
@@ -118,7 +138,7 @@ export const useFingerprint = () => {
       let batteryCharging: boolean | undefined
 
       try {
-        const nav = navigator as any
+        const nav = navigator as NavigatorExtended
         if (nav.getBattery) {
           const battery = await nav.getBattery()
           batteryLevel = battery.level
@@ -130,6 +150,7 @@ export const useFingerprint = () => {
 
       const audioFingerprint = await generateAudioFingerprint()
 
+      const nav = navigator as NavigatorExtended
       const data: FingerprintData = {
         userAgent: navigator.userAgent,
         platform: navigator.platform,
@@ -137,7 +158,7 @@ export const useFingerprint = () => {
         screenWidth: window.screen.width,
         screenHeight: window.screen.height,
         colorDepth: window.screen.colorDepth,
-        deviceMemory: (navigator as any).deviceMemory,
+        deviceMemory: nav.deviceMemory,
         hardwareConcurrency: navigator.hardwareConcurrency,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         timezoneOffset: new Date().getTimezoneOffset(),
@@ -151,7 +172,8 @@ export const useFingerprint = () => {
         plugins: Array.from(navigator.plugins)
           .map((p) => p.name)
           .join(","),
-        doNotTrack: navigator.doNotTrack,
+        // doNotTrack is string | null in DOM types; coerce null → undefined
+        doNotTrack: navigator.doNotTrack ?? undefined,
         cookiesEnabled: navigator.cookieEnabled,
         languages: navigator.languages?.join(",") || navigator.language,
         connectionType: getConnectionType(),
@@ -166,8 +188,8 @@ export const useFingerprint = () => {
     return () => clearTimeout(timeout)
   }, [])
 
-  const generateSeedData = (fp: FingerprintData) => {
-    const combinedString = [
+  const generateSeedData = (fp: FingerprintData, includeTimestamp = false) => {
+    const parts = [
       fp.userAgent,
       fp.platform,
       fp.screenWidth.toString(),
@@ -175,8 +197,11 @@ export const useFingerprint = () => {
       fp.language,
       fp.timezone,
       fp.canvasFingerprint.slice(0, 50),
-      Date.now().toString(),
-    ].join("|")
+    ]
+    // Timestamp is only included when regenerating so the initial seed is
+    // deterministic for the same browser/device combination.
+    if (includeTimestamp) parts.push(Date.now().toString())
+    const combinedString = parts.join("|")
 
     const seed = hashString(combinedString)
 
@@ -227,11 +252,7 @@ export const useFingerprint = () => {
     setIsLoading(true)
     setTimeout(() => {
       if (fingerprint) {
-        const timeVaryingFingerprint = {
-          ...fingerprint,
-          userAgent: fingerprint.userAgent + Date.now().toString(),
-        }
-        generateSeedData(timeVaryingFingerprint)
+        generateSeedData(fingerprint, true)
       }
       setIsLoading(false)
     }, 100)
