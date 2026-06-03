@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Tools Suite | The Shield IT</title>
+    <meta name="description" content="Merge, split, rotate, view metadata, and convert images to PDF — all in your browser.">
+    <link rel="icon" href="/favicon.ico">
+    <script src="/shared-shell.js"></script>
+    <!-- pdf-lib for PDF manipulation -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #060a12;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 960px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 28px; padding-top: 20px; }
+        h1 {
+            font-size: 2.2rem; margin-bottom: 8px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 1rem; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 4px; background: #1a2236; border-radius: 12px;
+            padding: 6px; margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .tab-btn {
+            flex: 1; min-width: 100px; padding: 9px 14px; border: none; border-radius: 8px;
+            background: transparent; color: #94a3b8; font-size: 0.88rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; text-align: center;
+        }
+        .tab-btn.active { background: #3b82f6; color: white; }
+        .tab-btn:hover:not(.active) { background: rgba(59,130,246,0.1); color: #e2e8f0; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Cards */
+        .card {
+            background: #1a2236; border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; padding: 26px; margin-bottom: 18px;
+        }
+        .card h2 { font-size: 1.2rem; color: #f1f5f9; margin-bottom: 6px; }
+        .card .desc { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; }
+
+        /* Drop zone */
+        .dropzone {
+            border: 2px dashed rgba(59,130,246,0.35); border-radius: 12px;
+            padding: 36px 20px; text-align: center; cursor: pointer;
+            transition: all 0.2s; background: rgba(59,130,246,0.04); position: relative;
+        }
+        .dropzone:hover, .dropzone.drag-over { border-color: #3b82f6; background: rgba(59,130,246,0.08); }
+        .dropzone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .dropzone-icon { font-size: 2.4rem; margin-bottom: 10px; }
+        .dropzone p { color: #94a3b8; font-size: 0.9rem; }
+        .dropzone strong { color: #e2e8f0; }
+
+        /* File list */
+        .file-list { margin-top: 16px; }
+        .file-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            background: rgba(6,10,18,0.5); border-radius: 8px; margin-bottom: 8px;
+        }
+        .file-item .file-name { flex: 1; font-size: 0.88rem; color: #cbd5e1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .file-item .file-size { font-size: 0.78rem; color: #475569; white-space: nowrap; }
+        .file-item .remove-btn {
+            background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; padding: 2px 6px;
+            border-radius: 4px; transition: background 0.15s;
+        }
+        .file-item .remove-btn:hover { background: rgba(239,68,68,0.12); }
+
+        /* Form controls */
+        label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; }
+        input[type=number], input[type=text], select {
+            background: rgba(6,10,18,0.6); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 9px 14px; color: #e2e8f0; font-size: 0.9rem;
+            outline: none; transition: border-color 0.2s; width: 100%;
+        }
+        input[type=number]:focus, input[type=text]:focus, select:focus { border-color: #3b82f6; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 16px 0; }
+
+        /* Action button */
+        .action-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb); color: white;
+            border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer;
+            font-size: 0.95rem; font-weight: 600; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.4); }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Progress / status */
+        .status { margin-top: 14px; padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; display: none; }
+        .status.success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: #86efac; display: block; }
+        .status.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #f87171; display: block; }
+        .status.info { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); color: #93c5fd; display: block; }
+
+        /* Metadata table */
+        .meta-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .meta-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .meta-table tr:last-child { border-bottom: none; }
+        .meta-table td { padding: 9px 8px; font-size: 0.87rem; }
+        .meta-table td:first-child { color: #94a3b8; width: 160px; }
+        .meta-table td:last-child { color: #e2e8f0; word-break: break-all; }
+
+        /* Image grid */
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 14px; }
+        .image-thumb {
+            background: rgba(6,10,18,0.5); border-radius: 8px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.07); aspect-ratio: 3/4; position: relative;
+        }
+        .image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .image-thumb .remove-btn {
+            position: absolute; top: 4px; right: 4px; background: rgba(239,68,68,0.8);
+            border: none; color: white; cursor: pointer; border-radius: 4px; font-size: 0.75rem; padding: 2px 6px;
+        }
+        .image-thumb .img-name { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); padding: 4px 6px; font-size: 0.7rem; color: #e2e8f0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+        .spinner-inline {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📄 PDF Tools Suite</h1>
+        <p class="subtitle">Merge, split, rotate, view metadata, and convert images — all in your browser, nothing uploaded</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('merge', this)">🔗 Merge</button>
+        <button class="tab-btn" onclick="switchTab('split', this)">✂️ Split</button>
+        <button class="tab-btn" onclick="switchTab('metadata', this)">🔍 Metadata</button>
+        <button class="tab-btn" onclick="switchTab('rotate', this)">🔄 Rotate</button>
+        <button class="tab-btn" onclick="switchTab('img2pdf', this)">🖼️ Image→PDF</button>
+    </div>
+
+    <!-- MERGE -->
+    <div id="tab-merge" class="tab-panel active">
+        <div class="card">
+            <h2>Merge PDFs</h2>
+            <p class="desc">Combine multiple PDF files into one. Add files in order, then download the merged result.</p>
+
+            <div class="dropzone" id="merge-drop">
+                <input type="file" id="merge-input" multiple accept=".pdf" onchange="addMergeFiles(this.files)">
+                <div class="dropzone-icon">📎</div>
+                <p><strong>Click to add PDFs</strong> or drag and drop</p>
+                <p style="font-size:0.8rem;color:#475569;margin-top:6px;">Multiple files accepted</p>
+            </div>
+
+            <div class="file-list" id="merge-list"></div>
+
+            <button class="action-btn" id="merge-btn" onclick="mergePDFs()" disabled>
+                🔗 Merge &amp; Download
+            </button>
+            <div class="status" id="merge-status"></div>
+        </div>
+    </div>
+
+    <!-- SPLIT -->
+    <div id="tab-split" class="tab-panel">
+        <div class="card">
+            <h2>Split PDF</h2>
+            <p class="desc">Extract a page range or split into individual pages.</p>
+
+            <div class="dropzone" id="split-drop">
+                <input type="file" id="split-input" accept=".pdf" onchange="loadSplitFile(this.files[0])">
+                <div class="dropzone-icon">📄</div>
+                <p><strong>Click to select a PDF</strong> or drag and drop</p>
+            </div>
+
+            <div id="split-info" style="display:none;">
+                <div class="file-list">
+                    <div class="file-item" id="split-file-item">
+                        <span class="file-name" id="split-fname"></span>
+                        <span class="file-size" id="split-finfo"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label>Start Page</label>
+                        <input type="number" id="split-start" value="1" min="1">
+                    </div>
+                    <div>
+                        <label>End Page</label>
+                        <input type="number" id="split-end" value="1" min="1">
+                    </div>
+                    <div>
+                        <label>Mode</label>
+                        <select id="split-mode">
+                            <option value="range">Extract range as single PDF</option>
+                            <option value="individual">Split into individual pages</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="action-btn" onclick="splitPDF()">✂️ Split &amp; Download</button>
+            </div>
+            <div class="status" id="split-status"></div>
+        </div>
+    </div>
+
+    <!-- METADATA -->
+    <div id="tab-metadata" class="tab-panel">
+        <div class="card">
+            <h2>PDF Metadata Viewer</h2>
+            <p class="desc">Inspect a PDF's hidden metadata: title, author, creator, producer, dates, and page count.</p>
+
+            <div class="dropzone">
+                <input type="file" id="meta-input" accept=".pdf" onchange="loadMetadata(this.files[0])">
+                <div class="dropzone-icon">🔍</div>
+                <p><strong>Click to select a PDF</strong> or drag and drop</p>
+            </div>
+
+            <div id="meta-results" style="display:none;margin-top:18px;">
+                <table class="meta-table" id="meta-table"></table>
+            </div>
+            <div class="status" id="meta-status"></div>
+        </div>
+    </div>
+
+    <!-- ROTATE -->
+    <div id="tab-rotate" class="tab-panel">
+        <div class="card">
+            <h2>PDF Page Rotator</h2>
+            <p class="desc">Rotate all pages or a specific range in a PDF by 90°, 180°, or 270°.</p>
+
+            <div class="dropzone">
+                <input type="file" id="rotate-input" accept=".pdf" onchange="loadRotateFile(this.files[0])">
+                <div class="dropzone-icon">🔄</div>
+                <p><strong>Click to select a PDF</strong> or drag and drop</p>
+            </div>
+
+            <div id="rotate-info" style="display:none;">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-name" id="rotate-fname"></span>
+                        <span class="file-size" id="rotate-finfo"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label>Rotation</label>
+                        <select id="rotate-angle">
+                            <option value="90">90° clockwise</option>
+                            <option value="180">180°</option>
+                            <option value="270">270° clockwise (90° counter)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Pages</label>
+                        <select id="rotate-scope">
+                            <option value="all">All pages</option>
+                            <option value="range">Page range</option>
+                        </select>
+                    </div>
+                    <div id="rotate-range-fields" style="display:none;">
+                        <label>Start Page</label>
+                        <input type="number" id="rotate-start" value="1" min="1">
+                    </div>
+                    <div id="rotate-range-end" style="display:none;">
+                        <label>End Page</label>
+                        <input type="number" id="rotate-end" value="1" min="1">
+                    </div>
+                </div>
+                <button class="action-btn" onclick="rotatePDF()">🔄 Rotate &amp; Download</button>
+            </div>
+            <div class="status" id="rotate-status"></div>
+        </div>
+    </div>
+
+    <!-- IMAGE TO PDF -->
+    <div id="tab-img2pdf" class="tab-panel">
+        <div class="card">
+            <h2>Image to PDF</h2>
+            <p class="desc">Convert JPEG, PNG, WebP, or BMP images into a single PDF. Choose page size.</p>
+
+            <div class="dropzone" id="img-drop">
+                <input type="file" id="img-input" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/bmp" onchange="addImages(this.files)">
+                <div class="dropzone-icon">🖼️</div>
+                <p><strong>Click to add images</strong> or drag and drop</p>
+                <p style="font-size:0.8rem;color:#475569;margin-top:6px;">JPEG, PNG, WebP, GIF, BMP accepted</p>
+            </div>
+
+            <div class="image-grid" id="img-grid"></div>
+
+            <div class="form-row" style="margin-top:16px;">
+                <div>
+                    <label>Page Size</label>
+                    <select id="img-size">
+                        <option value="a4">A4 (210 × 297 mm)</option>
+                        <option value="letter">Letter (8.5 × 11 in)</option>
+                        <option value="fit">Fit to image</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Orientation</label>
+                    <select id="img-orientation">
+                        <option value="portrait">Portrait</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="action-btn" id="img-btn" onclick="imagesToPDF()" disabled>
+                🖼️ Convert &amp; Download
+            </button>
+            <div class="status" id="img-status"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---- Shared ----
+    function switchTab(name, btn) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function fmt(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+        return (bytes/1048576).toFixed(1) + ' MB';
+    }
+
+    function setStatus(id, type, msg) {
+        const el = document.getElementById(id);
+        el.className = 'status ' + type;
+        el.textContent = msg;
+    }
+
+    function clearStatus(id) {
+        const el = document.getElementById(id);
+        el.className = 'status';
+        el.textContent = '';
+    }
+
+    function downloadBytes(bytes, filename) {
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename; a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+
+    // ---- MERGE ----
+    let mergeFiles = [];
+
+    function addMergeFiles(files) {
+        for (const f of files) {
+            if (f.type === 'application/pdf' || f.name.endsWith('.pdf')) mergeFiles.push(f);
+        }
+        renderMergeList();
+    }
+
+    function renderMergeList() {
+        const list = document.getElementById('merge-list');
+        list.innerHTML = '';
+        mergeFiles.forEach((f, i) => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `<span class="file-name">${escHtml(f.name)}</span><span class="file-size">${fmt(f.size)}</span><button class="remove-btn" onclick="removeMerge(${i})">✕</button>`;
+            list.appendChild(div);
+        });
+        document.getElementById('merge-btn').disabled = mergeFiles.length < 2;
+    }
+
+    function removeMerge(i) { mergeFiles.splice(i, 1); renderMergeList(); }
+
+    async function mergePDFs() {
+        if (mergeFiles.length < 2) return;
+        const btn = document.getElementById('merge-btn');
+        btn.disabled = true;
+        setStatus('merge-status', 'info', 'Merging PDFs…');
+        try {
+            const { PDFDocument } = PDFLib;
+            const merged = await PDFDocument.create();
+            for (const file of mergeFiles) {
+                const ab = await file.arrayBuffer();
+                const src = await PDFDocument.load(ab);
+                const pages = await merged.copyPages(src, src.getPageIndices());
+                pages.forEach(p => merged.addPage(p));
+            }
+            const bytes = await merged.save();
+            downloadBytes(bytes, 'merged.pdf');
+            setStatus('merge-status', 'success', '✅ Merged successfully! Download started.');
+        } catch (e) {
+            setStatus('merge-status', 'error', '⚠️ Error: ' + e.message);
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    // ---- SPLIT ----
+    let splitFile = null, splitPageCount = 0;
+
+    async function loadSplitFile(file) {
+        if (!file) return;
+        splitFile = file;
+        try {
+            const { PDFDocument } = PDFLib;
+            const doc = await PDFDocument.load(await file.arrayBuffer());
+            splitPageCount = doc.getPageCount();
+            document.getElementById('split-fname').textContent = file.name;
+            document.getElementById('split-finfo').textContent = fmt(file.size) + ' — ' + splitPageCount + ' pages';
+            document.getElementById('split-end').value = splitPageCount;
+            document.getElementById('split-start').max = splitPageCount;
+            document.getElementById('split-end').max = splitPageCount;
+            document.getElementById('split-info').style.display = '';
+            clearStatus('split-status');
+        } catch (e) {
+            setStatus('split-status', 'error', '⚠️ Could not read PDF: ' + e.message);
+        }
+    }
+
+    async function splitPDF() {
+        if (!splitFile) return;
+        const start = parseInt(document.getElementById('split-start').value) - 1;
+        const end = parseInt(document.getElementById('split-end').value) - 1;
+        const mode = document.getElementById('split-mode').value;
+
+        if (start < 0 || end >= splitPageCount || start > end) {
+            setStatus('split-status', 'error', '⚠️ Invalid page range.'); return;
+        }
+        setStatus('split-status', 'info', 'Splitting…');
+        try {
+            const { PDFDocument } = PDFLib;
+            const src = await PDFDocument.load(await splitFile.arrayBuffer());
+
+            if (mode === 'range') {
+                const out = await PDFDocument.create();
+                const indices = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+                const pages = await out.copyPages(src, indices);
+                pages.forEach(p => out.addPage(p));
+                downloadBytes(await out.save(), `pages_${start+1}-${end+1}.pdf`);
+                setStatus('split-status', 'success', `✅ Extracted pages ${start+1}–${end+1}. Download started.`);
+            } else {
+                for (let i = start; i <= end; i++) {
+                    const out = await PDFDocument.create();
+                    const [page] = await out.copyPages(src, [i]);
+                    out.addPage(page);
+                    downloadBytes(await out.save(), `page_${i+1}.pdf`);
+                }
+                setStatus('split-status', 'success', `✅ Downloaded ${end - start + 1} individual page PDFs.`);
+            }
+        } catch (e) {
+            setStatus('split-status', 'error', '⚠️ Error: ' + e.message);
+        }
+    }
+
+    // ---- METADATA ----
+    async function loadMetadata(file) {
+        if (!file) return;
+        clearStatus('meta-status');
+        try {
+            const { PDFDocument } = PDFLib;
+            const doc = await PDFDocument.load(await file.arrayBuffer(), { updateMetadata: false });
+            const rows = [
+                ['File Name', file.name],
+                ['File Size', fmt(file.size)],
+                ['Page Count', doc.getPageCount()],
+                ['Title', doc.getTitle() || '—'],
+                ['Author', doc.getAuthor() || '—'],
+                ['Subject', doc.getSubject() || '—'],
+                ['Keywords', doc.getKeywords() || '—'],
+                ['Creator', doc.getCreator() || '—'],
+                ['Producer', doc.getProducer() || '—'],
+                ['Creation Date', doc.getCreationDate() ? doc.getCreationDate().toLocaleString() : '—'],
+                ['Modification Date', doc.getModificationDate() ? doc.getModificationDate().toLocaleString() : '—'],
+            ];
+            const table = document.getElementById('meta-table');
+            table.innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${escHtml(String(v))}</td></tr>`).join('');
+            document.getElementById('meta-results').style.display = '';
+        } catch (e) {
+            setStatus('meta-status', 'error', '⚠️ Could not read metadata: ' + e.message);
+        }
+    }
+
+    // ---- ROTATE ----
+    let rotateFile = null, rotatePageCount = 0;
+
+    async function loadRotateFile(file) {
+        if (!file) return;
+        rotateFile = file;
+        try {
+            const { PDFDocument } = PDFLib;
+            const doc = await PDFDocument.load(await file.arrayBuffer());
+            rotatePageCount = doc.getPageCount();
+            document.getElementById('rotate-fname').textContent = file.name;
+            document.getElementById('rotate-finfo').textContent = fmt(file.size) + ' — ' + rotatePageCount + ' pages';
+            document.getElementById('rotate-end').value = rotatePageCount;
+            document.getElementById('rotate-info').style.display = '';
+            clearStatus('rotate-status');
+        } catch (e) {
+            setStatus('rotate-status', 'error', '⚠️ Could not read PDF: ' + e.message);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('rotate-scope').addEventListener('change', function () {
+            const show = this.value === 'range';
+            document.getElementById('rotate-range-fields').style.display = show ? '' : 'none';
+            document.getElementById('rotate-range-end').style.display = show ? '' : 'none';
+        });
+    });
+
+    async function rotatePDF() {
+        if (!rotateFile) return;
+        const angle = parseInt(document.getElementById('rotate-angle').value);
+        const scope = document.getElementById('rotate-scope').value;
+        setStatus('rotate-status', 'info', 'Rotating…');
+        try {
+            const { PDFDocument, degrees } = PDFLib;
+            const doc = await PDFDocument.load(await rotateFile.arrayBuffer());
+            let indices;
+            if (scope === 'all') {
+                indices = Array.from({ length: rotatePageCount }, (_, i) => i);
+            } else {
+                const s = parseInt(document.getElementById('rotate-start').value) - 1;
+                const e = parseInt(document.getElementById('rotate-end').value) - 1;
+                if (s < 0 || e >= rotatePageCount || s > e) { setStatus('rotate-status', 'error', '⚠️ Invalid page range.'); return; }
+                indices = Array.from({ length: e - s + 1 }, (_, i) => s + i);
+            }
+            indices.forEach(i => {
+                const page = doc.getPage(i);
+                const cur = page.getRotation().angle;
+                page.setRotation(degrees((cur + angle) % 360));
+            });
+            downloadBytes(await doc.save(), 'rotated.pdf');
+            setStatus('rotate-status', 'success', '✅ Rotated successfully! Download started.');
+        } catch (e) {
+            setStatus('rotate-status', 'error', '⚠️ Error: ' + e.message);
+        }
+    }
+
+    // ---- IMAGE TO PDF ----
+    let imageFiles = [];
+
+    function addImages(files) {
+        for (const f of files) imageFiles.push(f);
+        renderImageGrid();
+    }
+
+    function renderImageGrid() {
+        const grid = document.getElementById('img-grid');
+        grid.innerHTML = '';
+        imageFiles.forEach((f, i) => {
+            const div = document.createElement('div');
+            div.className = 'image-thumb';
+            const url = URL.createObjectURL(f);
+            div.innerHTML = `<img src="${url}" alt=""><button class="remove-btn" onclick="removeImage(${i})">✕</button><div class="img-name">${escHtml(f.name)}</div>`;
+            grid.appendChild(div);
+        });
+        document.getElementById('img-btn').disabled = imageFiles.length === 0;
+    }
+
+    function removeImage(i) { imageFiles.splice(i, 1); renderImageGrid(); }
+
+    async function imagesToPDF() {
+        if (imageFiles.length === 0) return;
+        const btn = document.getElementById('img-btn');
+        btn.disabled = true;
+        setStatus('img-status', 'info', 'Converting images…');
+        try {
+            const { PDFDocument } = PDFLib;
+            const pdf = await PDFDocument.create();
+            const sizeMode = document.getElementById('img-size').value;
+            const orient = document.getElementById('img-orientation').value;
+
+            // A4: 595×842 pt, Letter: 612×792 pt
+            const pageSizes = { a4: [595.28, 841.89], letter: [612, 792] };
+
+            for (const file of imageFiles) {
+                const ab = await file.arrayBuffer();
+                let img;
+                if (file.type === 'image/png') img = await pdf.embedPng(ab);
+                else {
+                    // Convert to JPEG via canvas for WebP/BMP/GIF
+                    const bmp = await createImageBitmap(new Blob([ab], { type: file.type }));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = bmp.width; canvas.height = bmp.height;
+                    canvas.getContext('2d').drawImage(bmp, 0, 0);
+                    const jpegBlob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.92));
+                    img = await pdf.embedJpg(await jpegBlob.arrayBuffer());
+                }
+
+                let pageW, pageH;
+                if (sizeMode === 'fit') {
+                    pageW = img.width; pageH = img.height;
+                } else {
+                    [pageW, pageH] = pageSizes[sizeMode];
+                    if (orient === 'landscape') [pageW, pageH] = [pageH, pageW];
+                }
+
+                const page = pdf.addPage([pageW, pageH]);
+                const scale = Math.min(pageW / img.width, pageH / img.height);
+                const w = img.width * scale, h = img.height * scale;
+                page.drawImage(img, { x: (pageW - w) / 2, y: (pageH - h) / 2, width: w, height: h });
+            }
+
+            downloadBytes(await pdf.save(), 'images.pdf');
+            setStatus('img-status', 'success', `✅ Converted ${imageFiles.length} image(s) to PDF! Download started.`);
+        } catch (e) {
+            setStatus('img-status', 'error', '⚠️ Error: ' + e.message);
+        } finally {
+            btn.disabled = imageFiles.length === 0;
+        }
+    }
+
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Drag-over styling
+    ['merge-drop', 'split-drop', 'img-drop'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });
+        el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+        el.addEventListener('drop', () => el.classList.remove('drag-over'));
+    });
+</script>
+</body>
+</html>

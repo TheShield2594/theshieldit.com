@@ -91,7 +91,7 @@ export function ToolCard({
           ? "border-primary/70 bg-card shadow-[0_25px_45px_-25px_hsl(var(--primary)/0.8)]"
           : "border-border/70 bg-card/70 hover:-translate-y-1 hover:border-primary/40 hover:bg-card"
       )}
-      style={{ animationDelay: `${index * 45}ms` }}
+      style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}
     >
       <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-transparent to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
 

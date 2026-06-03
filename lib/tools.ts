@@ -54,7 +54,6 @@ export interface Tool {
   tagLabel: string
   iconColor: string
   icon: ToolIcon
-  new?: boolean
 }
 
 export const CATEGORIES: { value: string; label: string }[] = [
@@ -132,15 +131,15 @@ export const TOOLS: Tool[] = [
     icon: "pen-line",
   },
   {
-    title: "DNS Leak Test",
+    title: "Browser Leak Tests",
     description:
-      "Check if your VPN is leaking DNS requests. Verify that your DNS queries are being protected from your ISP.",
-    href: "/tools/dns-leak-test",
-    tags: "dns leak test vpn privacy security isp dns-over-https",
+      "Test for DNS and WebRTC leaks that can expose your real IP even through a VPN.",
+    href: "/tools/browser-leak-tests",
+    tags: "dns leak test webrtc vpn privacy ip address real local isp dns-over-https",
     category: "security",
     tagLabel: "Privacy",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "shield-alert",
+    iconColor: "text-chart-1 bg-chart-1/10",
+    icon: "radar",
   },
   {
     title: "Email Header Analyzer",
@@ -163,17 +162,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Privacy",
     iconColor: "text-chart-4 bg-chart-4/10",
     icon: "image",
-  },
-  {
-    title: "Favorite Tools",
-    description:
-      "Bookmark your most-used security tools for quick access. Favorites stored locally in your browser — export and import across devices.",
-    href: "/tools/favorites",
-    tags: "favorites bookmarks saved tools localStorage quick access",
-    category: "developer",
-    tagLabel: "Utility",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "star",
   },
   {
     title: "Hash Generator & Verifier",
@@ -319,14 +307,14 @@ export const TOOLS: Tool[] = [
     icon: "scan-search",
   },
   {
-    title: "Privacy 101 Guide",
+    title: "Security & Privacy Guides",
     description:
-      "Beginner's guide to digital privacy. Learn what data is collected, how to protect it, and which tools matter most — no tech background needed.",
-    href: "/tools/guide-privacy-101",
-    tags: "privacy guide beginner 101 data protection tracker browser vpn tips tools",
+      "Practical guides covering privacy fundamentals and security basics for everyday users.",
+    href: "/tools/guides",
+    tags: "privacy guide beginner 101 data protection tracker browser vpn tips tools security basics phishing malware ransomware updates backup principles",
     category: "education",
     tagLabel: "Guide",
-    iconColor: "text-chart-1 bg-chart-1/10",
+    iconColor: "text-chart-2 bg-chart-2/10",
     icon: "book-open",
   },
   {
@@ -396,28 +384,6 @@ export const TOOLS: Tool[] = [
     icon: "book-marked",
   },
   {
-    title: "Security Basics Guide",
-    description:
-      "Understand cybersecurity fundamentals. Learn about common attacks, core security principles, phishing recognition, malware prevention, and backups.",
-    href: "/tools/guide-security-basics",
-    tags: "security basics guide beginner phishing malware ransomware updates backup principles",
-    category: "education",
-    tagLabel: "Guide",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "book",
-  },
-  {
-    title: "Security Blog",
-    description:
-      "Security news, privacy guides, and expert analysis. Stay informed about the latest threats, breaches, and how to protect yourself online.",
-    href: "/tools/blog",
-    tags: "blog security privacy news guides tips analysis breach phishing latest updates",
-    category: "education",
-    tagLabel: "Blog",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "newspaper",
-  },
-  {
     title: "Security Cheat Sheets",
     description:
       "Quick reference cards for security and privacy: password rules, phishing red flags, incident response, backup strategy, and browser hardening.",
@@ -471,17 +437,6 @@ export const TOOLS: Tool[] = [
     tagLabel: "Calculator",
     iconColor: "text-primary bg-primary/10",
     icon: "network",
-  },
-  {
-    title: "Tool History",
-    description:
-      "View your recently used tools. History stored entirely in your browser's localStorage — nothing is sent to any server.",
-    href: "/tools/tool-history",
-    tags: "tool history recent visited localStorage browser privacy",
-    category: "developer",
-    tagLabel: "Utility",
-    iconColor: "text-chart-1 bg-chart-1/10",
-    icon: "history",
   },
   {
     title: "Tracker Blocker Test",
@@ -550,17 +505,6 @@ export const TOOLS: Tool[] = [
     icon: "shield-check",
   },
   {
-    title: "WebRTC Leak Test",
-    description:
-      "Test if WebRTC is leaking your real IP address. Check if your VPN can be bypassed by WebRTC.",
-    href: "/tools/webrtc-leak-test",
-    tags: "webrtc leak test vpn privacy ip address real local",
-    category: "security",
-    tagLabel: "Privacy",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "wifi",
-  },
-  {
     title: "Website Security Analyzer",
     description:
       "Comprehensive website security analysis. Check DNS records, SSL/TLS certificates, security headers, and infrastructure all in one place.",
@@ -581,163 +525,28 @@ export const TOOLS: Tool[] = [
     tagLabel: "Analyzer",
     iconColor: "text-chart-1 bg-chart-1/10",
     icon: "wifi",
-    new: true,
   },
   {
-    title: "PDF Merger",
+    title: "PDF Tools Suite",
     description:
-      "Combine multiple PDF files into one. Drag and drop to reorder pages, then download the merged result — all in your browser.",
-    href: "/tools/pdf-merge",
-    tags: "pdf merge combine join files documents browser privacy",
+      "Merge, split, rotate, view metadata, and convert images — all your PDF needs in one place.",
+    href: "/tools/pdf-tools",
+    tags: "pdf merge combine split extract rotate metadata viewer image to pdf convert jpeg png browser privacy",
     category: "developer",
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "files",
-    new: true,
   },
   {
-    title: "PDF Splitter",
+    title: "Domain Inspector",
     description:
-      "Extract a page range from a PDF or split it into individual single-page files. No uploads required.",
-    href: "/tools/pdf-split",
-    tags: "pdf split extract pages range separate documents browser privacy",
-    category: "developer",
-    tagLabel: "PDF",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "scissors",
-    new: true,
-  },
-  {
-    title: "PDF Metadata Viewer",
-    description:
-      "Inspect a PDF's hidden metadata: title, author, creator, producer, creation date, modification date, and page count.",
-    href: "/tools/pdf-metadata",
-    tags: "pdf metadata viewer title author creator producer creation date page count info properties",
-    category: "developer",
-    tagLabel: "PDF",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "file-search",
-    new: true,
-  },
-  {
-    title: "PDF Page Rotator",
-    description:
-      "Rotate all pages or a specific page range in a PDF by 90°, 180°, or 270°. Download the corrected file instantly.",
-    href: "/tools/pdf-rotate",
-    tags: "pdf rotate pages orientation fix landscape portrait browser privacy",
-    category: "developer",
-    tagLabel: "PDF",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "rotate-cw",
-    new: true,
-  },
-  {
-    title: "Image to PDF",
-    description:
-      "Convert JPEG, PNG, WebP, GIF, or BMP images into a single PDF. Choose A4, Letter, or fit-to-image page size.",
-    href: "/tools/image-to-pdf",
-    tags: "image to pdf convert jpeg png webp gif bmp pictures photos browser privacy",
-    category: "developer",
-    tagLabel: "PDF",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "image",
-    new: true,
-  },
-  {
-    title: "TOTP / 2FA Code Generator",
-    description:
-      "Generate time-based one-time passwords (TOTP) from any Base32 secret. Test authenticator flows client-side with live 30-second countdown.",
-    href: "/tools/totp-generator",
-    tags: "totp 2fa otp authenticator time-based one-time password base32 hmac sha1 mfa security",
-    category: "security",
-    tagLabel: "Auth",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "key-round",
-    new: true,
-  },
-  {
-    title: "WHOIS / Domain Lookup",
-    description:
-      "Look up domain registration details: registrar, creation and expiry dates, nameservers, status codes, and DNSSEC. Uses the public RDAP protocol.",
-    href: "/tools/whois-lookup",
-    tags: "whois domain lookup rdap registrar expiry nameservers dnssec registration status",
-    category: "security",
-    tagLabel: "Analysis",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "scan-search",
-    new: true,
-  },
-  {
-    title: "DNS Record Lookup",
-    description:
-      "Query DNS records for any domain — A, AAAA, MX, TXT, CNAME, NS, SOA, and more. Uses Cloudflare's public DNS-over-HTTPS resolver.",
-    href: "/tools/dns-lookup",
-    tags: "dns record lookup a aaaa mx txt cname ns soa doh cloudflare domain resolver query",
+      "Look up WHOIS registration details and DNS records for any domain in one place.",
+    href: "/tools/domain-inspector",
+    tags: "whois lookup dns records domain registration analysis network security",
     category: "security",
     tagLabel: "Analysis",
     iconColor: "text-primary bg-primary/10",
     icon: "network",
-    new: true,
-  },
-  {
-    title: "Number Base Converter",
-    description:
-      "Convert numbers between binary, octal, decimal, and hexadecimal instantly. Supports BigInt, negative numbers, and visual bit representations.",
-    href: "/tools/number-base-converter",
-    tags: "number base converter binary octal decimal hexadecimal hex bit representation bigint developer",
-    category: "developer",
-    tagLabel: "Converter",
-    iconColor: "text-chart-3 bg-chart-3/10",
-    icon: "hash",
-    new: true,
-  },
-  {
-    title: "Text Case Converter",
-    description:
-      "Convert text between camelCase, PascalCase, snake_case, kebab-case, SCREAMING_SNAKE, Title Case, and more — all at once with one-click copy.",
-    href: "/tools/text-case-converter",
-    tags: "text case converter camelcase pascalcase snake_case kebab-case screaming title sentence uppercase lowercase developer utility",
-    category: "developer",
-    tagLabel: "Converter",
-    iconColor: "text-chart-2 bg-chart-2/10",
-    icon: "file-text",
-    new: true,
-  },
-  {
-    title: "Robots.txt Analyzer",
-    description:
-      "Fetch and analyze any site's robots.txt. See disallowed paths, sitemaps, crawl rules, and flagged sensitive paths that hint at hidden content.",
-    href: "/tools/robots-txt-analyzer",
-    tags: "robots.txt analyzer disallow sitemap crawl-delay seo security sensitive paths hidden content",
-    category: "security",
-    tagLabel: "Analyzer",
-    iconColor: "text-chart-4 bg-chart-4/10",
-    icon: "file-search",
-    new: true,
-  },
-  {
-    title: "Cron Expression Parser",
-    description:
-      "Parse cron expressions into plain-English descriptions and preview the next 8 run times. Supports 5-field and 6-field (with seconds) formats.",
-    href: "/tools/cron-parser",
-    tags: "cron expression parser human readable schedule next run times crontab job developer utility",
-    category: "developer",
-    tagLabel: "Parser",
-    iconColor: "text-primary bg-primary/10",
-    icon: "clock",
-    new: true,
-  },
-  {
-    title: "Color Code Converter",
-    description:
-      "Convert colors between HEX, RGB, RGBA, HSL, and HSLA. Includes a live preview, alpha slider, WCAG contrast checker, complementary color, and tints/shades.",
-    href: "/tools/color-converter",
-    tags: "color converter hex rgb rgba hsl hsla css variable picker contrast wcag accessibility tints shades complementary",
-    category: "developer",
-    tagLabel: "Converter",
-    iconColor: "text-chart-5 bg-chart-5/10",
-    icon: "pen-line",
-    new: true,
   },
 ]
 

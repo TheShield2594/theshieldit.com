@@ -19,3 +19,6 @@ next-env.d.ts
 
 # generated
 public/og-image.png
+
+# claude code worktree scratch space
+.claude/
