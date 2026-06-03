@@ -54,6 +54,7 @@ export interface Tool {
   tagLabel: string
   iconColor: string
   icon: ToolIcon
+  new?: boolean
 }
 
 export const CATEGORIES: { value: string; label: string }[] = [
