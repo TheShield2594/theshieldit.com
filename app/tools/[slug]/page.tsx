@@ -57,19 +57,24 @@ export default async function ToolPage({
       <SiteHeader />
 
       {/* Per-tool breadcrumb + title bar */}
-      <div className="border-b border-border/50 bg-card/30 px-4 py-5 sm:px-6">
+      <div className="border-b border-border/70 bg-card/40 px-4 py-5 sm:px-6">
         <div className="mx-auto max-w-5xl">
-          <Link
-            href="/"
-            className="mb-2 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-            All Tools
-          </Link>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">
+          <div className="flex items-baseline justify-between gap-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+              Index
+            </Link>
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              Nº {String(TOOLS.indexOf(tool!) + 1).padStart(2, "0")} — {tool.tagLabel}
+            </p>
+          </div>
+          <h1 className="mt-2 font-display text-3xl font-bold uppercase tracking-[0.02em] text-foreground sm:text-4xl">
             {tool.title}
           </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
+          <p className="mt-1.5 max-w-3xl text-sm text-muted-foreground">
             {tool.description}
           </p>
         </div>

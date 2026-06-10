@@ -13,23 +13,23 @@
         }
 
         :root {
-            --primary: #3b82f6;
-            --primary-dark: #2563eb;
+            --primary: #e3a93c;
+            --primary-dark: #d29a32;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface-light: #334155;
-            --text: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border: #475569;
+            --bg: #0e1016;
+            --surface: #181b22;
+            --surface-light: #252830;
+            --text: #e9e6dd;
+            --text-secondary: #bcb9ae;
+            --border: #363941;
             --shadow: rgba(0, 0, 0, 0.3);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
             color: var(--text);
             min-height: 100vh;
             padding: 20px;
@@ -52,7 +52,7 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #c98e2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -97,7 +97,7 @@
             padding: 15px 30px;
             font-size: 1.1em;
             font-weight: 600;
-            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #c98e2e 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -107,7 +107,7 @@
 
         button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 6px 12px rgba(227, 169, 60, 0.4);
         }
 
         button:disabled {
@@ -118,7 +118,7 @@
         .privacy-note {
             margin-top: 15px;
             padding: 12px;
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(227, 169, 60, 0.1);
             border-left: 3px solid var(--primary);
             border-radius: 4px;
             font-size: 0.9em;
@@ -171,7 +171,7 @@
         }
 
         .status-loading {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(227, 169, 60, 0.2);
             color: var(--primary);
         }
 
@@ -273,7 +273,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(59, 130, 246, 0.3);
+            border: 3px solid rgba(227, 169, 60, 0.3);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -293,9 +293,9 @@
 
         .info-box {
             padding: 15px;
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(201, 142, 46, 0.1);
             border-radius: 6px;
-            border-left: 3px solid #8b5cf6;
+            border-left: 3px solid #c98e2e;
             margin-top: 10px;
         }
 
@@ -349,7 +349,7 @@
         }
 
         .grade-b {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(227, 169, 60, 0.2);
             color: var(--primary);
         }
 
@@ -378,6 +378,7 @@
         }
     </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
     <div class="container">

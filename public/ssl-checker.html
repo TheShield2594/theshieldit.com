@@ -19,17 +19,17 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #3b82f6; --primary-dark: #2563eb; --secondary: #8b5cf6;
-      --accent: #06b6d4; --bg-dark: #0f172a; --bg-darker: #020617;
-      --text-light: #f1f5f9; --text-gray: #94a3b8; --border: #1e293b;
+      --primary: #e3a93c; --primary-dark: #d29a32; --secondary: #c98e2e;
+      --accent: #4f86e8; --bg-dark: #0e1016; --bg-darker: #0b0d11;
+      --text-light: #e9e6dd; --text-gray: #8e9088; --border: #181b22;
       --green: #22c55e; --red: #ef4444; --yellow: #eab308; --orange: #f97316;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(227,169,60,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(201,142,46,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(79,134,232,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
@@ -38,30 +38,30 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
       -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
     .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(227,169,60,0.3); }
     .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
       font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
-    .back-link:hover { color: var(--primary); background: rgba(59,130,246,0.1); }
+    .back-link:hover { color: var(--primary); background: rgba(227,169,60,0.1); }
     h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
       background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       text-align: center; animation: fadeInUp 0.8s ease-out; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
     .tool-layout { display: flex; flex-direction: column; gap: 2rem; animation: fadeInUp 0.8s ease-out 0.2s both; }
-    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px); }
+    .tool-panel { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px); }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-gray); margin-bottom: 0.4rem; }
-    .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+    .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(14,16,22,0.6); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text-light); font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s ease; }
     .form-group input:focus { border-color: var(--primary); }
     .check-btn { width: 100%; padding: 0.875rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; font-family: inherit; margin-top: 0.5rem; }
-    .check-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .check-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(227,169,60,0.3); }
     .check-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .privacy-note { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem 1rem;
-      background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2); border-radius: 8px;
+      background: rgba(79,134,232,0.08); border: 1px solid rgba(79,134,232,0.2); border-radius: 8px;
       font-size: 0.8rem; color: var(--text-gray); line-height: 1.5; }
     .privacy-note svg { flex-shrink: 0; margin-top: 1px; color: var(--accent); }
     .results-placeholder { color: var(--text-gray); text-align: center; font-size: 0.95rem; padding: 2rem 0; }
@@ -74,13 +74,13 @@
 
     .grade-banner { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; }
     .grade-banner.grade-a { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); }
-    .grade-banner.grade-b { background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); }
+    .grade-banner.grade-b { background: rgba(79,134,232,0.1); border: 1px solid rgba(79,134,232,0.3); }
     .grade-banner.grade-c { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.3); }
     .grade-banner.grade-f { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
     .grade-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center;
       justify-content: center; font-size: 1.5rem; font-weight: 800; flex-shrink: 0; }
     .grade-a .grade-circle { background: rgba(34,197,94,0.2); color: var(--green); }
-    .grade-b .grade-circle { background: rgba(6,182,212,0.2); color: var(--accent); }
+    .grade-b .grade-circle { background: rgba(79,134,232,0.2); color: var(--accent); }
     .grade-c .grade-circle { background: rgba(234,179,8,0.2); color: var(--yellow); }
     .grade-f .grade-circle { background: rgba(239,68,68,0.2); color: var(--red); }
     .grade-info h3 { font-size: 1.1rem; margin-bottom: 0.25rem; }
@@ -90,7 +90,7 @@
     .section-header { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-light);
       display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
     .section-header svg { color: var(--primary); }
-    .info-row { display: flex; padding: 0.5rem 0; border-bottom: 1px solid rgba(30,41,59,0.5); }
+    .info-row { display: flex; padding: 0.5rem 0; border-bottom: 1px solid rgba(24,27,34,0.5); }
     .info-row:last-child { border-bottom: none; }
     .info-label { width: 160px; flex-shrink: 0; font-size: 0.8rem; color: var(--text-gray); font-weight: 500; }
     .info-value { font-size: 0.85rem; word-break: break-all;
@@ -99,7 +99,7 @@
     .expiry-warning { color: var(--yellow); }
     .expiry-danger { color: var(--red); }
     .san-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .san-badge { padding: 0.15rem 0.5rem; background: rgba(59,130,246,0.1); border-radius: 4px; font-size: 0.75rem; color: var(--primary); }
+    .san-badge { padding: 0.15rem 0.5rem; background: rgba(227,169,60,0.1); border-radius: 4px; font-size: 0.75rem; color: var(--primary); }
 
     footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.85rem; }
     @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
@@ -112,6 +112,7 @@
     }
   </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
   <div class="bg-animation"></div>

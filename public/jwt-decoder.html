@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
+            color: #ddd9cf;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +35,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 1.1rem;
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(24, 27, 34, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -63,17 +63,17 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #cbd5e1;
+            color: #bcb9ae;
             font-weight: 500;
         }
 
         textarea {
             width: 100%;
             padding: 15px 20px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid rgba(59, 130, 246, 0.3);
+            background: rgba(14, 16, 22, 0.6);
+            border: 2px solid rgba(227, 169, 60, 0.3);
             border-radius: 12px;
-            color: #e2e8f0;
+            color: #ddd9cf;
             font-size: 0.9rem;
             transition: all 0.3s ease;
             font-family: 'Courier New', monospace;
@@ -83,7 +83,7 @@
 
         textarea:focus {
             outline: none;
-            border-color: rgba(59, 130, 246, 0.6);
+            border-color: rgba(227, 169, 60, 0.6);
         }
 
         .grid {
@@ -93,19 +93,19 @@
         }
 
         .jwt-section {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(14, 16, 22, 0.6);
             padding: 20px;
             border-radius: 12px;
         }
 
         .jwt-section h3 {
-            color: #3b82f6;
+            color: #e3a93c;
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
 
         .jwt-content {
-            background: rgba(30, 41, 59, 0.6);
+            background: rgba(24, 27, 34, 0.6);
             padding: 15px;
             border-radius: 8px;
             font-family: 'Courier New', monospace;
@@ -123,18 +123,18 @@
         }
 
         .jwt-part.header {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 3px solid #3b82f6;
+            background: rgba(227, 169, 60, 0.1);
+            border-left: 3px solid #e3a93c;
         }
 
         .jwt-part.payload {
-            background: rgba(139, 92, 246, 0.1);
-            border-left: 3px solid #8b5cf6;
+            background: rgba(201, 142, 46, 0.1);
+            border-left: 3px solid #c98e2e;
         }
 
         .jwt-part.signature {
-            background: rgba(6, 182, 212, 0.1);
-            border-left: 3px solid #06b6d4;
+            background: rgba(79, 134, 232, 0.1);
+            border-left: 3px solid #4f86e8;
         }
 
         .validity-badge {
@@ -177,25 +177,25 @@
         }
 
         .info-label {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 0.85rem;
             margin-bottom: 4px;
         }
 
         .info-value {
-            color: #e2e8f0;
+            color: #ddd9cf;
             font-weight: 500;
         }
 
         .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
+            background: rgba(227, 169, 60, 0.1);
+            border-left: 4px solid #e3a93c;
             padding: 20px;
             border-radius: 8px;
         }
 
         .info-box h3 {
-            color: #3b82f6;
+            color: #e3a93c;
             margin-bottom: 15px;
         }
 
@@ -205,12 +205,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #cbd5e1;
+            color: #bcb9ae;
         }
 
         .back-link {
             display: inline-block;
-            color: #3b82f6;
+            color: #e3a93c;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -218,7 +218,7 @@
         }
 
         .back-link:hover {
-            color: #60a5fa;
+            color: #ecbc62;
             transform: translateX(-5px);
         }
 
@@ -233,6 +233,7 @@
         }
     </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
     <div class="container">
@@ -343,7 +344,7 @@
                     <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid rgba(239, 68, 68, 0.5); border-radius: 12px; padding: 20px; text-align: center;">
                         <div style="font-size: 2rem; margin-bottom: 10px;">⚠️</div>
                         <div style="font-size: 1.2rem; font-weight: 600; color: #ef4444; margin-bottom: 10px;">Invalid JWT</div>
-                        <div style="color: #cbd5e1;">${escapeHtml(error.message)}</div>
+                        <div style="color: #bcb9ae;">${escapeHtml(error.message)}</div>
                     </div>
                 `;
                 resultsDiv.style.display = 'block';
