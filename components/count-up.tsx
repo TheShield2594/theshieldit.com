@@ -11,7 +11,11 @@ export function CountUp({ value, duration = 1100 }: { value: number; duration?: 
   const frame = useRef<number>(0)
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      cancelAnimationFrame(frame.current)
+      setDisplay(value)
+      return
+    }
     const start = performance.now()
     function step(now: number) {
       const t = Math.min((now - start) / duration, 1)

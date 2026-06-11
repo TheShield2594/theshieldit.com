@@ -68,10 +68,13 @@ export function ToolsGrid() {
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
   }, [])
 
-  // Mount-only: bind scroll listener and ResizeObserver once
+  // Bind scroll listener and ResizeObserver; re-bind when the carousel
+  // remounts after a view-mode toggle (the scroller doesn't exist in grid view)
   useEffect(() => {
+    if (viewMode !== "carousel") return
     const el = scrollRef.current
     if (!el) return
+    updateScrollState()
     el.addEventListener("scroll", updateScrollState, { passive: true })
     const ro = new ResizeObserver(updateScrollState)
     ro.observe(el)
@@ -79,7 +82,7 @@ export function ToolsGrid() {
       el.removeEventListener("scroll", updateScrollState)
       ro.disconnect()
     }
-  }, [updateScrollState])
+  }, [updateScrollState, viewMode])
 
   // Re-check scroll state after filter changes (without re-binding listeners)
   useEffect(() => {

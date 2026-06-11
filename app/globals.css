@@ -219,6 +219,8 @@
   .animate-fade-in-up,
   .animate-fade-in,
   .animate-scale-in,
+  .animate-shimmer,
+  .animate-pulse-ring,
   .animate-float {
     animation: none;
   }

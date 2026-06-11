@@ -93,7 +93,7 @@ export function SiteHeader() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3 border-r border-border/70 pr-6 outline-none"
+          className="flex items-center gap-3 border-r border-border/70 pr-6"
         >
           <ShieldMark className="h-6 w-6 text-accent" />
           <span className="font-display text-[21px] font-extrabold uppercase tracking-[0.06em] text-foreground">
