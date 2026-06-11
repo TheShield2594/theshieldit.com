@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
+            color: #ddd9cf;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +35,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 1.1rem;
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(24, 27, 34, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -57,7 +57,7 @@
         }
 
         .your-ip-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(227, 169, 60, 0.1) 0%, rgba(201, 142, 46, 0.1) 100%);
             text-align: center;
             padding: 30px;
             border-radius: 12px;
@@ -67,7 +67,7 @@
         .ip-display {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #3b82f6;
+            color: #e3a93c;
             font-family: 'Courier New', monospace;
             margin: 10px 0;
         }
@@ -81,21 +81,21 @@
         input[type="text"] {
             flex: 1;
             padding: 15px 20px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid rgba(59, 130, 246, 0.3);
+            background: rgba(14, 16, 22, 0.6);
+            border: 2px solid rgba(227, 169, 60, 0.3);
             border-radius: 12px;
-            color: #e2e8f0;
+            color: #ddd9cf;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: rgba(59, 130, 246, 0.6);
+            border-color: rgba(227, 169, 60, 0.6);
         }
 
         button {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #d29a32 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -109,7 +109,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 12px rgba(227, 169, 60, 0.4);
         }
 
         button:disabled {
@@ -125,34 +125,34 @@
         }
 
         .info-item {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(14, 16, 22, 0.6);
             padding: 20px;
             border-radius: 12px;
-            border-left: 4px solid #3b82f6;
+            border-left: 4px solid #e3a93c;
         }
 
         .info-label {
             font-size: 0.85rem;
-            color: #94a3b8;
+            color: #8e9088;
             margin-bottom: 8px;
         }
 
         .info-value {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #e2e8f0;
+            color: #ddd9cf;
             word-break: break-all;
         }
 
         .loading {
             text-align: center;
             padding: 40px;
-            color: #94a3b8;
+            color: #8e9088;
         }
 
         .spinner {
-            border: 4px solid rgba(59, 130, 246, 0.2);
-            border-top: 4px solid #3b82f6;
+            border: 4px solid rgba(227, 169, 60, 0.2);
+            border-top: 4px solid #e3a93c;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -167,7 +167,7 @@
 
         .back-link {
             display: inline-block;
-            color: #3b82f6;
+            color: #e3a93c;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -175,7 +175,7 @@
         }
 
         .back-link:hover {
-            color: #60a5fa;
+            color: #ecbc62;
             transform: translateX(-5px);
         }
 
@@ -207,6 +207,7 @@
         }
     </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
     <div class="container">
@@ -218,7 +219,7 @@
 
         <div class="card">
             <div class="your-ip-card">
-                <div style="color: #94a3b8; margin-bottom: 10px;">Your IP Address</div>
+                <div style="color: #8e9088; margin-bottom: 10px;">Your IP Address</div>
                 <div class="ip-display" id="yourIP">Loading...</div>
                 <button onclick="lookupCurrentIP()" style="margin-top: 15px;">
                     🔍 Lookup My IP
@@ -227,7 +228,7 @@
         </div>
 
         <div class="card">
-            <h2 style="color: #3b82f6; margin-bottom: 20px;">Lookup Any IP Address</h2>
+            <h2 style="color: #e3a93c; margin-bottom: 20px;">Lookup Any IP Address</h2>
             <div class="input-group">
                 <input type="text" id="ipInput" placeholder="Enter IP address (e.g., 8.8.8.8)" />
                 <button onclick="lookupIP()">🔍 Lookup</button>
@@ -349,7 +350,7 @@
 
             const html = `
                 <div style="margin-bottom: 20px;">
-                    <h3 style="color: #3b82f6; margin-bottom: 15px;">📍 Location Information</h3>
+                    <h3 style="color: #e3a93c; margin-bottom: 15px;">📍 Location Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">IP Address</div>
@@ -379,7 +380,7 @@
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="color: #3b82f6; margin-bottom: 15px;">🌐 Network Information</h3>
+                    <h3 style="color: #e3a93c; margin-bottom: 15px;">🌐 Network Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">ISP</div>
@@ -402,7 +403,7 @@
 
                 ${safe.languages ? `
                 <div>
-                    <h3 style="color: #3b82f6; margin-bottom: 15px;">🗣️ Additional Information</h3>
+                    <h3 style="color: #e3a93c; margin-bottom: 15px;">🗣️ Additional Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">Languages</div>

@@ -1,31 +1,35 @@
-import { Shield, Heart } from "lucide-react"
 import Link from "next/link"
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/50 bg-card/30">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-8 md:flex-row md:justify-between md:px-8">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-2 rounded-md outline-none">
-          <Shield className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold text-foreground">The Shield IT</span>
+    <footer className="border-t border-border/70">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground md:flex-row md:justify-between md:px-8">
+        <Link href="/" className="outline-none transition-colors hover:text-foreground">
+          The Shield IT &mdash; est. 2024
         </Link>
 
-        {/* Center */}
-        <p className="flex items-center gap-1 text-xs text-muted-foreground">
-          Built with <Heart className="h-3 w-3 text-chart-5" aria-hidden="true" /> for the privacy-conscious
-        </p>
-
-        {/* Right */}
-        <p className="text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} &middot; No tracking except{" "}
+        <p className="text-center">
+          No accounts &middot; no uploads &middot;{" "}
           <a
             href="https://umami.is"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary transition-colors hover:text-accent"
+            className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
           >
-            privacy-friendly analytics
+            cookieless analytics
+          </a>{" "}
+          only
+        </p>
+
+        <p>
+          Built by one person{" "}
+          <a
+            href="https://linkedin.com/in/theshieldit"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+          >
+            ↗
           </a>
         </p>
       </div>

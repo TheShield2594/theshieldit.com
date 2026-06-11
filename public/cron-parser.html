@@ -19,16 +19,16 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
-      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
-      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+      --primary: #e3a93c; --secondary: #c98e2e; --accent: #4f86e8;
+      --bg-dark: #0e1016; --bg-darker: #0b0d11; --text-light: #e9e6dd;
+      --text-gray: #8e9088; --border: #181b22; --green: #22c55e; --red: #ef4444;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(227,169,60,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(201,142,46,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(79,134,232,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
@@ -36,13 +36,13 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
-    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+    .tool-panel { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 16px;
       padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
 
     /* Cron input */
     .cron-input-wrap { position: relative; }
-    .cron-input { width: 100%; padding: 1rem 1.25rem; background: rgba(15,23,42,0.7);
+    .cron-input { width: 100%; padding: 1rem 1.25rem; background: rgba(14,16,22,0.7);
       border: 2px solid var(--border); border-radius: 12px; color: var(--text-light);
       font-size: 1.25rem; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
       outline: none; transition: border-color 0.2s ease; letter-spacing: 0.05em; }
@@ -63,7 +63,7 @@
     .error-banner.show { display: block; }
 
     /* Description */
-    .description-box { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+    .description-box { background: rgba(227,169,60,0.08); border: 1px solid rgba(227,169,60,0.2);
       border-radius: 12px; padding: 1.25rem 1.5rem; margin-top: 1rem; }
     .description-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
       color: var(--text-gray); margin-bottom: 0.4rem; }
@@ -74,7 +74,7 @@
     .fields-table { width: 100%; border-collapse: collapse; }
     .fields-table th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
       color: var(--text-gray); padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--border); }
-    .fields-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(30,41,59,0.6); font-size: 0.88rem; vertical-align: middle; }
+    .fields-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(24,27,34,0.6); font-size: 0.88rem; vertical-align: middle; }
     .fields-table tr:last-child td { border-bottom: none; }
     .field-name-cell { color: var(--text-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
     .field-value-cell { font-family: 'SF Mono', 'Fira Code', monospace; color: var(--primary); font-size: 0.9rem; }
@@ -83,16 +83,16 @@
     .field-range-cell { font-size: 0.75rem; color: var(--text-gray); }
     .field-badge { display: inline-block; font-size: 0.68rem; padding: 0.1rem 0.45rem; border-radius: 20px;
       font-weight: 600; letter-spacing: 0.04em; margin-left: 0.3rem; vertical-align: middle; }
-    .badge-any { background: rgba(148,163,184,0.1); color: var(--text-gray); border: 1px solid rgba(148,163,184,0.2); }
-    .badge-every { background: rgba(6,182,212,0.1); color: var(--accent); border: 1px solid rgba(6,182,212,0.2); }
-    .badge-exact { background: rgba(59,130,246,0.1); color: var(--primary); border: 1px solid rgba(59,130,246,0.2); }
-    .badge-range { background: rgba(139,92,246,0.1); color: var(--secondary); border: 1px solid rgba(139,92,246,0.2); }
+    .badge-any { background: rgba(142,144,136,0.1); color: var(--text-gray); border: 1px solid rgba(142,144,136,0.2); }
+    .badge-every { background: rgba(79,134,232,0.1); color: var(--accent); border: 1px solid rgba(79,134,232,0.2); }
+    .badge-exact { background: rgba(227,169,60,0.1); color: var(--primary); border: 1px solid rgba(227,169,60,0.2); }
+    .badge-range { background: rgba(201,142,46,0.1); color: var(--secondary); border: 1px solid rgba(201,142,46,0.2); }
     .badge-list { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
 
     /* Next run times */
     .run-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
     .run-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.875rem;
-      background: rgba(15,23,42,0.5); border: 1px solid var(--border); border-radius: 8px; }
+      background: rgba(14,16,22,0.5); border: 1px solid var(--border); border-radius: 8px; }
     .run-index { font-size: 0.7rem; color: var(--text-gray); min-width: 20px; text-align: right; font-weight: 600; }
     .run-datetime { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88rem; color: var(--text-light); flex: 1; }
     .run-relative { font-size: 0.78rem; color: var(--accent); white-space: nowrap; }
@@ -100,13 +100,13 @@
 
     /* Examples */
     .example-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.5rem; margin-top: 0.75rem; }
-    .example-chip { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 10px;
+    .example-chip { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 10px;
       padding: 0.65rem 0.875rem; cursor: pointer; transition: all 0.2s; }
-    .example-chip:hover { border-color: var(--primary); background: rgba(59,130,246,0.08); }
+    .example-chip:hover { border-color: var(--primary); background: rgba(227,169,60,0.08); }
     .example-chip .expr { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; color: var(--primary); }
     .example-chip .desc { font-size: 0.75rem; color: var(--text-gray); margin-top: 0.2rem; }
 
-    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem;
+    .info-note { background: rgba(227,169,60,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem;
       border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
     .hidden { display: none; }
     .divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
@@ -119,6 +119,7 @@
       .fields-table th:last-child, .fields-table td:last-child { display: none; }
     }
   </style>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
 <div class="bg-animation"></div>

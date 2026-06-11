@@ -1,11 +1,19 @@
 import type { Metadata, Viewport } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import localFont from "next/font/local"
 import Script from "next/script"
 import "./globals.css"
 
 const geistSans = GeistSans
 const geistMono = GeistMono
+
+const bigShoulders = localFont({
+  src: "../assets/fonts/BigShoulders-Variable-latin.woff2",
+  weight: "100 900",
+  display: "swap",
+  variable: "--font-big-shoulders",
+})
 
 export const metadata: Metadata = {
   title: "The Shield IT - Free Online IT & Privacy Tools",
@@ -40,7 +48,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#060a12",
+  themeColor: "#0b0d11",
   width: "device-width",
   initialScale: 1,
 }
@@ -53,7 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-dvh`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bigShoulders.variable} font-sans min-h-dvh`}
       >
         <a
           href="#main-content"

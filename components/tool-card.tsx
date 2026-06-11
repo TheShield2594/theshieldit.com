@@ -67,6 +67,7 @@ export function ToolCard({
   onHover,
   isFavorited,
   onFavorite,
+  variant = "carousel",
 }: {
   tool: Tool
   index: number
@@ -74,35 +75,68 @@ export function ToolCard({
   onHover: () => void
   isFavorited?: boolean
   onFavorite?: () => void
+  variant?: "carousel" | "grid"
 }) {
   const Icon = ICON_MAP[tool.icon] || Shield
+  const indexLabel = String(index + 1).padStart(2, "0")
 
   return (
-    <Link
-      href={tool.href}
+    <div
       data-tool-href={tool.href}
       onMouseEnter={onHover}
-      onFocus={onHover}
       className={cn(
-        "group relative block aspect-square min-w-36 rounded-2xl border p-4 transition-all duration-300 sm:min-w-44 md:min-w-48",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        "animate-fade-in-up",
+        "group relative aspect-square transition-colors duration-200",
+        variant === "carousel"
+          ? "min-w-36 animate-fade-in-up sm:min-w-44 md:min-w-48"
+          : "animate-fade-in border-b border-r border-border/70 bg-background",
         selected
-          ? "border-primary/70 bg-card shadow-[0_25px_45px_-25px_hsl(var(--primary)/0.8)]"
-          : "border-border/70 bg-card/70 hover:-translate-y-1 hover:border-primary/40 hover:bg-card"
+          ? "bg-card shadow-[inset_0_0_0_1px_hsl(var(--primary))]"
+          : "hover:bg-card"
       )}
       style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-transparent to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
-
-      {/* NEW badge */}
-      {tool.new && (
-        <span className="absolute right-2 top-2 z-10 rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-primary-foreground">
-          New
+      <Link
+        href={tool.href}
+        onFocus={onHover}
+        className="block h-full p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+      >
+        {/* Index number — yields to the favorite star on hover */}
+        <span
+          aria-hidden="true"
+          className={cn(
+            "absolute right-3.5 top-3 font-mono text-[11px] tracking-[0.08em] transition-opacity duration-150",
+            selected ? "text-primary" : "text-muted-foreground/70",
+            (isFavorited || onFavorite) && "group-hover:opacity-0",
+            isFavorited && "opacity-0"
+          )}
+        >
+          {indexLabel}
         </span>
-      )}
 
-      {/* Favorites button — overlays the NEW badge on hover, always visible when favorited */}
+        <div className="relative flex h-full flex-col justify-between">
+          <div
+            className={cn(
+              "flex h-10 w-10 items-center justify-center border border-border/70 transition-colors duration-200",
+              tool.iconColor,
+              selected && "border-primary/60"
+            )}
+          >
+            <Icon className="h-[18px] w-[18px]" />
+          </div>
+
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              {tool.tagLabel}
+              {tool.new && <span className="text-primary"> &middot; New</span>}
+            </p>
+            <h3 className="mt-1.5 text-sm font-semibold leading-tight text-foreground line-clamp-2">
+              {tool.title}
+            </h3>
+          </div>
+        </div>
+      </Link>
+
+      {/* Favorites button — sibling of the link, revealed on hover or keyboard focus */}
       {onFavorite && (
         <button
           type="button"
@@ -113,38 +147,15 @@ export function ToolCard({
           }}
           aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
           className={cn(
-            "absolute right-2 top-2 z-20 flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150",
+            "absolute right-2 top-2 z-20 flex h-6 w-6 items-center justify-center transition-all duration-150",
             isFavorited
-              ? "text-amber-400"
-              : "text-transparent group-hover:bg-secondary/80 group-hover:text-muted-foreground hover:!text-amber-400"
+              ? "text-primary"
+              : "text-muted-foreground opacity-0 hover:text-primary focus-visible:bg-card focus-visible:opacity-100 group-hover:opacity-100"
           )}
         >
-          <Star
-            className="h-3.5 w-3.5"
-            fill={isFavorited ? "currentColor" : "none"}
-          />
+          <Star className="h-3.5 w-3.5" fill={isFavorited ? "currentColor" : "none"} />
         </button>
       )}
-
-      <div className="relative flex h-full flex-col justify-between">
-        <div
-          className={cn(
-            "flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
-            tool.iconColor
-          )}
-        >
-          <Icon className="h-5 w-5" />
-        </div>
-
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-            {tool.tagLabel}
-          </p>
-          <h3 className="mt-1 text-sm font-semibold leading-tight text-foreground line-clamp-2">
-            {tool.title}
-          </h3>
-        </div>
-      </div>
-    </Link>
+    </div>
   )
 }

@@ -34,15 +34,15 @@
     }
 
     :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --secondary: #8b5cf6;
-      --accent: #06b6d4;
-      --bg-dark: #0f172a;
-      --bg-darker: #020617;
-      --text-light: #f1f5f9;
-      --text-gray: #94a3b8;
-      --border: #1e293b;
+      --primary: #e3a93c;
+      --primary-dark: #d29a32;
+      --secondary: #c98e2e;
+      --accent: #4f86e8;
+      --bg-dark: #0e1016;
+      --bg-darker: #0b0d11;
+      --text-light: #e9e6dd;
+      --text-gray: #8e9088;
+      --border: #181b22;
     }
 
     body {
@@ -62,9 +62,9 @@
       z-index: 0;
       opacity: 0.4;
       background:
-        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(227, 169, 60, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(201, 142, 46, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(79, 134, 232, 0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite;
     }
 
@@ -112,7 +112,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 4px 12px rgba(227, 169, 60, 0.3);
     }
 
     .back-link {
@@ -129,7 +129,7 @@
 
     .back-link:hover {
       color: var(--primary);
-      background: rgba(59, 130, 246, 0.1);
+      background: rgba(227, 169, 60, 0.1);
     }
 
     h1 {
@@ -160,7 +160,7 @@
     }
 
     .tool-panel {
-      background: rgba(30, 41, 59, 0.5);
+      background: rgba(24, 27, 34, 0.5);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.5rem;
@@ -186,7 +186,7 @@
 
     .mode-tab {
       padding: 0.5rem 1rem;
-      background: rgba(30, 41, 59, 0.5);
+      background: rgba(24, 27, 34, 0.5);
       border: 1px solid var(--border);
       border-radius: 8px;
       color: var(--text-gray);
@@ -203,7 +203,7 @@
     }
 
     .mode-tab.active {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(227, 169, 60, 0.15);
       border-color: var(--primary);
       color: var(--primary);
     }
@@ -226,7 +226,7 @@
     .form-group select {
       width: 100%;
       padding: 0.75rem 1rem;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(14, 16, 22, 0.6);
       border: 1px solid var(--border);
       border-radius: 8px;
       color: var(--text-light);
@@ -285,7 +285,7 @@
 
     .generate-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 8px 24px rgba(227, 169, 60, 0.3);
     }
 
     /* QR Output */
@@ -322,8 +322,8 @@
 
     .download-btn {
       padding: 0.6rem 1.25rem;
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(227, 169, 60, 0.15);
+      border: 1px solid rgba(227, 169, 60, 0.3);
       border-radius: 8px;
       color: var(--primary);
       cursor: pointer;
@@ -335,7 +335,7 @@
     }
 
     .download-btn:hover {
-      background: rgba(59, 130, 246, 0.25);
+      background: rgba(227, 169, 60, 0.25);
       border-color: var(--primary);
     }
 
@@ -382,8 +382,8 @@
 
     .randomize-btn {
       padding: 0.25rem 0.6rem;
-      background: rgba(139, 92, 246, 0.15);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: rgba(201, 142, 46, 0.15);
+      border: 1px solid rgba(201, 142, 46, 0.3);
       border-radius: 6px;
       color: var(--secondary);
       cursor: pointer;
@@ -394,7 +394,7 @@
     }
 
     .randomize-btn:hover {
-      background: rgba(139, 92, 246, 0.25);
+      background: rgba(201, 142, 46, 0.25);
       border-color: var(--secondary);
     }
 
@@ -444,7 +444,7 @@
     .style-btn {
       flex: 1;
       padding: 0.45rem 0.5rem;
-      background: rgba(30, 41, 59, 0.5);
+      background: rgba(24, 27, 34, 0.5);
       border: 1px solid var(--border);
       border-radius: 7px;
       color: var(--text-gray);
@@ -465,7 +465,7 @@
     }
 
     .style-btn.active {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(227, 169, 60, 0.15);
       border-color: var(--primary);
       color: var(--primary);
     }
@@ -514,6 +514,7 @@
     }
   </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
   <div class="bg-animation"></div>
@@ -711,13 +712,13 @@
 
     var PRESETS = [
       { name: 'Classic',  fg: '#000000', bg: '#ffffff' },
-      { name: 'Midnight', fg: '#e2e8f0', bg: '#0f172a' },
+      { name: 'Midnight', fg: '#ddd9cf', bg: '#0e1016' },
       { name: 'Ocean',    fg: '#1e40af', bg: '#dbeafe' },
       { name: 'Forest',   fg: '#166534', bg: '#dcfce7' },
       { name: 'Sunset',   fg: '#9a3412', bg: '#fff7ed' },
       { name: 'Violet',   fg: '#5b21b6', bg: '#ede9fe' },
       { name: 'Rose',     fg: '#881337', bg: '#fff1f2' },
-      { name: 'Slate',    fg: '#334155', bg: '#f1f5f9' },
+      { name: 'Slate',    fg: '#252830', bg: '#e9e6dd' },
       { name: 'Amber',    fg: '#78350f', bg: '#fef3c7' },
       { name: 'Neon',     fg: '#00e676', bg: '#0a0a0a' },
     ];

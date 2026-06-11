@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
+            color: #ddd9cf;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +35,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 1.1rem;
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(24, 27, 34, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -59,7 +59,7 @@
         .status-card {
             text-align: center;
             padding: 40px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(227, 169, 60, 0.1) 0%, rgba(201, 142, 46, 0.1) 100%);
             border-radius: 12px;
         }
 
@@ -83,7 +83,7 @@
         }
 
         .status-description {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
@@ -94,11 +94,11 @@
         }
 
         .ip-item {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(14, 16, 22, 0.6);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 15px;
-            border-left: 4px solid #3b82f6;
+            border-left: 4px solid #e3a93c;
         }
 
         .ip-item.leak {
@@ -108,7 +108,7 @@
         .ip-address {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #3b82f6;
+            color: #e3a93c;
             font-family: 'Courier New', monospace;
             margin-bottom: 10px;
         }
@@ -123,27 +123,27 @@
         }
 
         .ip-type.public {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
+            background: rgba(227, 169, 60, 0.2);
+            color: #e3a93c;
         }
 
         .ip-type.local {
-            background: rgba(139, 92, 246, 0.2);
-            color: #8b5cf6;
+            background: rgba(201, 142, 46, 0.2);
+            color: #c98e2e;
         }
 
         .ip-type.ipv6 {
-            background: rgba(6, 182, 212, 0.2);
-            color: #06b6d4;
+            background: rgba(79, 134, 232, 0.2);
+            color: #4f86e8;
         }
 
         .ip-details {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 0.9rem;
         }
 
         button {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #d29a32 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -159,7 +159,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 12px rgba(227, 169, 60, 0.4);
         }
 
         button:disabled {
@@ -169,15 +169,15 @@
         }
 
         .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
+            background: rgba(227, 169, 60, 0.1);
+            border-left: 4px solid #e3a93c;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
 
         .info-box h3 {
-            color: #3b82f6;
+            color: #e3a93c;
             margin-bottom: 15px;
         }
 
@@ -187,12 +187,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #cbd5e1;
+            color: #bcb9ae;
         }
 
         .back-link {
             display: inline-block;
-            color: #3b82f6;
+            color: #e3a93c;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -200,7 +200,7 @@
         }
 
         .back-link:hover {
-            color: #60a5fa;
+            color: #ecbc62;
             transform: translateX(-5px);
         }
 
@@ -210,8 +210,8 @@
         }
 
         .spinner {
-            border: 4px solid rgba(59, 130, 246, 0.2);
-            border-top: 4px solid #3b82f6;
+            border: 4px solid rgba(227, 169, 60, 0.2);
+            border-top: 4px solid #e3a93c;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -243,6 +243,7 @@
         }
     </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
     <div class="container">
@@ -272,7 +273,7 @@
 
         <div class="card info-box">
             <h3>🛡️ What is a WebRTC Leak?</h3>
-            <p style="margin-bottom: 15px; color: #cbd5e1;">
+            <p style="margin-bottom: 15px; color: #bcb9ae;">
                 WebRTC (Web Real-Time Communication) is a browser feature that enables video/audio chat directly in your browser.
                 However, it can reveal your real IP address even when using a VPN, potentially exposing your location and identity.
             </p>
@@ -490,7 +491,7 @@
                 }
 
                 // Display IP addresses
-                ipList.innerHTML = '<h3 style="color: #3b82f6; margin-bottom: 15px;">Detected IP Addresses</h3>';
+                ipList.innerHTML = '<h3 style="color: #e3a93c; margin-bottom: 15px;">Detected IP Addresses</h3>';
 
                 ips.forEach(ipInfo => {
                     const ipDiv = document.createElement('div');

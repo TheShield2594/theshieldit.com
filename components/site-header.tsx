@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Shield, Menu, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const SOCIAL_LINKS = [
@@ -38,6 +38,26 @@ const SOCIAL_LINKS = [
   },
 ]
 
+/* Shield mark with internal rule lines — the brand's "technical drawing" */
+function ShieldMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6l-8-3z" />
+      <path d="M12 2.5v19" strokeWidth="0.9" />
+      <path d="M4.6 9h14.8" strokeWidth="0.9" />
+    </svg>
+  )
+}
+
 function SocialLinks({
   linkClassName,
   tabIndex,
@@ -68,32 +88,36 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-8">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-sm">
+      <div className="mx-auto flex h-14 max-w-6xl items-stretch justify-between px-4 md:px-8">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 rounded-lg outline-none"
+          className="flex items-center gap-3 border-r border-border/70 pr-6"
         >
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Shield className="h-[18px] w-[18px] text-primary-foreground" />
-            <div className="absolute inset-0 rounded-lg animate-pulse-ring" />
-          </div>
-          <span className="text-lg font-bold tracking-tight text-foreground">
-            The Shield IT
+          <ShieldMark className="h-6 w-6 text-accent" />
+          <span className="font-display text-[21px] font-extrabold uppercase tracking-[0.06em] text-foreground">
+            The Shield<span className="text-accent">&nbsp;IT</span>
           </span>
         </Link>
 
-        {/* Desktop social links */}
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Social links">
-          <SocialLinks
-            linkClassName="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          />
-        </nav>
+        {/* Desktop: status line + social links */}
+        <div className="hidden items-center gap-7 md:flex">
+          <p className="flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-chart-3 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-chart-3" />
+            </span>
+            Runs local &middot; nothing leaves your browser
+          </p>
+          <nav className="flex items-center gap-1" aria-label="Social links">
+            <SocialLinks linkClassName="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground" />
+          </nav>
+        </div>
 
         {/* Mobile hamburger */}
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground md:hidden"
+          className="flex h-9 w-9 items-center justify-center self-center text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -105,14 +129,17 @@ export function SiteHeader() {
       {/* Mobile drawer */}
       <div
         className={cn(
-          "overflow-hidden border-t border-border/50 bg-background/95 backdrop-blur-xl transition-all duration-300 md:hidden",
-          mobileOpen ? "max-h-48 py-4" : "max-h-0 py-0"
+          "overflow-hidden border-t border-border/70 bg-background/95 backdrop-blur-sm transition-all duration-300 md:hidden",
+          mobileOpen ? "max-h-48 py-4" : "max-h-0 border-t-0 py-0"
         )}
         aria-hidden={!mobileOpen}
       >
+        <p className="mb-3 text-center font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
+          Runs local &middot; nothing leaves your browser
+        </p>
         <nav className="flex items-center justify-center gap-3 px-4" aria-label="Social links">
           <SocialLinks
-            linkClassName="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            linkClassName="flex h-10 w-10 items-center justify-center border border-border/70 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             tabIndex={mobileOpen ? 0 : -1}
           />
         </nav>

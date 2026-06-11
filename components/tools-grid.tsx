@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Search, X, SlidersHorizontal, ArrowRight, Star, LayoutGrid, GalleryHorizontal, ChevronLeft, ChevronRight } from "lucide-react"
+import { Search, X, SlidersHorizontal, Star, LayoutGrid, GalleryHorizontal, ChevronLeft, ChevronRight } from "lucide-react"
 import { TOOLS, CATEGORIES, CATEGORY_COUNTS } from "@/lib/tools"
 import { ToolCard } from "@/components/tool-card"
 import { useFavorites } from "@/hooks/useFavorites"
@@ -68,10 +68,13 @@ export function ToolsGrid() {
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
   }, [])
 
-  // Mount-only: bind scroll listener and ResizeObserver once
+  // Bind scroll listener and ResizeObserver; re-bind when the carousel
+  // remounts after a view-mode toggle (the scroller doesn't exist in grid view)
   useEffect(() => {
+    if (viewMode !== "carousel") return
     const el = scrollRef.current
     if (!el) return
+    updateScrollState()
     el.addEventListener("scroll", updateScrollState, { passive: true })
     const ro = new ResizeObserver(updateScrollState)
     ro.observe(el)
@@ -79,7 +82,7 @@ export function ToolsGrid() {
       el.removeEventListener("scroll", updateScrollState)
       ro.disconnect()
     }
-  }, [updateScrollState])
+  }, [updateScrollState, viewMode])
 
   // Re-check scroll state after filter changes (without re-binding listeners)
   useEffect(() => {
@@ -122,6 +125,7 @@ export function ToolsGrid() {
   useSearchShortcut(inputRef)
 
   const activeTool = filtered.find((tool) => tool.href === activeToolHref) ?? filtered[0]
+  const activeIndex = activeTool ? filtered.indexOf(activeTool) : -1
   const hasFilters = query.length > 0 || activeCategory !== "all" || showFavorites
 
   function clearAll() {
@@ -142,16 +146,22 @@ export function ToolsGrid() {
   }
 
   return (
-    <section id="tools" aria-label="Tools directory" className="pb-8">
-      <div className="mx-auto max-w-5xl">
-        <p className="animate-fade-in text-center text-xs uppercase tracking-[0.24em] text-muted-foreground/80">
-          Tool Console
-        </p>
+    <section id="tools" aria-label="Tools directory" className="pb-8 pt-14">
+      <div className="mx-auto max-w-6xl">
+        {/* Section header */}
+        <div className="animate-fade-in flex items-baseline justify-between border-b border-border pb-4">
+          <h2 className="font-display text-3xl font-bold uppercase tracking-[0.03em] text-foreground">
+            Tool Console
+          </h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+            Index 01 — {String(TOOLS.length).padStart(2, "0")}
+          </p>
+        </div>
 
-        {/* Category filters + view toggle row */}
-        <div className="animate-fade-in-up mt-5 flex flex-wrap items-center justify-between gap-2">
+        {/* Category filters + search + view toggle */}
+        <div className="animate-fade-in-up mt-6 flex flex-wrap items-center gap-2">
           <div
-            className="flex flex-wrap items-center gap-2"
+            className="flex flex-wrap items-center gap-1.5"
             role="group"
             aria-label="Filter by category"
           >
@@ -165,21 +175,14 @@ export function ToolsGrid() {
                   onClick={() => { setActiveCategory(cat.value); setShowFavorites(false) }}
                   aria-pressed={isActive}
                   className={cn(
-                    "flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200",
+                    "border px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[0.04em] transition-colors duration-200",
                     isActive
-                      ? "border-primary/70 bg-primary/15 text-primary"
-                      : "border-border/70 bg-card/40 text-muted-foreground hover:border-primary/35 hover:text-foreground"
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border/70 text-muted-foreground hover:border-border hover:text-foreground"
                   )}
                 >
                   {cat.label}
-                  <span
-                    className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none",
-                      isActive
-                        ? "bg-primary/20 text-primary"
-                        : "bg-secondary text-muted-foreground"
-                    )}
-                  >
+                  <span className={cn("ml-2", isActive ? "opacity-70" : "opacity-50")}>
                     {count}
                   </span>
                 </button>
@@ -192,30 +195,52 @@ export function ToolsGrid() {
               onClick={() => setShowFavorites((v) => !v)}
               aria-pressed={showFavorites}
               className={cn(
-                "flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200",
+                "flex items-center gap-1.5 border px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[0.04em] transition-colors duration-200",
                 showFavorites
-                  ? "border-amber-400/70 bg-amber-400/15 text-amber-400"
-                  : "border-border/70 bg-card/40 text-muted-foreground hover:border-amber-400/35 hover:text-foreground"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border/70 text-muted-foreground hover:border-border hover:text-foreground"
               )}
             >
-              <Star
-                className="h-3 w-3"
-                fill={showFavorites ? "currentColor" : "none"}
-              />
-              Favorites
+              <Star className="h-3 w-3" fill={showFavorites ? "currentColor" : "none"} />
+              Saved
               {favorites.size > 0 && (
-                <span
-                  className={cn(
-                    "rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none",
-                    showFavorites
-                      ? "bg-amber-400/20 text-amber-400"
-                      : "bg-secondary text-muted-foreground"
-                  )}
-                >
+                <span className={cn(showFavorites ? "opacity-70" : "opacity-50")}>
                   {favorites.size}
                 </span>
               )}
             </button>
+          </div>
+
+          {/* Search */}
+          <div className="relative min-w-[220px] flex-1">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <input
+              ref={inputRef}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search the kit…"
+              aria-label="Search tools"
+              className={cn(
+                "w-full border border-border/70 bg-transparent py-2 pl-10 pr-16 font-mono text-[12.5px] text-foreground placeholder:text-muted-foreground",
+                "outline-none transition-colors duration-200 focus:border-primary"
+              )}
+            />
+            <div className="absolute right-2.5 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => { setQuery(""); inputRef.current?.focus() }}
+                  className="flex h-6 w-6 items-center justify-center text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                  aria-label="Clear search"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+              <kbd className="hidden border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline-flex">
+                /
+              </kbd>
+            </div>
           </div>
 
           {/* View mode toggle */}
@@ -223,7 +248,7 @@ export function ToolsGrid() {
             type="button"
             onClick={toggleViewMode}
             aria-label={viewMode === "carousel" ? "Switch to grid view" : "Switch to carousel view"}
-            className="flex items-center gap-1.5 rounded-full border border-border/70 bg-card/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-primary/35 hover:text-foreground"
+            className="flex items-center gap-1.5 border border-border/70 px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[0.04em] text-muted-foreground transition-colors hover:border-border hover:text-foreground"
           >
             {viewMode === "carousel" ? (
               <>
@@ -239,41 +264,6 @@ export function ToolsGrid() {
           </button>
         </div>
 
-        {/* Search bar */}
-        <div className="animate-fade-in-up mt-5 mx-auto max-w-xl">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              ref={inputRef}
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search your tool library..."
-              aria-label="Search tools"
-              className={cn(
-                "w-full rounded-full border border-border/70 bg-card/70 py-3 pl-11 pr-20 text-sm text-foreground placeholder:text-muted-foreground",
-                "outline-none transition-all duration-200",
-                "focus:border-primary/50 focus:shadow-[0_0_0_3px_hsl(var(--primary)/0.1)]"
-              )}
-            />
-            <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => { setQuery(""); inputRef.current?.focus() }}
-                  className="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  aria-label="Clear search"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-              <kbd className="hidden items-center gap-0.5 rounded-md border border-border bg-secondary px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground sm:inline-flex">
-                /
-              </kbd>
-            </div>
-          </div>
-        </div>
-
         {filtered.length > 0 ? (
           <>
             {viewMode === "carousel" ? (
@@ -286,7 +276,7 @@ export function ToolsGrid() {
                     onClick={() => scrollCarousel(-1)}
                     aria-label="Scroll left"
                     className={cn(
-                      "absolute -left-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-card",
+                      "absolute -left-3.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center border border-border bg-card transition-all duration-200 hover:border-primary",
                       canScrollLeft ? "opacity-100" : "pointer-events-none opacity-0"
                     )}
                   >
@@ -299,7 +289,7 @@ export function ToolsGrid() {
                     onClick={() => scrollCarousel(1)}
                     aria-label="Scroll right"
                     className={cn(
-                      "absolute -right-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-card",
+                      "absolute -right-3.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center border border-border bg-card transition-all duration-200 hover:border-primary",
                       canScrollRight ? "opacity-100" : "pointer-events-none opacity-0"
                     )}
                   >
@@ -309,10 +299,10 @@ export function ToolsGrid() {
 
                 <div
                   ref={scrollRef}
-                  className="overflow-x-auto pb-2 scrollbar-hide"
+                  className="overflow-x-auto border border-border/70 scrollbar-hide"
                   style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
-                  <div className="flex min-w-full gap-3 sm:gap-4">
+                  <div className="flex min-w-full divide-x divide-border/70">
                     {filtered.map((tool, i) => (
                       <ToolCard
                         key={tool.href}
@@ -322,24 +312,39 @@ export function ToolsGrid() {
                         onHover={() => setActiveToolHref(tool.href)}
                         isFavorited={favorites.has(tool.href)}
                         onFavorite={() => toggleFavorite(tool.href)}
+                        variant="carousel"
                       />
                     ))}
                   </div>
                 </div>
 
-                {/* Keyboard nav hint — gated by restored */}
-                {restored && (
-                  <p className="mt-2 text-center text-[10px] text-muted-foreground/50">
-                    <kbd className="rounded border border-border/50 bg-secondary px-1 py-0.5 font-mono">←</kbd>
-                    {" "}
-                    <kbd className="rounded border border-border/50 bg-secondary px-1 py-0.5 font-mono">→</kbd>
-                    {" "}to navigate
-                  </p>
+                {/* Selected tool readout — attached to the card rail */}
+                {restored && activeTool && (
+                  <div className="grid items-center gap-6 border border-t-0 border-border/70 bg-card p-5 sm:grid-cols-[1fr_auto] sm:p-7">
+                    <div>
+                      <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-primary">
+                        Now selected — {String(activeIndex + 1).padStart(2, "0")} /{" "}
+                        {String(filtered.length).padStart(2, "0")}
+                      </p>
+                      <h3 className="mt-2 font-display text-3xl font-bold uppercase tracking-[0.02em] text-foreground">
+                        {activeTool.title}
+                      </h3>
+                      <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                        {activeTool.description}
+                      </p>
+                    </div>
+                    <a
+                      href={activeTool.href}
+                      className="justify-self-start bg-primary px-7 py-3.5 font-mono text-[13px] font-medium tracking-[0.08em] text-primary-foreground transition-colors hover:bg-foreground sm:justify-self-end"
+                    >
+                      LAUNCH →
+                    </a>
+                  </div>
                 )}
               </div>
             ) : (
-              /* Grid view */
-              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              /* Grid view — shared hairline borders between plates */
+              <div className="mt-8 grid grid-cols-2 border-l border-t border-border/70 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                 {filtered.map((tool, i) => (
                   <ToolCard
                     key={tool.href}
@@ -349,40 +354,25 @@ export function ToolsGrid() {
                     onHover={() => {}}
                     isFavorited={favorites.has(tool.href)}
                     onFavorite={() => toggleFavorite(tool.href)}
+                    variant="grid"
                   />
                 ))}
               </div>
             )}
 
-            {/* Selected tool preview — carousel only, gated by restored */}
-            {restored && viewMode === "carousel" && activeTool && (
-              <div className="animate-fade-in-up mt-7 rounded-2xl border border-border/70 bg-card/70 p-5 sm:p-7">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-primary/80">Now Selected</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-foreground">{activeTool.title}</h3>
-                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                      {activeTool.description}
-                    </p>
-                  </div>
-                  <a
-                    href={activeTool.href}
-                    className="inline-flex items-center gap-2 self-start rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-                  >
-                    Launch
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
-                </div>
-              </div>
-            )}
-
-            <p className="mt-4 text-center text-xs text-muted-foreground" aria-live="polite">
-              Showing <span className="font-semibold text-foreground">{filtered.length}</span> of {TOOLS.length} tools
+            <p
+              className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground"
+              aria-live="polite"
+            >
+              Showing <span className="text-foreground">{filtered.length}</span> / {TOOLS.length}
+              {restored && viewMode === "carousel" && (
+                <span className="hidden sm:inline"> &middot; ← → to navigate</span>
+              )}
               {hasFilters && (
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="ml-2 inline-flex items-center gap-1 text-primary transition-colors hover:text-accent"
+                  className="ml-3 inline-flex items-center gap-1 uppercase text-primary transition-colors hover:text-foreground"
                 >
                   <X className="h-3 w-3" />
                   Clear filters
@@ -391,22 +381,22 @@ export function ToolsGrid() {
             </p>
           </>
         ) : (
-          <div className="mt-12 flex flex-col items-center justify-center text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary">
-              <SlidersHorizontal className="h-6 w-6 text-muted-foreground" />
+          <div className="mt-10 flex flex-col items-center justify-center border border-border/70 px-6 py-14 text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center border border-border/70 text-muted-foreground">
+              <SlidersHorizontal className="h-5 w-5" />
             </div>
             <p className="text-lg font-semibold text-foreground">No tools found</p>
             <p className="mt-1.5 max-w-xs text-sm text-muted-foreground">
               {showFavorites && favorites.size === 0
-                ? "Star any tool to add it to your favorites."
-                : "Try a different search term or clear your filters to reload your tool carousel."}
+                ? "Star any tool to add it to your saved set."
+                : "Try a different search term or clear your filters."}
             </p>
             <button
               type="button"
               onClick={clearAll}
-              className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="mt-5 bg-primary px-5 py-2.5 font-mono text-[12px] tracking-[0.06em] text-primary-foreground transition-colors hover:bg-foreground"
             >
-              Reset filters
+              RESET FILTERS
             </button>
           </div>
         )}

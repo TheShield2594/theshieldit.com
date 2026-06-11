@@ -19,16 +19,16 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #3b82f6; --secondary: #8b5cf6; --accent: #06b6d4;
-      --bg-dark: #0f172a; --bg-darker: #020617; --text-light: #f1f5f9;
-      --text-gray: #94a3b8; --border: #1e293b; --green: #22c55e; --red: #ef4444;
+      --primary: #e3a93c; --secondary: #c98e2e; --accent: #4f86e8;
+      --bg-dark: #0e1016; --bg-darker: #0b0d11; --text-light: #e9e6dd;
+      --text-gray: #8e9088; --border: #181b22; --green: #22c55e; --red: #ef4444;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6,182,212,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(227,169,60,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(201,142,46,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(79,134,232,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
@@ -37,10 +37,10 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       text-align: center; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
-    .tool-panel { background: rgba(30,41,59,0.5); border: 1px solid var(--border); border-radius: 16px;
+    .tool-panel { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 16px;
       padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
-    input, select { width: 100%; padding: 0.75rem; background: rgba(15,23,42,0.6); border: 1px solid var(--border);
+    input, select { width: 100%; padding: 0.75rem; background: rgba(14,16,22,0.6); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit;
       outline: none; transition: border-color 0.2s ease; }
     input:focus, select:focus { border-color: var(--primary); }
@@ -48,17 +48,17 @@
     .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; font-family: inherit; }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(227,169,60,0.3); }
     .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
     .btn-full { width: 100%; margin-top: 1rem; padding: 0.875rem; }
-    .result-box { background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; }
+    .result-box { background: rgba(14,16,22,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; }
     .label { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 0.25rem; }
-    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(227,169,60,0.15); border: 1px solid rgba(227,169,60,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(227,169,60,0.25); }
     .badge-green { display: inline-block; background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
     .badge-red { display: inline-block; background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
     .badge-yellow { display: inline-block; background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
-    .info-note { background: rgba(59,130,246,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .info-note { background: rgba(227,169,60,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
     .flex-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
     .flex-between { display: flex; justify-content: space-between; align-items: center; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -90,7 +90,7 @@
 
     /* Info grid */
     .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.875rem; }
-    .info-card { background: rgba(15,23,42,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+    .info-card { background: rgba(14,16,22,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
     .info-card-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
     .info-card-value { font-size: 0.95rem; font-weight: 600; color: var(--text-light); word-break: break-word; }
     .info-card-value.mono { font-family: monospace; font-size: 0.85rem; }
@@ -99,7 +99,7 @@
     /* Nameservers */
     .ns-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem; }
     .ns-item { font-family: monospace; font-size: 0.85rem; padding: 0.35rem 0.65rem;
-      background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.15); border-radius: 6px; color: var(--accent); }
+      background: rgba(227,169,60,0.07); border: 1px solid rgba(227,169,60,0.15); border-radius: 6px; color: var(--accent); }
 
     /* Status codes */
     .status-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
@@ -125,9 +125,10 @@
 
     /* Example chips */
     .example-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
-    .chip { font-size: 0.78rem; padding: 0.22rem 0.65rem; background: rgba(30,41,59,0.8); border: 1px solid var(--border); border-radius: 99px; color: var(--text-gray); cursor: pointer; transition: all 0.2s; font-family: monospace; }
-    .chip:hover { border-color: var(--primary); color: var(--primary); background: rgba(59,130,246,0.08); }
+    .chip { font-size: 0.78rem; padding: 0.22rem 0.65rem; background: rgba(24,27,34,0.8); border: 1px solid var(--border); border-radius: 99px; color: var(--text-gray); cursor: pointer; transition: all 0.2s; font-family: monospace; }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: rgba(227,169,60,0.08); }
   </style>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
   <div class="bg-animation"></div>

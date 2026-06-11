@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
+            color: #ddd9cf;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +35,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 1.1rem;
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(24, 27, 34, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -57,18 +57,18 @@
         }
 
         .upload-area {
-            border: 3px dashed rgba(59, 130, 246, 0.3);
+            border: 3px dashed rgba(227, 169, 60, 0.3);
             border-radius: 16px;
             padding: 60px 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(14, 16, 22, 0.4);
         }
 
         .upload-area:hover, .upload-area.dragover {
-            border-color: rgba(59, 130, 246, 0.6);
-            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(227, 169, 60, 0.6);
+            background: rgba(227, 169, 60, 0.1);
         }
 
         .upload-icon {
@@ -78,12 +78,12 @@
 
         .upload-text {
             font-size: 1.2rem;
-            color: #cbd5e1;
+            color: #bcb9ae;
             margin-bottom: 10px;
         }
 
         .upload-hint {
-            color: #94a3b8;
+            color: #8e9088;
             font-size: 0.9rem;
         }
 
@@ -92,7 +92,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #e3a93c 0%, #d29a32 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -108,7 +108,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 12px rgba(227, 169, 60, 0.4);
         }
 
         button:disabled {
@@ -118,7 +118,7 @@
         }
 
         button.secondary {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #c98e2e 0%, #b87f27 100%);
         }
 
         button.danger {
@@ -138,14 +138,14 @@
         }
 
         .metadata-section {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(14, 16, 22, 0.6);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
         }
 
         .metadata-section h3 {
-            color: #3b82f6;
+            color: #e3a93c;
             margin-bottom: 15px;
         }
 
@@ -156,20 +156,20 @@
         }
 
         .metadata-item {
-            background: rgba(30, 41, 59, 0.6);
+            background: rgba(24, 27, 34, 0.6);
             padding: 12px;
             border-radius: 8px;
-            border-left: 4px solid #3b82f6;
+            border-left: 4px solid #e3a93c;
         }
 
         .metadata-label {
             font-size: 0.85rem;
-            color: #94a3b8;
+            color: #8e9088;
             margin-bottom: 5px;
         }
 
         .metadata-value {
-            color: #cbd5e1;
+            color: #bcb9ae;
             word-break: break-all;
         }
 
@@ -193,14 +193,14 @@
         }
 
         .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
+            background: rgba(227, 169, 60, 0.1);
+            border-left: 4px solid #e3a93c;
             padding: 20px;
             border-radius: 8px;
         }
 
         .info-box h3 {
-            color: #3b82f6;
+            color: #e3a93c;
             margin-bottom: 15px;
         }
 
@@ -210,12 +210,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #cbd5e1;
+            color: #bcb9ae;
         }
 
         .back-link {
             display: inline-block;
-            color: #3b82f6;
+            color: #e3a93c;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -223,7 +223,7 @@
         }
 
         .back-link:hover {
-            color: #60a5fa;
+            color: #ecbc62;
             transform: translateX(-5px);
         }
 
@@ -247,6 +247,7 @@
         }
     </style>
   <script src="/shared-shell.js" defer></script>
+  <link rel="stylesheet" href="/field-kit-theme.css">
 </head>
 <body>
     <div class="container">
@@ -279,7 +280,7 @@
 
         <div class="card info-box">
             <h3>🔐 What is EXIF Metadata?</h3>
-            <p style="margin-bottom: 15px; color: #cbd5e1;">
+            <p style="margin-bottom: 15px; color: #bcb9ae;">
                 EXIF (Exchangeable Image File Format) data is metadata embedded in photos that can include:
             </p>
             <ul>

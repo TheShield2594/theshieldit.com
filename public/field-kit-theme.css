@@ -1,0 +1,29 @@
+/*
+ * Field Kit overrides for the legacy standalone tool pages.
+ * Loaded after each page's inline styles, so these win the cascade.
+ * Palette substitutions are handled by scripts/retheme-legacy-tools.mjs;
+ * this file only neutralizes templated decorations that hex-mapping
+ * can't fix (floating gradient blobs, gradient logo text).
+ */
+
+/* Kill the animated radial-gradient background blobs */
+.bg-animation {
+  background: none !important;
+  animation: none !important;
+}
+
+/* Gradient wordmark → flat warm ink */
+.logo {
+  background: none !important;
+  -webkit-text-fill-color: #e9e6dd !important;
+  color: #e9e6dd !important;
+}
+
+/* Gradient logo plate → outlined cobalt mark */
+.logo .shield-icon,
+.shield-icon {
+  background: transparent !important;
+  border: 1px solid #4f86e8;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
