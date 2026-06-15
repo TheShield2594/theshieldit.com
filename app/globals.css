@@ -3,43 +3,43 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* "Field Kit" palette — near-black blue base, warm paper ink,
-     signal amber for interaction, cobalt for the brand mark. */
-  --background: 222 21% 5%;
-  --foreground: 45 21% 89%;
+  /* "Clawdia" palette — pure black base, warm cream ink,
+     bold orange for interaction and brand. */
+  --background: 0 0% 5%;
+  --foreground: 40 30% 90%;
 
-  --card: 222 24% 8%;
-  --card-foreground: 45 21% 89%;
+  --card: 0 0% 9%;
+  --card-foreground: 40 30% 90%;
 
-  --popover: 222 22% 7%;
-  --popover-foreground: 45 21% 89%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 40 30% 90%;
 
-  --primary: 39 75% 56%;
-  --primary-foreground: 222 21% 5%;
+  --primary: 25 90% 55%;
+  --primary-foreground: 0 0% 5%;
 
-  --secondary: 222 14% 13%;
-  --secondary-foreground: 45 15% 85%;
+  --secondary: 25 8% 13%;
+  --secondary-foreground: 40 20% 80%;
 
-  --muted: 222 14% 13%;
-  --muted-foreground: 50 5% 58%;
+  --muted: 25 8% 13%;
+  --muted-foreground: 40 8% 55%;
 
-  --accent: 219 77% 61%;
-  --accent-foreground: 222 21% 5%;
+  --accent: 35 85% 60%;
+  --accent-foreground: 0 0% 5%;
 
   --destructive: 0 62% 52%;
-  --destructive-foreground: 45 21% 95%;
+  --destructive-foreground: 40 30% 95%;
 
-  --border: 45 9% 18%;
-  --input: 45 9% 18%;
-  --ring: 39 75% 56%;
+  --border: 25 10% 16%;
+  --input: 25 10% 16%;
+  --ring: 25 90% 55%;
 
   --radius: 0.25rem;
 
-  --chart-1: 219 77% 61%;
-  --chart-2: 174 35% 52%;
-  --chart-3: 145 32% 55%;
-  --chart-4: 39 75% 56%;
-  --chart-5: 8 55% 60%;
+  --chart-1: 25 90% 55%;
+  --chart-2: 35 80% 60%;
+  --chart-3: 15 70% 58%;
+  --chart-4: 40 30% 80%;
+  --chart-5: 18 80% 45%;
 }
 
 @theme inline {

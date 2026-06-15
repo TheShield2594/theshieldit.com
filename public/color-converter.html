@@ -11,16 +11,16 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #e3a93c; --secondary: #c98e2e; --accent: #4f86e8;
-      --bg-dark: #0e1016; --bg-darker: #0b0d11; --text-light: #e9e6dd;
-      --text-gray: #8e9088; --border: #181b22; --green: #22c55e; --red: #ef4444;
+      --primary: #e86c25; --secondary: #c05518; --accent: #e86c25;
+      --bg-dark: #111111; --bg-darker: #0d0d0d; --text-light: #ede3cf;
+      --text-gray: #a09880; --border: #1a1a1a; --green: #22c55e; --red: #ef4444;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(227,169,60,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(201,142,46,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(79,134,232,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(232,108,37,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(192,85,24,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(232,108,37,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
@@ -28,10 +28,10 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
-    .tool-panel { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 16px;
+    .tool-panel { background: rgba(26,26,26,0.5); border: 1px solid var(--border); border-radius: 16px;
       padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
-    input, select, textarea { width: 100%; padding: 0.75rem; background: rgba(14,16,22,0.6); border: 1px solid var(--border);
+    input, select, textarea { width: 100%; padding: 0.75rem; background: rgba(17,17,17,0.6); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s ease; }
     input:focus, select:focus, textarea:focus { border-color: var(--primary); }
     input::placeholder, textarea::placeholder { color: var(--text-gray); }
@@ -39,17 +39,17 @@
     .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; font-family: inherit; }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(227,169,60,0.3); }
-    .case-card { background: rgba(14,16,22,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,108,37,0.3); }
+    .case-card { background: rgba(17,17,17,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
     .case-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; min-width: 140px; }
     .case-value { font-family: monospace; font-size: 0.9rem; color: var(--text-light); flex: 1; word-break: break-all; }
-    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(227,169,60,0.15); border: 1px solid rgba(227,169,60,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
-    .copy-btn:hover { background: rgba(227,169,60,0.25); }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(232,108,37,0.15); border: 1px solid rgba(232,108,37,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
+    .copy-btn:hover { background: rgba(232,108,37,0.25); }
     .copy-btn.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
-    .info-note { background: rgba(227,169,60,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .info-note { background: rgba(232,108,37,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
     .color-preview { width: 100%; height: 100px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; transition: background-color 0.2s ease; }
     .color-formats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .format-card { background: rgba(14,16,22,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; }
+    .format-card { background: rgba(17,17,17,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; }
     .format-name { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
     .format-value { font-family: monospace; font-size: 0.9rem; color: var(--text-light); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
     @media (max-width: 600px) { .color-formats { grid-template-columns: 1fr; } .case-label { min-width: 100px; } }
@@ -58,7 +58,7 @@
     .input-row { display: flex; gap: 0.75rem; align-items: stretch; }
     .input-row input[type="color"] {
       width: 56px; min-width: 56px; height: 48px; padding: 4px 6px;
-      border-radius: 8px; cursor: pointer; background: rgba(14,16,22,0.6);
+      border-radius: 8px; cursor: pointer; background: rgba(17,17,17,0.6);
       border: 1px solid var(--border); flex-shrink: 0;
     }
     .input-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
@@ -121,7 +121,7 @@
 
     /* Contrast checker */
     .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .contrast-card { background: rgba(14,16,22,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .contrast-card { background: rgba(17,17,17,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
     .contrast-bg { border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; font-size: 0.95rem; font-weight: 600; text-align: center; }
     .contrast-ratio { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
     .badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -169,18 +169,18 @@
     <div class="tool-panel">
       <div class="panel-title">Color Input</div>
       <div class="input-row">
-        <input type="color" id="colorPicker" value="#e3a93c" oninput="onPickerChange(this.value)" title="Pick a color" aria-label="Pick a color">
+        <input type="color" id="colorPicker" value="#e86c25" oninput="onPickerChange(this.value)" title="Pick a color" aria-label="Pick a color">
         <div class="text-input-wrap">
-          <input type="text" id="colorText" placeholder="#e3a93c  or  rgb(227,169,60)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)" aria-label="Color value">
+          <input type="text" id="colorText" placeholder="#e86c25  or  rgb(232,108,37)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)" aria-label="Color value">
         </div>
       </div>
-      <div class="error-msg" id="errorMsg">Could not parse color. Try: #e3a93c, rgb(227,169,60), hsl(217,91%,60%), or a named color like "blue".</div>
+      <div class="error-msg" id="errorMsg">Could not parse color. Try: #e86c25, rgb(232,108,37), hsl(217,91%,60%), or a named color like "blue".</div>
 
       <!-- Alpha slider -->
       <div class="alpha-row">
         <div class="alpha-label">Alpha (Opacity) <span id="alphaVal">100%</span></div>
         <input type="range" class="styled-alpha" id="alphaSlider" min="0" max="100" value="100"
-          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #e3a93c);"
+          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #e86c25);"
           aria-label="Alpha (opacity)" aria-describedby="alphaVal">
       </div>
     </div>
@@ -188,7 +188,7 @@
     <!-- Preview -->
     <div class="tool-panel" id="previewPanel">
       <div class="panel-title">Preview</div>
-      <div class="color-preview" id="colorPreview" style="background:#e3a93c;"></div>
+      <div class="color-preview" id="colorPreview" style="background:#e86c25;"></div>
       <div class="color-formats" id="formatsGrid">
         <!-- populated by JS -->
       </div>
@@ -591,7 +591,7 @@
 
     // ── Init ──────────────────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('colorText').value = '#e3a93c';
+      document.getElementById('colorText').value = '#e86c25';
       updateAll({ r: 227, g: 169, b: 60 }, 1.0);
     });
   </script>

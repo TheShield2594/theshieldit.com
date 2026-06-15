@@ -12,7 +12,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background: #060a12;
-            color: #ddd9cf;
+            color: #e0d8c0;
             min-height: 100vh;
             padding: 20px;
         }
@@ -20,10 +20,10 @@
         header { text-align: center; margin-bottom: 28px; padding-top: 20px; }
         h1 {
             font-size: 2.2rem; margin-bottom: 8px;
-            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
+            background: linear-gradient(135deg, #e86c25 0%, #c05518 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .subtitle { color: #8e9088; font-size: 1rem; }
+        .subtitle { color: #a09880; font-size: 1rem; }
 
         /* Input */
         .input-row {
@@ -33,29 +33,29 @@
         }
         .domain-input {
             flex: 1; background: rgba(6,10,18,0.6); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px; padding: 11px 16px; color: #ddd9cf; font-size: 1rem;
+            border-radius: 8px; padding: 11px 16px; color: #e0d8c0; font-size: 1rem;
             outline: none; transition: border-color 0.2s;
         }
-        .domain-input:focus { border-color: #e3a93c; }
-        .domain-input::placeholder { color: #8e9088; }
+        .domain-input:focus { border-color: #e86c25; }
+        .domain-input::placeholder { color: #a09880; }
         .lookup-btn {
-            background: linear-gradient(135deg, #e3a93c, #d29a32); color: white;
+            background: linear-gradient(135deg, #e86c25, #d45f1a); color: white;
             border: none; padding: 11px 22px; border-radius: 8px; cursor: pointer;
             font-size: 0.95rem; font-weight: 600; transition: all 0.2s;
             white-space: nowrap;
         }
-        .lookup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(227,169,60,0.4); }
+        .lookup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,108,37,0.4); }
         .lookup-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         /* Tabs */
         .tabs { display: flex; gap: 4px; background: #1a2236; border-radius: 12px; padding: 6px; margin-bottom: 20px; }
         .tab-btn {
             flex: 1; padding: 10px 20px; border: none; border-radius: 8px;
-            background: transparent; color: #8e9088; font-size: 0.95rem; font-weight: 600;
+            background: transparent; color: #a09880; font-size: 0.95rem; font-weight: 600;
             cursor: pointer; transition: all 0.2s;
         }
-        .tab-btn.active { background: #e3a93c; color: white; }
-        .tab-btn:hover:not(.active) { background: rgba(227,169,60,0.1); color: #ddd9cf; }
+        .tab-btn.active { background: #e86c25; color: white; }
+        .tab-btn:hover:not(.active) { background: rgba(232,108,37,0.1); color: #e0d8c0; }
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
 
@@ -64,21 +64,21 @@
             background: #1a2236; border: 1px solid rgba(255,255,255,0.08);
             border-radius: 16px; padding: 26px; margin-bottom: 18px;
         }
-        .card h3 { color: #e3a93c; margin-bottom: 16px; font-size: 1rem; }
+        .card h3 { color: #e86c25; margin-bottom: 16px; font-size: 1rem; }
 
         /* WHOIS table */
         .whois-table { width: 100%; border-collapse: collapse; }
         .whois-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
         .whois-table tr:last-child { border-bottom: none; }
         .whois-table td { padding: 10px 8px; font-size: 0.88rem; vertical-align: top; }
-        .whois-table td:first-child { color: #8e9088; width: 160px; white-space: nowrap; }
-        .whois-table td:last-child { color: #ddd9cf; font-family: 'Courier New', monospace; word-break: break-all; }
+        .whois-table td:first-child { color: #a09880; width: 160px; white-space: nowrap; }
+        .whois-table td:last-child { color: #e0d8c0; font-family: 'Courier New', monospace; word-break: break-all; }
 
         /* DNS records */
         .record-group { margin-bottom: 18px; }
         .record-type { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; margin-bottom: 8px; }
-        .rt-a { background: rgba(227,169,60,0.15); color: #ecbc62; }
-        .rt-aaaa { background: rgba(79,134,232,0.15); color: #6f9ded; }
+        .rt-a { background: rgba(232,108,37,0.15); color: #f08040; }
+        .rt-aaaa { background: rgba(232,108,37,0.15); color: #f08040; }
         .rt-mx { background: rgba(168,85,247,0.15); color: #c084fc; }
         .rt-ns { background: rgba(245,158,11,0.15); color: #fbbf24; }
         .rt-txt { background: rgba(34,197,94,0.15); color: #86efac; }
@@ -86,20 +86,20 @@
         .record-row {
             display: flex; gap: 12px; background: rgba(6,10,18,0.5);
             border-radius: 8px; padding: 9px 12px; margin-bottom: 6px;
-            font-family: 'Courier New', monospace; font-size: 0.82rem; color: #bcb9ae;
+            font-family: 'Courier New', monospace; font-size: 0.82rem; color: #c8c0a8;
             word-break: break-all;
         }
-        .record-ttl { color: #8e9088; white-space: nowrap; min-width: 60px; }
+        .record-ttl { color: #a09880; white-space: nowrap; min-width: 60px; }
 
         .placeholder {
-            text-align: center; padding: 48px 20px; color: #8e9088;
+            text-align: center; padding: 48px 20px; color: #a09880;
         }
         .placeholder-icon { font-size: 3rem; margin-bottom: 12px; }
         .placeholder p { font-size: 0.9rem; }
 
         .loading { text-align: center; padding: 40px; }
         .spinner {
-            border: 4px solid rgba(227,169,60,0.2); border-top-color: #e3a93c;
+            border: 4px solid rgba(232,108,37,0.2); border-top-color: #e86c25;
             border-radius: 50%; width: 40px; height: 40px;
             animation: spin 1s linear infinite; margin: 0 auto 14px;
         }
@@ -116,8 +116,8 @@
         .status-expired { background: rgba(239,68,68,0.15); color: #f87171; }
 
         .info-note {
-            background: rgba(227,169,60,0.07); border-left: 3px solid #e3a93c;
-            padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 0.82rem; color: #8e9088; margin-top: 14px;
+            background: rgba(232,108,37,0.07); border-left: 3px solid #e86c25;
+            padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 0.82rem; color: #a09880; margin-top: 14px;
         }
 
         @media (max-width: 600px) {
@@ -231,7 +231,7 @@
         } catch (e) {
             hide('whois-loading');
             show('whois-error');
-            document.getElementById('whois-error').innerHTML = `<div class="error-box">⚠️ WHOIS lookup failed: ${e.message}. This may be a CORS restriction or the domain is not found. Try directly at <a href="https://lookup.icann.org/en/lookup?name=${encodeURIComponent(domain)}" target="_blank" rel="noopener noreferrer" style="color:#e3a93c;">ICANN Lookup</a>.</div>`;
+            document.getElementById('whois-error').innerHTML = `<div class="error-box">⚠️ WHOIS lookup failed: ${e.message}. This may be a CORS restriction or the domain is not found. Try directly at <a href="https://lookup.icann.org/en/lookup?name=${encodeURIComponent(domain)}" target="_blank" rel="noopener noreferrer" style="color:#e86c25;">ICANN Lookup</a>.</div>`;
         }
     }
 

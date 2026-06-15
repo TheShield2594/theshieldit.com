@@ -1,5 +1,5 @@
 /*
- * Field Kit overrides for the legacy standalone tool pages.
+ * Clawdia overrides for the legacy standalone tool pages.
  * Loaded after each page's inline styles, so these win the cascade.
  * Palette substitutions are handled by scripts/retheme-legacy-tools.mjs;
  * this file only neutralizes templated decorations that hex-mapping
@@ -12,18 +12,18 @@
   animation: none !important;
 }
 
-/* Gradient wordmark → flat warm ink */
+/* Gradient wordmark → flat cream ink */
 .logo {
   background: none !important;
-  -webkit-text-fill-color: #e9e6dd !important;
-  color: #e9e6dd !important;
+  -webkit-text-fill-color: #f0e8d8 !important;
+  color: #f0e8d8 !important;
 }
 
-/* Gradient logo plate → outlined cobalt mark */
+/* Gradient logo plate → outlined orange mark */
 .logo .shield-icon,
 .shield-icon {
   background: transparent !important;
-  border: 1px solid #4f86e8;
+  border: 1px solid #e86c25;
   border-radius: 4px !important;
   box-shadow: none !important;
 }

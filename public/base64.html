@@ -18,16 +18,16 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #e3a93c; --secondary: #c98e2e; --accent: #4f86e8;
-      --bg-dark: #0e1016; --bg-darker: #0b0d11; --text-light: #e9e6dd;
-      --text-gray: #8e9088; --border: #181b22;
+      --primary: #e86c25; --secondary: #c05518; --accent: #e86c25;
+      --bg-dark: #111111; --bg-darker: #0d0d0d; --text-light: #ede3cf;
+      --text-gray: #a09880; --border: #1a1a1a;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(227,169,60,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(201,142,46,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(79,134,232,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(232,108,37,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(192,85,24,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(232,108,37,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
@@ -36,23 +36,23 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
       -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
     .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(227,169,60,0.3); }
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(232,108,37,0.3); }
     .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
       font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
-    .back-link:hover { color: var(--primary); background: rgba(227,169,60,0.1); }
+    .back-link:hover { color: var(--primary); background: rgba(232,108,37,0.1); }
     h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
       background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       text-align: center; animation: fadeInUp 0.8s ease-out; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
-    .tool-panel { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 16px;
+    .tool-panel { background: rgba(26,26,26,0.5); border: 1px solid var(--border); border-radius: 16px;
       padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.2s both; }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
     .editor-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
     .editor-label span { font-size: 0.85rem; font-weight: 500; color: var(--text-gray); }
     .char-count { font-size: 0.75rem; color: var(--text-gray); }
     textarea {
-      width: 100%; min-height: 150px; padding: 0.75rem; background: rgba(14,16,22,0.6); border: 1px solid var(--border);
+      width: 100%; min-height: 150px; padding: 0.75rem; background: rgba(17,17,17,0.6); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text-light); font-size: 0.85rem;
       font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
       outline: none; resize: vertical; transition: border-color 0.2s ease; line-height: 1.5;
@@ -63,8 +63,8 @@
     .action-btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; font-family: inherit; display: flex; align-items: center; gap: 0.5rem; }
-    .action-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(227,169,60,0.3); }
-    .action-btn.secondary { background: rgba(24,27,34,0.5); border: 1px solid var(--border); color: var(--text-gray); }
+    .action-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,108,37,0.3); }
+    .action-btn.secondary { background: rgba(26,26,26,0.5); border: 1px solid var(--border); color: var(--text-gray); }
     .action-btn.secondary:hover { border-color: var(--primary); color: var(--text-light); box-shadow: none; }
     .options-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem; }
     .option-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-gray); cursor: pointer; }
@@ -72,7 +72,7 @@
     .arrow-icon { display: flex; align-items: center; justify-content: center; padding: 0.5rem; color: var(--text-gray); }
     .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
     .privacy-note { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem 1rem;
-      background: rgba(79,134,232,0.08); border: 1px solid rgba(79,134,232,0.2); border-radius: 8px;
+      background: rgba(232,108,37,0.08); border: 1px solid rgba(232,108,37,0.2); border-radius: 8px;
       font-size: 0.8rem; color: var(--text-gray); line-height: 1.5; }
     .privacy-note svg { flex-shrink: 0; margin-top: 1px; color: var(--accent); }
     footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.85rem; }

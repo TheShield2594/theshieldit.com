@@ -10,8 +10,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
-            color: #ddd9cf;
+            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
+            color: #e0d8c0;
             min-height: 100vh;
             padding: 20px;
         }
@@ -20,20 +20,20 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #10b981 0%, #4f86e8 100%);
+            background: linear-gradient(135deg, #10b981 0%, #e86c25 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .subtitle { color: #8e9088; font-size: 1.1rem; }
+        .subtitle { color: #a09880; font-size: 1.1rem; }
         .back-link {
             display: inline-flex; align-items: center; gap: 8px;
-            color: #75776f; text-decoration: none; font-size: 0.9rem;
+            color: #857868; text-decoration: none; font-size: 0.9rem;
             margin-bottom: 30px; transition: color 0.2s;
         }
-        .back-link:hover { color: #8e9088; }
+        .back-link:hover { color: #a09880; }
         .card {
-            background: rgba(24, 27, 34, 0.8);
+            background: rgba(26, 26, 26, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -41,7 +41,7 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #e9e6dd; }
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #ede3cf; }
         .info-note {
             background: rgba(16,185,129,0.08);
             border: 1px solid rgba(16,185,129,0.2);
@@ -49,13 +49,13 @@
             font-size: 0.85rem; color: #6ee7b7; line-height: 1.6;
             margin-bottom: 20px;
         }
-        label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: #bcb9ae; font-weight: 500; }
+        label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: #c8c0a8; font-weight: 500; }
         .input-group { margin-bottom: 20px; }
         textarea {
             width: 100%; padding: 14px;
-            background: rgba(14, 16, 22, 0.6);
+            background: rgba(17, 17, 17, 0.6);
             border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 10px; color: #ddd9cf;
+            border-radius: 10px; color: #e0d8c0;
             font-size: 0.85rem; resize: vertical;
             font-family: 'Courier New', monospace;
             transition: border-color 0.3s;
@@ -63,9 +63,9 @@
         textarea:focus { outline: none; border-color: rgba(16,185,129,0.5); }
         select {
             width: 100%; padding: 12px 14px;
-            background: rgba(14, 16, 22, 0.6);
+            background: rgba(17, 17, 17, 0.6);
             border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 10px; color: #ddd9cf;
+            border-radius: 10px; color: #e0d8c0;
             font-size: 0.9rem; cursor: pointer;
         }
         select:focus { outline: none; border-color: rgba(16,185,129,0.5); }
@@ -77,9 +77,9 @@
             font-size: 1rem; font-weight: 600;
             cursor: pointer; transition: all 0.3s;
         }
-        .btn-primary { background: linear-gradient(135deg, #10b981, #4f86e8); color: white; }
+        .btn-primary { background: linear-gradient(135deg, #10b981, #e86c25); color: white; }
         .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-secondary { background: rgba(255,255,255,0.08); color: #8e9088; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; padding: 8px 16px; }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: #a09880; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; padding: 8px 16px; }
         .btn-secondary:hover { background: rgba(255,255,255,0.12); }
         .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
         .result-box {
@@ -95,7 +95,7 @@
         .result-valid .result-title { color: #10b981; }
         .result-invalid .result-title { color: #ef4444; }
         .result-error .result-title { color: #f59e0b; }
-        .result-body { color: #8e9088; font-size: 0.9rem; line-height: 1.6; }
+        .result-body { color: #a09880; font-size: 0.9rem; line-height: 1.6; }
         .detail-row {
             display: flex; gap: 12px; justify-content: center;
             flex-wrap: wrap; margin-top: 16px;
@@ -103,30 +103,30 @@
         .detail-chip {
             padding: 4px 14px; border-radius: 20px;
             font-size: 0.78rem; background: rgba(255,255,255,0.08);
-            color: #8e9088; font-family: monospace;
+            color: #a09880; font-family: monospace;
         }
-        .tabs { display: flex; gap: 2px; margin-bottom: 24px; background: rgba(14,16,22,0.5); border-radius: 10px; padding: 4px; }
+        .tabs { display: flex; gap: 2px; margin-bottom: 24px; background: rgba(17,17,17,0.5); border-radius: 10px; padding: 4px; }
         .tab {
             flex: 1; padding: 9px; text-align: center; border-radius: 8px;
             font-size: 0.85rem; font-weight: 500; cursor: pointer;
-            color: #75776f; transition: all 0.2s; border: none; background: transparent;
+            color: #857868; transition: all 0.2s; border: none; background: transparent;
         }
         .tab.active { background: rgba(16,185,129,0.15); color: #10b981; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .hint { font-size: 0.78rem; color: #75776f; margin-top: 6px; }
+        .hint { font-size: 0.78rem; color: #857868; margin-top: 6px; }
         .file-btn {
             display: inline-flex; align-items: center; gap: 6px;
             padding: 7px 14px; border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 8px; font-size: 0.8rem; color: #75776f;
+            border-radius: 8px; font-size: 0.8rem; color: #857868;
             cursor: pointer; transition: all 0.2s; background: transparent;
         }
         .file-btn:hover { border-color: rgba(16,185,129,0.4); color: #10b981; }
         input[type="file"] { display: none; }
         .algo-info {
-            background: rgba(14,16,22,0.4);
+            background: rgba(17,17,17,0.4);
             border-radius: 8px; padding: 12px 16px;
-            font-size: 0.8rem; color: #75776f; line-height: 1.7;
+            font-size: 0.8rem; color: #857868; line-height: 1.7;
             margin-top: 12px;
         }
         .hidden { display: none; }
@@ -226,7 +226,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
                     📁 Choose file to verify
                     <input type="file" id="msgFile" onchange="loadMsgFile(this)">
                 </label>
-                <div id="fileInfo" style="font-size:0.82rem; color:#75776f;"></div>
+                <div id="fileInfo" style="font-size:0.82rem; color:#857868;"></div>
             </div>
         </div>
     </div>
@@ -254,10 +254,10 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
                 📁 Load signature file
                 <input type="file" id="sigFile" onchange="loadSigFile(this)">
             </label>
-            <div id="sigFileInfo" style="font-size:0.82rem; color:#75776f; margin-top:8px;"></div>
+            <div id="sigFileInfo" style="font-size:0.82rem; color:#857868; margin-top:8px;"></div>
         </div>
 
-        <div id="sigEncodingNote" style="font-size:0.78rem; color:#75776f; margin-top:8px;"></div>
+        <div id="sigEncodingNote" style="font-size:0.78rem; color:#857868; margin-top:8px;"></div>
     </div>
 
     <div style="text-align:center; margin-bottom:20px;">
@@ -268,11 +268,11 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 
     <div class="card">
         <h2>Algorithm Reference</h2>
-        <div style="font-size:0.85rem; color:#8e9088; line-height:1.9;">
-            <strong style="color:#ddd9cf;">RSA-PKCS1-v1_5</strong> — Classic RSA signature scheme. Used in TLS 1.2 and below, JWT RS256/RS384/RS512.<br>
-            <strong style="color:#ddd9cf;">RSA-PSS</strong> — Probabilistic RSA signature with better security proofs. Used in TLS 1.3, modern applications.<br>
-            <strong style="color:#ddd9cf;">ECDSA</strong> — Elliptic Curve signature. Smaller keys with equivalent security. Used in JWT ES256/ES384/ES512, Bitcoin, TLS 1.3.<br><br>
-            <strong style="color:#ddd9cf;">Public Key Format:</strong> PKCS#8 SubjectPublicKeyInfo (BEGIN PUBLIC KEY). Not PKCS#1 (BEGIN RSA PUBLIC KEY).<br>
+        <div style="font-size:0.85rem; color:#a09880; line-height:1.9;">
+            <strong style="color:#e0d8c0;">RSA-PKCS1-v1_5</strong> — Classic RSA signature scheme. Used in TLS 1.2 and below, JWT RS256/RS384/RS512.<br>
+            <strong style="color:#e0d8c0;">RSA-PSS</strong> — Probabilistic RSA signature with better security proofs. Used in TLS 1.3, modern applications.<br>
+            <strong style="color:#e0d8c0;">ECDSA</strong> — Elliptic Curve signature. Smaller keys with equivalent security. Used in JWT ES256/ES384/ES512, Bitcoin, TLS 1.3.<br><br>
+            <strong style="color:#e0d8c0;">Public Key Format:</strong> PKCS#8 SubjectPublicKeyInfo (BEGIN PUBLIC KEY). Not PKCS#1 (BEGIN RSA PUBLIC KEY).<br>
             To convert: <code style="background:rgba(255,255,255,0.07); padding:2px 6px; border-radius:4px;">openssl rsa -in private.pem -pubout -out public.pem</code>
         </div>
     </div>
@@ -415,7 +415,7 @@ function getAlgoParams(algoStr) {
 async function verifySignature() {
     const resultSection = document.getElementById('resultSection');
     resultSection.classList.remove('hidden');
-    resultSection.innerHTML = '<div class="result-box" style="border-color:rgba(100,116,139,0.3)"><div class="result-icon">⏳</div><div class="result-title" style="color:#8e9088;">Verifying...</div></div>';
+    resultSection.innerHTML = '<div class="result-box" style="border-color:rgba(100,116,139,0.3)"><div class="result-icon">⏳</div><div class="result-title" style="color:#a09880;">Verifying...</div></div>';
 
     try {
         // Get public key
