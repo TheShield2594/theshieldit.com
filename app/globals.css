@@ -3,43 +3,44 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* "Field Kit" palette — near-black blue base, warm paper ink,
-     signal amber for interaction, cobalt for the brand mark. */
-  --background: 222 21% 5%;
-  --foreground: 45 21% 89%;
+  /* Clawdia palette — exact design tokens from Clawdia unified design system.
+     bg-0 warm near-black, cream text, claw-500 orange primary. */
 
-  --card: 222 24% 8%;
-  --card-foreground: 45 21% 89%;
+  /* #0d0b0a */ --background: 20 13% 5%;
+  /* #faf5f0 */ --foreground: 30 50% 96%;
 
-  --popover: 222 22% 7%;
-  --popover-foreground: 45 21% 89%;
+  /* #141210 */ --card: 30 11% 7%;
+                --card-foreground: 30 50% 96%;
 
-  --primary: 39 75% 56%;
-  --primary-foreground: 222 21% 5%;
+  /* #1c1916 */ --popover: 30 12% 10%;
+                --popover-foreground: 30 50% 96%;
 
-  --secondary: 222 14% 13%;
-  --secondary-foreground: 45 15% 85%;
+  /* #f97316 */ --primary: 25 95% 53%;
+  /* #0d0b0a */ --primary-foreground: 20 13% 5%;
 
-  --muted: 222 14% 13%;
-  --muted-foreground: 50 5% 58%;
+  /* #2a241e */ --secondary: 30 17% 14%;
+  /* #d4cbb9 */ --secondary-foreground: 40 24% 78%;
 
-  --accent: 219 77% 61%;
-  --accent-foreground: 222 21% 5%;
+  /* #2a241e */ --muted: 30 17% 14%;
+  /* #a49b92 */ --muted-foreground: 30 9% 61%;
 
-  --destructive: 0 62% 52%;
-  --destructive-foreground: 45 21% 95%;
+  /* #e89163 */ --accent: 21 74% 65%;
+  /* #0d0b0a */ --accent-foreground: 20 13% 5%;
 
-  --border: 45 9% 18%;
-  --input: 45 9% 18%;
-  --ring: 39 75% 56%;
+                --destructive: 0 62% 52%;
+                --destructive-foreground: 30 50% 96%;
+
+  /* #2a241e */ --border: 30 17% 14%;
+  /* #2a241e */ --input: 30 17% 14%;
+  /* #f97316 */ --ring: 25 95% 53%;
 
   --radius: 0.25rem;
 
-  --chart-1: 219 77% 61%;
-  --chart-2: 174 35% 52%;
-  --chart-3: 145 32% 55%;
-  --chart-4: 39 75% 56%;
-  --chart-5: 8 55% 60%;
+  /* #f97316 */ --chart-1: 25 95% 53%;
+  /* #d97742 */ --chart-2: 21 67% 56%;
+  /* #e89163 */ --chart-3: 21 74% 65%;
+  /* #f59e0b */ --chart-4: 38 92% 50%;
+  /* #c25f2e */ --chart-5: 20 62% 47%;
 }
 
 @theme inline {

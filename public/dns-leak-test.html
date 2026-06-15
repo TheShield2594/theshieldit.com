@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
-            color: #ddd9cf;
+            background: linear-gradient(135deg, #141210 0%, #1c1916 100%);
+            color: #e8dec6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +35,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #8e9088;
+            color: #a49b92;
             font-size: 1.1rem;
         }
 
         .card {
-            background: rgba(24, 27, 34, 0.8);
+            background: rgba(28, 25, 22, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -59,7 +59,7 @@
         .status-card {
             text-align: center;
             padding: 40px;
-            background: linear-gradient(135deg, rgba(227, 169, 60, 0.1) 0%, rgba(201, 142, 46, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(194, 95, 46, 0.1) 100%);
             border-radius: 12px;
         }
 
@@ -87,14 +87,14 @@
         }
 
         .status-description {
-            color: #8e9088;
+            color: #a49b92;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
         }
 
         button {
-            background: linear-gradient(135deg, #e3a93c 0%, #d29a32 100%);
+            background: linear-gradient(135deg, #f97316 0%, #d97742 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -111,7 +111,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(227, 169, 60, 0.4);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
         }
 
         button:disabled {
@@ -125,11 +125,11 @@
         }
 
         .dns-server {
-            background: rgba(14, 16, 22, 0.6);
+            background: rgba(20, 18, 16, 0.6);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 15px;
-            border-left: 4px solid #e3a93c;
+            border-left: 4px solid #f97316;
         }
 
         .dns-server.leak {
@@ -139,7 +139,7 @@
         .dns-ip {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #e3a93c;
+            color: #f97316;
             font-family: 'Courier New', monospace;
             margin-bottom: 10px;
         }
@@ -158,25 +158,25 @@
 
         .dns-detail-label {
             font-size: 0.85rem;
-            color: #8e9088;
+            color: #a49b92;
             margin-bottom: 4px;
         }
 
         .dns-detail-value {
             font-weight: 600;
-            color: #bcb9ae;
+            color: #d4cbb9;
         }
 
         .info-box {
-            background: rgba(227, 169, 60, 0.1);
-            border-left: 4px solid #e3a93c;
+            background: rgba(249, 115, 22, 0.1);
+            border-left: 4px solid #f97316;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
 
         .info-box h3 {
-            color: #e3a93c;
+            color: #f97316;
             margin-bottom: 15px;
         }
 
@@ -186,12 +186,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #bcb9ae;
+            color: #d4cbb9;
         }
 
         .back-link {
             display: inline-block;
-            color: #e3a93c;
+            color: #f97316;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -199,7 +199,7 @@
         }
 
         .back-link:hover {
-            color: #ecbc62;
+            color: #e89163;
             transform: translateX(-5px);
         }
 
@@ -209,8 +209,8 @@
         }
 
         .spinner {
-            border: 4px solid rgba(227, 169, 60, 0.2);
-            border-top: 4px solid #e3a93c;
+            border: 4px solid rgba(249, 115, 22, 0.2);
+            border-top: 4px solid #f97316;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -224,7 +224,7 @@
         }
 
         .your-ip {
-            background: rgba(227, 169, 60, 0.1);
+            background: rgba(249, 115, 22, 0.1);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -232,14 +232,14 @@
         }
 
         .your-ip-label {
-            color: #8e9088;
+            color: #a49b92;
             margin-bottom: 8px;
         }
 
         .your-ip-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #e3a93c;
+            color: #f97316;
             font-family: 'Courier New', monospace;
         }
 
@@ -305,7 +305,7 @@
 
         <div class="card info-box">
             <h3>🛡️ What is a DNS Leak?</h3>
-            <p style="margin-bottom: 15px; color: #bcb9ae;">
+            <p style="margin-bottom: 15px; color: #d4cbb9;">
                 A DNS leak occurs when your DNS requests are sent to your ISP's servers instead of your VPN's DNS servers,
                 potentially exposing your browsing activity even when using a VPN.
             </p>
@@ -444,7 +444,7 @@
             }
 
             // Display DNS servers
-            dnsServersDiv.innerHTML = '<h3 style="color: #e3a93c; margin-bottom: 15px;">Detected DNS Servers</h3>';
+            dnsServersDiv.innerHTML = '<h3 style="color: #f97316; margin-bottom: 15px;">Detected DNS Servers</h3>';
 
             servers.forEach(server => {
                 const serverDiv = document.createElement('div');

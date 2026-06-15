@@ -8,40 +8,40 @@
     <link rel="icon" href="/favicon.ico">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #0e1016 0%, #181b22 100%); color: #ddd9cf; min-height: 100vh; padding: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #141210 0%, #1c1916 100%); color: #e8dec6; min-height: 100vh; padding: 20px; }
         .container { max-width: 1100px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
         h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .subtitle { color: #8e9088; font-size: 1.1rem; }
-        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #75776f; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
-        .back-link:hover { color: #8e9088; }
-        .print-btn { padding: 8px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #8e9088; font-size: 0.85rem; cursor: pointer; float: right; margin-top: -60px; }
+        .subtitle { color: #a49b92; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #6b6258; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #a49b92; }
+        .print-btn { padding: 8px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #a49b92; font-size: 0.85rem; cursor: pointer; float: right; margin-top: -60px; }
         .print-btn:hover { background: rgba(255,255,255,0.12); }
         .sheets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .sheet { background: rgba(24,27,34,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .sheet { background: rgba(28,25,22,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
         .sheet-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .sheet-icon { font-size: 1.5rem; }
-        .sheet-title { font-size: 1.05rem; font-weight: 700; color: #e9e6dd; }
-        .sheet-subtitle { font-size: 0.72rem; color: #75776f; margin-top: 2px; }
+        .sheet-title { font-size: 1.05rem; font-weight: 700; color: #f3ecdd; }
+        .sheet-subtitle { font-size: 0.72rem; color: #6b6258; margin-top: 2px; }
         .rule-list { list-style: none; }
         .rule-item { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.83rem; line-height: 1.5; }
         .rule-item:last-child { border-bottom: none; }
         .rule-icon { flex-shrink: 0; width: 18px; text-align: center; }
-        .rule-text { color: #8e9088; flex: 1; }
-        .rule-text strong { color: #ddd9cf; }
+        .rule-text { color: #a49b92; flex: 1; }
+        .rule-text strong { color: #e8dec6; }
         .do { color: #22c55e; }
         .dont { color: #ef4444; }
         .warn { color: #f59e0b; }
-        .info { color: #e3a93c; }
-        .cmd { font-family: 'Courier New', monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.78rem; color: #ddd9cf; }
-        .section-divider { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #8e9088; margin: 12px 0 8px; font-weight: 600; }
+        .info { color: #f97316; }
+        .cmd { font-family: 'Courier New', monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.78rem; color: #e8dec6; }
+        .section-divider { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #a49b92; margin: 12px 0 8px; font-weight: 600; }
         @media print {
             body { background: white; color: black; padding: 10px; }
             .back-link, .print-btn { display: none; }
             .sheets-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .sheet { background: #f8f9fa; border: 1px solid #dee2e6; break-inside: avoid; }
             .rule-text { color: #333; }
-            h1 { color: #1a1a1a; -webkit-text-fill-color: #1a1a1a; }
+            h1 { color: #1c1916; -webkit-text-fill-color: #1c1916; }
         }
     </style>
   <script src="/shared-shell.js" defer></script>

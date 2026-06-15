@@ -18,18 +18,18 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #e3a93c; --secondary: #c98e2e; --accent: #4f86e8;
-      --bg-dark: #0e1016; --bg-darker: #0b0d11; --text-light: #e9e6dd;
-      --text-gray: #8e9088; --border: #181b22;
+      --primary: #f97316; --secondary: #c25f2e; --accent: #f97316;
+      --bg-dark: #141210; --bg-darker: #0d0b0a; --text-light: #f3ecdd;
+      --text-gray: #a49b92; --border: #1c1916;
       --add-bg: rgba(34,197,94,0.1); --add-border: rgba(34,197,94,0.3); --add-text: #4ade80;
       --del-bg: rgba(239,68,68,0.1); --del-border: rgba(239,68,68,0.3); --del-text: #f87171;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(227,169,60,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(201,142,46,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(79,134,232,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(249,115,22,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(194,95,46,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(249,115,22,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; min-height: 100vh; }
@@ -38,22 +38,22 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text;
       -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
     .shield-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(227,169,60,0.3); }
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(249,115,22,0.3); }
     .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); text-decoration: none;
       font-size: 0.95rem; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 8px; }
-    .back-link:hover { color: var(--primary); background: rgba(227,169,60,0.1); }
+    .back-link:hover { color: var(--primary); background: rgba(249,115,22,0.1); }
     h1 { font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 800; margin-bottom: 0.5rem;
       background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       text-align: center; animation: fadeInUp 0.8s ease-out; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.1s both; }
-    .tool-panel { background: rgba(24,27,34,0.5); border: 1px solid var(--border); border-radius: 16px;
+    .tool-panel { background: rgba(28,25,22,0.5); border: 1px solid var(--border); border-radius: 16px;
       padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.2s both; }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
     .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     .editor-col label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-gray); margin-bottom: 0.4rem; }
     textarea {
-      width: 100%; min-height: 250px; padding: 0.75rem; background: rgba(14,16,22,0.6); border: 1px solid var(--border);
+      width: 100%; min-height: 250px; padding: 0.75rem; background: rgba(20,18,16,0.6); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text-light); font-size: 0.8rem;
       font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
       outline: none; resize: vertical; transition: border-color 0.2s ease; line-height: 1.6; tab-size: 4;
@@ -64,8 +64,8 @@
     .compare-btn { flex: 1; padding: 0.875rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; font-family: inherit; }
-    .compare-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(227,169,60,0.3); }
-    .swap-btn, .clear-btn { padding: 0.875rem 1.25rem; background: rgba(24,27,34,0.5); border: 1px solid var(--border);
+    .compare-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(249,115,22,0.3); }
+    .swap-btn, .clear-btn { padding: 0.875rem 1.25rem; background: rgba(28,25,22,0.5); border: 1px solid var(--border);
       border-radius: 10px; color: var(--text-gray); cursor: pointer; transition: all 0.3s ease; font-family: inherit; font-size: 0.9rem; }
     .swap-btn:hover, .clear-btn:hover { border-color: var(--primary); color: var(--text-light); }
 
@@ -74,9 +74,9 @@
     .stat-badge { padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
     .stat-badge.additions { background: var(--add-bg); color: var(--add-text); }
     .stat-badge.deletions { background: var(--del-bg); color: var(--del-text); }
-    .stat-badge.unchanged { background: rgba(142,144,136,0.1); color: var(--text-gray); }
+    .stat-badge.unchanged { background: rgba(42,36,30,0.1); color: var(--text-gray); }
     .diff-output { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.8rem; line-height: 1.7; }
-    .diff-line { display: flex; border-bottom: 1px solid rgba(24,27,34,0.3); }
+    .diff-line { display: flex; border-bottom: 1px solid rgba(28,25,22,0.3); }
     .diff-line:last-child { border-bottom: none; }
     .line-num { width: 40px; text-align: right; padding: 0.15rem 0.5rem; color: var(--text-gray); font-size: 0.75rem;
       user-select: none; flex-shrink: 0; border-right: 1px solid var(--border); }

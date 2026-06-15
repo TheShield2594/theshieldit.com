@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0e1016 0%, #181b22 100%);
-            color: #ddd9cf;
+            background: linear-gradient(135deg, #141210 0%, #1c1916 100%);
+            color: #e8dec6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +35,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #e3a93c 0%, #c98e2e 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #8e9088;
+            color: #a49b92;
             font-size: 1.1rem;
         }
 
         .card {
-            background: rgba(24, 27, 34, 0.8);
+            background: rgba(28, 25, 22, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -63,17 +63,17 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #bcb9ae;
+            color: #d4cbb9;
             font-weight: 500;
         }
 
         select, input[type="text"] {
             width: 100%;
             padding: 15px 20px;
-            background: rgba(14, 16, 22, 0.6);
-            border: 2px solid rgba(227, 169, 60, 0.3);
+            background: rgba(20, 18, 16, 0.6);
+            border: 2px solid rgba(249, 115, 22, 0.3);
             border-radius: 12px;
-            color: #ddd9cf;
+            color: #e8dec6;
             font-size: 1rem;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -81,11 +81,11 @@
 
         select:focus, input:focus {
             outline: none;
-            border-color: rgba(227, 169, 60, 0.6);
+            border-color: rgba(249, 115, 22, 0.6);
         }
 
         button {
-            background: linear-gradient(135deg, #e3a93c 0%, #d29a32 100%);
+            background: linear-gradient(135deg, #f97316 0%, #d97742 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -99,7 +99,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(227, 169, 60, 0.4);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
         }
 
         button:disabled {
@@ -109,19 +109,19 @@
         }
 
         button.secondary {
-            background: linear-gradient(135deg, #c98e2e 0%, #b87f27 100%);
+            background: linear-gradient(135deg, #c25f2e 0%, #b85520 100%);
             margin-top: 10px;
         }
 
         .key-section {
-            background: rgba(14, 16, 22, 0.6);
+            background: rgba(20, 18, 16, 0.6);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
         }
 
         .key-section h3 {
-            color: #e3a93c;
+            color: #f97316;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -129,13 +129,13 @@
         }
 
         .key-display {
-            background: rgba(24, 27, 34, 0.6);
+            background: rgba(28, 25, 22, 0.6);
             padding: 15px;
             border-radius: 8px;
             font-family: 'Courier New', monospace;
             font-size: 0.85rem;
             word-break: break-all;
-            color: #8e9088;
+            color: #a49b92;
             max-height: 300px;
             overflow-y: auto;
             white-space: pre-wrap;
@@ -165,14 +165,14 @@
         }
 
         .info-box {
-            background: rgba(227, 169, 60, 0.1);
-            border-left: 4px solid #e3a93c;
+            background: rgba(249, 115, 22, 0.1);
+            border-left: 4px solid #f97316;
             padding: 20px;
             border-radius: 8px;
         }
 
         .info-box h3 {
-            color: #e3a93c;
+            color: #f97316;
             margin-bottom: 15px;
         }
 
@@ -182,12 +182,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #bcb9ae;
+            color: #d4cbb9;
         }
 
         .back-link {
             display: inline-block;
-            color: #e3a93c;
+            color: #f97316;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -195,7 +195,7 @@
         }
 
         .back-link:hover {
-            color: #ecbc62;
+            color: #e89163;
             transform: translateX(-5px);
         }
 
@@ -267,7 +267,7 @@
 
             <div class="warning-box">
                 <h4>⚠️ Security Warning</h4>
-                <p style="color: #bcb9ae; margin-top: 10px;">
+                <p style="color: #d4cbb9; margin-top: 10px;">
                     <strong>Never share your private key!</strong> The private key must be kept completely secret.
                     Only share the public key. Store your private key securely, ideally encrypted with a password.
                 </p>
@@ -278,7 +278,7 @@
             <div class="card key-section">
                 <h3>
                     🔓 Public Key
-                    <span style="font-size: 0.85rem; color: #8e9088; font-weight: normal;">Safe to share</span>
+                    <span style="font-size: 0.85rem; color: #a49b92; font-weight: normal;">Safe to share</span>
                 </h3>
                 <div class="key-display" id="publicKeyDisplay"></div>
                 <div class="button-group">
