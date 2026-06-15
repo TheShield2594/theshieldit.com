@@ -18,9 +18,9 @@
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
     .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4;
-      background: radial-gradient(circle at 20% 50%, rgba(232,108,37,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(192,85,24,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(232,108,37,0.1) 0%, transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(249,115,22,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(194,95,46,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(249,115,22,0.1) 0%, transparent 50%);
       animation: bgFloat 20s ease-in-out infinite; }
     @keyframes bgFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
     .container { max-width: 900px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
@@ -28,44 +28,44 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; }
     .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 2rem; }
-    .tool-panel { background: rgba(26,26,26,0.5); border: 1px solid var(--border); border-radius: 16px;
+    .tool-panel { background: rgba(28,25,22,0.5); border: 1px solid var(--border); border-radius: 16px;
       padding: 1.5rem; backdrop-filter: blur(10px); margin-bottom: 1.5rem; }
     .panel-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 1rem; }
-    input, select, textarea { width: 100%; padding: 0.75rem; background: rgba(17,17,17,0.6); border: 1px solid var(--border);
+    input, select, textarea { width: 100%; padding: 0.75rem; background: rgba(20,18,16,0.6); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text-light); font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s ease; }
     input:focus, select:focus, textarea:focus { border-color: var(--primary); }
     input::placeholder, textarea::placeholder { color: var(--text-gray); }
     .btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; font-family: inherit; }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,108,37,0.3); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(249,115,22,0.3); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
     .btn-full { width: 100%; margin-top: 1rem; padding: 0.875rem; }
-    .result-box { background: rgba(17,17,17,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; font-size: 0.85rem; }
+    .result-box { background: rgba(20,18,16,0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; font-family: monospace; word-break: break-all; font-size: 0.85rem; }
     .label { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 0.25rem; }
-    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(232,108,37,0.15); border: 1px solid rgba(232,108,37,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    .copy-btn:hover { background: rgba(232,108,37,0.25); }
+    .copy-btn { font-size: 0.75rem; padding: 0.25rem 0.6rem; background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.3); color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(249,115,22,0.25); }
     .badge-green { display: inline-block; background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
     .badge-red { display: inline-block; background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
     .badge-yellow { display: inline-block; background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
-    .info-note { background: rgba(232,108,37,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
+    .info-note { background: rgba(249,115,22,0.08); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: var(--text-gray); margin-top: 1rem; }
     .flex-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
     /* Tabs */
-    .tabs { display: flex; gap: 0; background: rgba(17,17,17,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 1rem; }
+    .tabs { display: flex; gap: 0; background: rgba(20,18,16,0.5); border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 1rem; }
     .tab { flex: 1; padding: 0.5rem 1rem; border-radius: 8px; border: none; background: transparent;
       color: var(--text-gray); font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: inherit;
       transition: all 0.2s ease; }
-    .tab.active { background: rgba(232,108,37,0.15); color: var(--primary); border: 1px solid rgba(232,108,37,0.3); }
+    .tab.active { background: rgba(249,115,22,0.15); color: var(--primary); border: 1px solid rgba(249,115,22,0.3); }
     .tab:hover:not(.active) { color: var(--text-light); }
 
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
     /* Spinner */
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(232,108,37,0.3);
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(249,115,22,0.3);
       border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -85,10 +85,10 @@
     /* Agent group */
     .agent-group { margin-bottom: 0.75rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
     .agent-header { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
-      background: rgba(17,17,17,0.5); cursor: pointer; user-select: none; transition: background 0.15s; }
-    .agent-header:hover { background: rgba(17,17,17,0.8); }
+      background: rgba(20,18,16,0.5); cursor: pointer; user-select: none; transition: background 0.15s; }
+    .agent-header:hover { background: rgba(20,18,16,0.8); }
     .agent-name-badge { font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 6px;
-      background: rgba(192,85,24,0.15); border: 1px solid rgba(192,85,24,0.3); color: var(--secondary);
+      background: rgba(194,95,46,0.15); border: 1px solid rgba(194,95,46,0.3); color: var(--secondary);
       font-family: monospace; }
     .agent-wildcard { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: var(--red); }
     .agent-summary { font-size: 0.78rem; color: var(--text-gray); margin-left: auto; }
@@ -111,7 +111,7 @@
 
     /* Sitemap list */
     .sitemap-item { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-      padding: 0.5rem 0.75rem; background: rgba(17,17,17,0.4); border-radius: 7px; margin-bottom: 0.4rem; }
+      padding: 0.5rem 0.75rem; background: rgba(20,18,16,0.4); border-radius: 7px; margin-bottom: 0.4rem; }
     .sitemap-url { font-family: monospace; font-size: 0.82rem; color: var(--accent); word-break: break-all; }
 
     /* Flagged paths */
@@ -125,13 +125,13 @@
     .collapsible-toggle:hover { color: var(--text-light); }
     .collapsible-body { display: none; margin-top: 0.5rem; }
     .collapsible-body.open { display: block; }
-    .raw-content { background: rgba(17,17,17,0.6); border: 1px solid var(--border); border-radius: 8px;
+    .raw-content { background: rgba(20,18,16,0.6); border: 1px solid var(--border); border-radius: 8px;
       padding: 1rem; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; word-break: break-all;
       max-height: 300px; overflow-y: auto; color: var(--text-gray); line-height: 1.7; }
 
     /* Stats row */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
-    .stat-card { background: rgba(17,17,17,0.5); border: 1px solid var(--border); border-radius: 10px;
+    .stat-card { background: rgba(20,18,16,0.5); border: 1px solid var(--border); border-radius: 10px;
       padding: 0.85rem 1rem; text-align: center; }
     .stat-number { font-size: 1.6rem; font-weight: 800; line-height: 1;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -567,7 +567,7 @@
             chip.style.cssText += 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:var(--red);';
             chip.innerHTML = `&#9888; ${escHtml(p)}`;
           } else {
-            chip.style.cssText += 'background:rgba(17,17,17,0.5);border:1px solid var(--border);color:var(--text-gray);';
+            chip.style.cssText += 'background:rgba(20,18,16,0.5);border:1px solid var(--border);color:var(--text-gray);';
             chip.textContent = p;
           }
           box.appendChild(chip);
