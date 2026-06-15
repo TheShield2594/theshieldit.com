@@ -11,9 +11,9 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #e86c25; --secondary: #c05518; --accent: #e86c25;
-      --bg-dark: #111111; --bg-darker: #0d0d0d; --text-light: #ede3cf;
-      --text-gray: #a09880; --border: #1a1a1a; --green: #22c55e; --red: #ef4444;
+      --primary: #f97316; --secondary: #c25f2e; --accent: #f97316;
+      --bg-dark: #141210; --bg-darker: #0d0b0a; --text-light: #f3ecdd;
+      --text-gray: #a49b92; --border: #1c1916; --green: #22c55e; --red: #ef4444;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-darker); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
@@ -169,18 +169,18 @@
     <div class="tool-panel">
       <div class="panel-title">Color Input</div>
       <div class="input-row">
-        <input type="color" id="colorPicker" value="#e86c25" oninput="onPickerChange(this.value)" title="Pick a color" aria-label="Pick a color">
+        <input type="color" id="colorPicker" value="#f97316" oninput="onPickerChange(this.value)" title="Pick a color" aria-label="Pick a color">
         <div class="text-input-wrap">
-          <input type="text" id="colorText" placeholder="#e86c25  or  rgb(232,108,37)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)" aria-label="Color value">
+          <input type="text" id="colorText" placeholder="#f97316  or  rgb(232,108,37)  or  hsl(217,91%,60%)  or  red" oninput="onTextChange(this.value)" aria-label="Color value">
         </div>
       </div>
-      <div class="error-msg" id="errorMsg">Could not parse color. Try: #e86c25, rgb(232,108,37), hsl(217,91%,60%), or a named color like "blue".</div>
+      <div class="error-msg" id="errorMsg">Could not parse color. Try: #f97316, rgb(232,108,37), hsl(217,91%,60%), or a named color like "blue".</div>
 
       <!-- Alpha slider -->
       <div class="alpha-row">
         <div class="alpha-label">Alpha (Opacity) <span id="alphaVal">100%</span></div>
         <input type="range" class="styled-alpha" id="alphaSlider" min="0" max="100" value="100"
-          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #e86c25);"
+          oninput="onAlphaChange(this.value)" style="background: linear-gradient(to right, transparent, #f97316);"
           aria-label="Alpha (opacity)" aria-describedby="alphaVal">
       </div>
     </div>
@@ -188,7 +188,7 @@
     <!-- Preview -->
     <div class="tool-panel" id="previewPanel">
       <div class="panel-title">Preview</div>
-      <div class="color-preview" id="colorPreview" style="background:#e86c25;"></div>
+      <div class="color-preview" id="colorPreview" style="background:#f97316;"></div>
       <div class="color-formats" id="formatsGrid">
         <!-- populated by JS -->
       </div>
@@ -591,7 +591,7 @@
 
     // ── Init ──────────────────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('colorText').value = '#e86c25';
+      document.getElementById('colorText').value = '#f97316';
       updateAll({ r: 227, g: 169, b: 60 }, 1.0);
     });
   </script>

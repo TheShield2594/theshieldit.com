@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
-            color: #e0d8c0;
+            background: linear-gradient(135deg, #141210 0%, #1c1916 100%);
+            color: #e8dec6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,14 +35,14 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #e86c25 0%, #c05518 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #a09880;
+            color: #a49b92;
             font-size: 1.1rem;
         }
 
@@ -87,14 +87,14 @@
         }
 
         .status-description {
-            color: #a09880;
+            color: #a49b92;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
         }
 
         button {
-            background: linear-gradient(135deg, #e86c25 0%, #d45f1a 100%);
+            background: linear-gradient(135deg, #f97316 0%, #d97742 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -129,7 +129,7 @@
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 15px;
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
         }
 
         .dns-server.leak {
@@ -139,7 +139,7 @@
         .dns-ip {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #e86c25;
+            color: #f97316;
             font-family: 'Courier New', monospace;
             margin-bottom: 10px;
         }
@@ -158,25 +158,25 @@
 
         .dns-detail-label {
             font-size: 0.85rem;
-            color: #a09880;
+            color: #a49b92;
             margin-bottom: 4px;
         }
 
         .dns-detail-value {
             font-weight: 600;
-            color: #c8c0a8;
+            color: #d4cbb9;
         }
 
         .info-box {
             background: rgba(232, 108, 37, 0.1);
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
 
         .info-box h3 {
-            color: #e86c25;
+            color: #f97316;
             margin-bottom: 15px;
         }
 
@@ -186,12 +186,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #c8c0a8;
+            color: #d4cbb9;
         }
 
         .back-link {
             display: inline-block;
-            color: #e86c25;
+            color: #f97316;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -199,7 +199,7 @@
         }
 
         .back-link:hover {
-            color: #f08040;
+            color: #e89163;
             transform: translateX(-5px);
         }
 
@@ -210,7 +210,7 @@
 
         .spinner {
             border: 4px solid rgba(232, 108, 37, 0.2);
-            border-top: 4px solid #e86c25;
+            border-top: 4px solid #f97316;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -232,14 +232,14 @@
         }
 
         .your-ip-label {
-            color: #a09880;
+            color: #a49b92;
             margin-bottom: 8px;
         }
 
         .your-ip-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #e86c25;
+            color: #f97316;
             font-family: 'Courier New', monospace;
         }
 
@@ -305,7 +305,7 @@
 
         <div class="card info-box">
             <h3>🛡️ What is a DNS Leak?</h3>
-            <p style="margin-bottom: 15px; color: #c8c0a8;">
+            <p style="margin-bottom: 15px; color: #d4cbb9;">
                 A DNS leak occurs when your DNS requests are sent to your ISP's servers instead of your VPN's DNS servers,
                 potentially exposing your browsing activity even when using a VPN.
             </p>
@@ -444,7 +444,7 @@
             }
 
             // Display DNS servers
-            dnsServersDiv.innerHTML = '<h3 style="color: #e86c25; margin-bottom: 15px;">Detected DNS Servers</h3>';
+            dnsServersDiv.innerHTML = '<h3 style="color: #f97316; margin-bottom: 15px;">Detected DNS Servers</h3>';
 
             servers.forEach(server => {
                 const serverDiv = document.createElement('div');

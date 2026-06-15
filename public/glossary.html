@@ -8,19 +8,19 @@
     <link rel="icon" href="/favicon.ico">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%); color: #e0d8c0; min-height: 100vh; padding: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #141210 0%, #1c1916 100%); color: #e8dec6; min-height: 100vh; padding: 20px; }
         .container { max-width: 1000px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
         h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(135deg, #f59e0b 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .subtitle { color: #a09880; font-size: 1.1rem; }
-        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #857868; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
-        .back-link:hover { color: #a09880; }
+        .subtitle { color: #a49b92; font-size: 1.1rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #6b6258; text-decoration: none; font-size: 0.9rem; margin-bottom: 30px; }
+        .back-link:hover { color: #a49b92; }
         .search-bar { position: relative; margin-bottom: 24px; }
-        .search-bar input { width: 100%; padding: 14px 20px 14px 48px; background: rgba(26,26,26,0.9); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; color: #e0d8c0; font-size: 1rem; transition: border-color 0.3s; }
+        .search-bar input { width: 100%; padding: 14px 20px 14px 48px; background: rgba(26,26,26,0.9); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; color: #e8dec6; font-size: 1rem; transition: border-color 0.3s; }
         .search-bar input:focus { outline: none; border-color: rgba(245,158,11,0.5); }
         .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; pointer-events: none; }
         .alpha-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
-        .alpha-btn { padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #857868; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+        .alpha-btn { padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #6b6258; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; font-weight: 600; }
         .alpha-btn:hover, .alpha-btn.active { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); color: #fde68a; }
         .letter-section { margin-bottom: 32px; }
         .letter-heading { font-size: 1.8rem; font-weight: 800; color: #f59e0b; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(245,158,11,0.2); }
@@ -28,18 +28,18 @@
         .term-item { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
         .term-item:last-child { border-bottom: none; }
         .term-item:hover { background: rgba(255,255,255,0.03); border-radius: 8px; }
-        .term-name { font-weight: 700; font-size: 1rem; color: #ede3cf; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .term-name { font-weight: 700; font-size: 1rem; color: #f3ecdd; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
         .term-cat { padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
         .cat-crypto { background: rgba(99,102,241,0.15); color: #a5b4fc; }
         .cat-network { background: rgba(16,185,129,0.15); color: #6ee7b7; }
         .cat-attack { background: rgba(239,68,68,0.15); color: #fca5a5; }
         .cat-privacy { background: rgba(245,158,11,0.15); color: #fde68a; }
-        .cat-protocol { background: rgba(232,108,37,0.15); color: #f5a870; }
-        .cat-legal { background: rgba(192,85,24,0.15); color: #f0a060; }
+        .cat-protocol { background: rgba(232,108,37,0.15); color: #f0ad88; }
+        .cat-legal { background: rgba(192,85,24,0.15); color: #f0ad88; }
         .cat-tool { background: rgba(20,184,166,0.15); color: #99f6e4; }
-        .term-def { font-size: 0.88rem; color: #a09880; line-height: 1.7; }
-        .no-results { text-align: center; padding: 60px 20px; color: #857868; font-size: 1.1rem; }
-        .count-badge { background: rgba(26,26,26,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 16px; font-size: 0.8rem; color: #857868; text-align: right; margin-bottom: 16px; }
+        .term-def { font-size: 0.88rem; color: #a49b92; line-height: 1.7; }
+        .no-results { text-align: center; padding: 60px 20px; color: #6b6258; font-size: 1.1rem; }
+        .count-badge { background: rgba(26,26,26,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 16px; font-size: 0.8rem; color: #6b6258; text-align: right; margin-bottom: 16px; }
     </style>
   <script src="/shared-shell.js" defer></script>
   <link rel="stylesheet" href="/field-kit-theme.css">

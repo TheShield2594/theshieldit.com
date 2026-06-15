@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
-            color: #e0d8c0;
+            background: linear-gradient(135deg, #141210 0%, #1c1916 100%);
+            color: #e8dec6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,14 +35,14 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #e86c25 0%, #c05518 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #a09880;
+            color: #a49b92;
             font-size: 1.1rem;
         }
 
@@ -67,7 +67,7 @@
         .ip-display {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #e86c25;
+            color: #f97316;
             font-family: 'Courier New', monospace;
             margin: 10px 0;
         }
@@ -84,7 +84,7 @@
             background: rgba(17, 17, 17, 0.6);
             border: 2px solid rgba(232, 108, 37, 0.3);
             border-radius: 12px;
-            color: #e0d8c0;
+            color: #e8dec6;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
@@ -95,7 +95,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #e86c25 0%, #d45f1a 100%);
+            background: linear-gradient(135deg, #f97316 0%, #d97742 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -128,31 +128,31 @@
             background: rgba(17, 17, 17, 0.6);
             padding: 20px;
             border-radius: 12px;
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
         }
 
         .info-label {
             font-size: 0.85rem;
-            color: #a09880;
+            color: #a49b92;
             margin-bottom: 8px;
         }
 
         .info-value {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #e0d8c0;
+            color: #e8dec6;
             word-break: break-all;
         }
 
         .loading {
             text-align: center;
             padding: 40px;
-            color: #a09880;
+            color: #a49b92;
         }
 
         .spinner {
             border: 4px solid rgba(232, 108, 37, 0.2);
-            border-top: 4px solid #e86c25;
+            border-top: 4px solid #f97316;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -167,7 +167,7 @@
 
         .back-link {
             display: inline-block;
-            color: #e86c25;
+            color: #f97316;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -175,7 +175,7 @@
         }
 
         .back-link:hover {
-            color: #f08040;
+            color: #e89163;
             transform: translateX(-5px);
         }
 
@@ -219,7 +219,7 @@
 
         <div class="card">
             <div class="your-ip-card">
-                <div style="color: #a09880; margin-bottom: 10px;">Your IP Address</div>
+                <div style="color: #a49b92; margin-bottom: 10px;">Your IP Address</div>
                 <div class="ip-display" id="yourIP">Loading...</div>
                 <button onclick="lookupCurrentIP()" style="margin-top: 15px;">
                     🔍 Lookup My IP
@@ -228,7 +228,7 @@
         </div>
 
         <div class="card">
-            <h2 style="color: #e86c25; margin-bottom: 20px;">Lookup Any IP Address</h2>
+            <h2 style="color: #f97316; margin-bottom: 20px;">Lookup Any IP Address</h2>
             <div class="input-group">
                 <input type="text" id="ipInput" placeholder="Enter IP address (e.g., 8.8.8.8)" />
                 <button onclick="lookupIP()">🔍 Lookup</button>
@@ -350,7 +350,7 @@
 
             const html = `
                 <div style="margin-bottom: 20px;">
-                    <h3 style="color: #e86c25; margin-bottom: 15px;">📍 Location Information</h3>
+                    <h3 style="color: #f97316; margin-bottom: 15px;">📍 Location Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">IP Address</div>
@@ -380,7 +380,7 @@
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="color: #e86c25; margin-bottom: 15px;">🌐 Network Information</h3>
+                    <h3 style="color: #f97316; margin-bottom: 15px;">🌐 Network Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">ISP</div>
@@ -403,7 +403,7 @@
 
                 ${safe.languages ? `
                 <div>
-                    <h3 style="color: #e86c25; margin-bottom: 15px;">🗣️ Additional Information</h3>
+                    <h3 style="color: #f97316; margin-bottom: 15px;">🗣️ Additional Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">Languages</div>

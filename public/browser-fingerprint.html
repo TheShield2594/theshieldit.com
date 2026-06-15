@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
-            color: #e0d8c0;
+            background: linear-gradient(135deg, #141210 0%, #1c1916 100%);
+            color: #e8dec6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,14 +35,14 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #e86c25 0%, #c05518 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #a09880;
+            color: #a49b92;
             font-size: 1.1rem;
         }
 
@@ -69,7 +69,7 @@
             height: 200px;
             margin: 0 auto 20px;
             border-radius: 50%;
-            background: conic-gradient(#e86c25 0deg, #c05518 180deg, #ef4444 360deg);
+            background: conic-gradient(#f97316 0deg, #c25f2e 180deg, #ef4444 360deg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -79,7 +79,7 @@
         .score-inner {
             width: 170px;
             height: 170px;
-            background: #111111;
+            background: #141210;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -90,7 +90,7 @@
         .score-value {
             font-size: 3rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #e86c25 0%, #c05518 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -98,25 +98,25 @@
 
         .score-label {
             font-size: 1rem;
-            color: #a09880;
+            color: #a49b92;
             margin-top: 5px;
         }
 
         .uniqueness-text {
             font-size: 1.3rem;
-            color: #c8c0a8;
+            color: #d4cbb9;
             margin-bottom: 10px;
         }
 
         .uniqueness-description {
-            color: #a09880;
+            color: #a49b92;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .section-title {
             font-size: 1.5rem;
-            color: #e86c25;
+            color: #f97316;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -133,7 +133,7 @@
             background: rgba(17, 17, 17, 0.6);
             padding: 20px;
             border-radius: 12px;
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
         }
 
         .fingerprint-item.warning {
@@ -146,7 +146,7 @@
 
         .fingerprint-label {
             font-weight: 600;
-            color: #c8c0a8;
+            color: #d4cbb9;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -154,7 +154,7 @@
         }
 
         .fingerprint-value {
-            color: #a09880;
+            color: #a49b92;
             word-break: break-all;
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
@@ -185,7 +185,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #e86c25 0%, #d45f1a 100%);
+            background: linear-gradient(135deg, #f97316 0%, #d97742 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -206,13 +206,13 @@
 
         .protection-tips {
             background: rgba(232, 108, 37, 0.1);
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
             padding: 20px;
             border-radius: 8px;
         }
 
         .protection-tips h3 {
-            color: #e86c25;
+            color: #f97316;
             margin-bottom: 15px;
         }
 
@@ -222,12 +222,12 @@
 
         .protection-tips li {
             margin-bottom: 10px;
-            color: #c8c0a8;
+            color: #d4cbb9;
         }
 
         .back-link {
             display: inline-block;
-            color: #e86c25;
+            color: #f97316;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -235,19 +235,19 @@
         }
 
         .back-link:hover {
-            color: #f08040;
+            color: #e89163;
             transform: translateX(-5px);
         }
 
         .loading {
             text-align: center;
             padding: 40px;
-            color: #a09880;
+            color: #a49b92;
         }
 
         .spinner {
             border: 4px solid rgba(232, 108, 37, 0.2);
-            border-top: 4px solid #e86c25;
+            border-top: 4px solid #f97316;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -688,8 +688,8 @@
                     <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid rgba(239, 68, 68, 0.5); border-radius: 12px; padding: 30px; text-align: center;">
                         <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
                         <div style="font-size: 1.5rem; font-weight: 600; color: #ef4444; margin-bottom: 10px;">Error Loading Fingerprint</div>
-                        <div style="color: #c8c0a8;">Unable to calculate browser fingerprint. Please refresh the page to try again.</div>
-                        <div style="margin-top: 15px; font-size: 0.85rem; color: #a09880;">${error.message || 'Unknown error'}</div>
+                        <div style="color: #d4cbb9;">Unable to calculate browser fingerprint. Please refresh the page to try again.</div>
+                        <div style="margin-top: 15px; font-size: 0.85rem; color: #a49b92;">${error.message || 'Unknown error'}</div>
                     </div>
                 `;
                 resultsDiv.style.display = 'block';

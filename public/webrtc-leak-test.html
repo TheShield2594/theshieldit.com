@@ -15,8 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
-            color: #e0d8c0;
+            background: linear-gradient(135deg, #141210 0%, #1c1916 100%);
+            color: #e8dec6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,14 +35,14 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #e86c25 0%, #c05518 100%);
+            background: linear-gradient(135deg, #f97316 0%, #c25f2e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .subtitle {
-            color: #a09880;
+            color: #a49b92;
             font-size: 1.1rem;
         }
 
@@ -83,7 +83,7 @@
         }
 
         .status-description {
-            color: #a09880;
+            color: #a49b92;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
@@ -98,7 +98,7 @@
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 15px;
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
         }
 
         .ip-item.leak {
@@ -108,7 +108,7 @@
         .ip-address {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #e86c25;
+            color: #f97316;
             font-family: 'Courier New', monospace;
             margin-bottom: 10px;
         }
@@ -124,26 +124,26 @@
 
         .ip-type.public {
             background: rgba(232, 108, 37, 0.2);
-            color: #e86c25;
+            color: #f97316;
         }
 
         .ip-type.local {
             background: rgba(192, 85, 24, 0.2);
-            color: #c05518;
+            color: #c25f2e;
         }
 
         .ip-type.ipv6 {
             background: rgba(232, 108, 37, 0.2);
-            color: #e86c25;
+            color: #f97316;
         }
 
         .ip-details {
-            color: #a09880;
+            color: #a49b92;
             font-size: 0.9rem;
         }
 
         button {
-            background: linear-gradient(135deg, #e86c25 0%, #d45f1a 100%);
+            background: linear-gradient(135deg, #f97316 0%, #d97742 100%);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -170,14 +170,14 @@
 
         .info-box {
             background: rgba(232, 108, 37, 0.1);
-            border-left: 4px solid #e86c25;
+            border-left: 4px solid #f97316;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
 
         .info-box h3 {
-            color: #e86c25;
+            color: #f97316;
             margin-bottom: 15px;
         }
 
@@ -187,12 +187,12 @@
 
         .info-box li {
             margin-bottom: 10px;
-            color: #c8c0a8;
+            color: #d4cbb9;
         }
 
         .back-link {
             display: inline-block;
-            color: #e86c25;
+            color: #f97316;
             text-decoration: none;
             margin-bottom: 20px;
             font-weight: 500;
@@ -200,7 +200,7 @@
         }
 
         .back-link:hover {
-            color: #f08040;
+            color: #e89163;
             transform: translateX(-5px);
         }
 
@@ -211,7 +211,7 @@
 
         .spinner {
             border: 4px solid rgba(232, 108, 37, 0.2);
-            border-top: 4px solid #e86c25;
+            border-top: 4px solid #f97316;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -273,7 +273,7 @@
 
         <div class="card info-box">
             <h3>🛡️ What is a WebRTC Leak?</h3>
-            <p style="margin-bottom: 15px; color: #c8c0a8;">
+            <p style="margin-bottom: 15px; color: #d4cbb9;">
                 WebRTC (Web Real-Time Communication) is a browser feature that enables video/audio chat directly in your browser.
                 However, it can reveal your real IP address even when using a VPN, potentially exposing your location and identity.
             </p>
@@ -491,7 +491,7 @@
                 }
 
                 // Display IP addresses
-                ipList.innerHTML = '<h3 style="color: #e86c25; margin-bottom: 15px;">Detected IP Addresses</h3>';
+                ipList.innerHTML = '<h3 style="color: #f97316; margin-bottom: 15px;">Detected IP Addresses</h3>';
 
                 ips.forEach(ipInfo => {
                     const ipDiv = document.createElement('div');

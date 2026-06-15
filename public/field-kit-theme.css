@@ -12,18 +12,18 @@
   animation: none !important;
 }
 
-/* Gradient wordmark → flat cream ink */
+/* Gradient wordmark → flat cream ink (#faf5f0 = Clawdia --text) */
 .logo {
   background: none !important;
-  -webkit-text-fill-color: #f0e8d8 !important;
-  color: #f0e8d8 !important;
+  -webkit-text-fill-color: #faf5f0 !important;
+  color: #faf5f0 !important;
 }
 
-/* Gradient logo plate → outlined orange mark */
+/* Gradient logo plate → outlined claw-500 orange mark */
 .logo .shield-icon,
 .shield-icon {
   background: transparent !important;
-  border: 1px solid #e86c25;
+  border: 1px solid #f97316;
   border-radius: 4px !important;
   box-shadow: none !important;
 }
