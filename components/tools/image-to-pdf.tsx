@@ -31,11 +31,15 @@ export default function ImageToPdf() {
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Track all created object URLs in a ref so we can revoke them on unmount
+  // without revoking URLs that are still in use after a state change.
+  const urlsRef = useRef<Set<string>>(new Set());
+
   useEffect(() => {
     return () => {
-      images.forEach((img) => URL.revokeObjectURL(img.preview));
+      urlsRef.current.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [images]);
+  }, []);
 
   const ACCEPTED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp"];
 
@@ -45,18 +49,25 @@ export default function ImageToPdf() {
     setError("");
     setImages((prev) => [
       ...prev,
-      ...imgs.map((f) => ({
-        id: crypto.randomUUID(),
-        file: f,
-        preview: URL.createObjectURL(f),
-      })),
+      ...imgs.map((f) => {
+        const preview = URL.createObjectURL(f);
+        urlsRef.current.add(preview);
+        return {
+          id: crypto.randomUUID(),
+          file: f,
+          preview,
+        };
+      }),
     ]);
   }
 
   function removeImage(id: string) {
     setImages((prev) => {
       const img = prev.find((i) => i.id === id);
-      if (img) URL.revokeObjectURL(img.preview);
+      if (img) {
+        URL.revokeObjectURL(img.preview);
+        urlsRef.current.delete(img.preview);
+      }
       return prev.filter((i) => i.id !== id);
     });
   }

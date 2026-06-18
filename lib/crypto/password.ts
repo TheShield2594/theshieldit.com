@@ -69,11 +69,12 @@ function enforceComplexity(pass: string[], opts: PasswordOptions): void {
   }
 }
 
-/** Cryptographically uniform Fisher-Yates shuffle (in-place). */
+/** Cryptographically uniform Fisher-Yates shuffle (in-place) with rejection sampling. */
 function cryptoShuffle(arr: string[]): void {
   for (let i = arr.length - 1; i > 0; i--) {
+    const max = Math.floor(0xffffffff / (i + 1)) * (i + 1);
     const buf = new Uint32Array(1);
-    crypto.getRandomValues(buf);
+    do { crypto.getRandomValues(buf); } while (buf[0] >= max);
     const j = buf[0] % (i + 1);
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }

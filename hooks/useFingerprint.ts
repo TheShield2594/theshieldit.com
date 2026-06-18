@@ -45,6 +45,11 @@ interface NavigatorExtended extends Navigator {
   connection?: { effectiveType?: string }
   mozConnection?: { effectiveType?: string }
   webkitConnection?: { effectiveType?: string }
+  userAgentData?: {
+    platform?: string
+    mobile?: boolean
+    brands?: Array<{ brand: string; version: string }>
+  }
 }
 
 const hashString = (str: string): number => {
@@ -74,50 +79,44 @@ const generateCanvasFingerprint = (): string => {
   return canvas.toDataURL()
 }
 
+/**
+ * Generate an audio fingerprint using an OfflineAudioContext.
+ *
+ * This replaces the deprecated createScriptProcessor approach with a
+ * render-free method that reads the analyser bin after a short render.
+ * Falls back gracefully on unsupported browsers.
+ */
 const generateAudioFingerprint = async (): Promise<string> => {
-  let audioContext: AudioContext | null = null
-  let oscillator: OscillatorNode | null = null
   try {
-    const AudioCtx =
-      window.AudioContext ??
-      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!AudioCtx) return "audio-unavailable"
+    const sampleRate = 44100
+    const OfflineCtx =
+      window.OfflineAudioContext ??
+      (window as Window & { webkitOfflineAudioContext?: typeof OfflineAudioContext }).webkitOfflineAudioContext
+    if (!OfflineCtx) return "audio-unavailable"
 
-    audioContext = new AudioCtx()
-    oscillator = audioContext.createOscillator()
-    const analyser = audioContext.createAnalyser()
-    const gainNode = audioContext.createGain()
-    const processor = audioContext.createScriptProcessor(4096, 1, 1)
-
-    gainNode.gain.value = 0
+    const ctx = new OfflineCtx(1, sampleRate, sampleRate)
+    const oscillator = ctx.createOscillator()
     oscillator.type = "triangle"
-    oscillator.connect(analyser)
-    analyser.connect(processor)
-    processor.connect(gainNode)
-    gainNode.connect(audioContext.destination)
+    oscillator.frequency.value = 10000
+
+    const compressor = ctx.createDynamicsCompressor()
+    compressor.threshold.value = -50
+    compressor.knee.value = 40
+    compressor.ratio.value = 12
+    compressor.attack.value = 0
+    compressor.release.value = 0.25
+
+    oscillator.connect(compressor)
+    compressor.connect(ctx.destination)
     oscillator.start(0)
 
-    const fingerprint = await Promise.race<string>([
-      new Promise<string>((resolve) => {
-        processor.onaudioprocess = (event) => {
-          processor.onaudioprocess = null
-          const data = event.inputBuffer.getChannelData(0)
-          let sum = 0
-          for (let i = 0; i < data.length; i++) sum += Math.abs(data[i])
-          resolve(sum.toString())
-        }
-      }),
-      new Promise<string>((_, reject) =>
-        setTimeout(() => reject(new Error("timeout")), 3000)
-      ),
-    ])
-
-    return fingerprint
+    const buffer = await ctx.startRendering()
+    const data = buffer.getChannelData(0)
+    let sum = 0
+    for (let i = 0; i < data.length; i++) sum += Math.abs(data[i])
+    return sum.toString()
   } catch {
     return "audio-error"
-  } finally {
-    try { oscillator?.stop() } catch { /* already stopped */ }
-    audioContext?.close()
   }
 }
 
@@ -125,6 +124,16 @@ const getConnectionType = (): string | undefined => {
   const nav = navigator as NavigatorExtended
   const connection = nav.connection ?? nav.mozConnection ?? nav.webkitConnection
   return connection?.effectiveType
+}
+
+/**
+ * Get the platform string using userAgentData where available,
+ * falling back to the deprecated navigator.platform.
+ */
+const getPlatform = (): string => {
+  const nav = navigator as NavigatorExtended
+  if (nav.userAgentData?.platform) return nav.userAgentData.platform
+  return navigator.platform
 }
 
 export const useFingerprint = () => {
@@ -137,6 +146,9 @@ export const useFingerprint = () => {
       let batteryLevel: number | undefined
       let batteryCharging: boolean | undefined
 
+      // Battery API is deprecated and removed in some browsers (e.g. Firefox).
+      // Intentionally best-effort — fingerprint data will simply omit battery
+      // info on unsupported browsers.
       try {
         const nav = navigator as NavigatorExtended
         if (nav.getBattery) {
@@ -153,7 +165,7 @@ export const useFingerprint = () => {
       const nav = navigator as NavigatorExtended
       const data: FingerprintData = {
         userAgent: navigator.userAgent,
-        platform: navigator.platform,
+        platform: getPlatform(),
         language: navigator.language,
         screenWidth: window.screen.width,
         screenHeight: window.screen.height,

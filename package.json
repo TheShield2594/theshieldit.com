@@ -6,7 +6,7 @@
   "scripts": {
     "gen:tools": "node scripts/gen-tools-map.mjs",
     "predev": "node scripts/gen-tools-map.mjs",
-    "prebuild": "node scripts/gen-tools-map.mjs && node scripts/gen-og-image.mjs",
+    "prebuild": "node scripts/gen-tools-map.mjs && node scripts/gen-og-image.mjs && node scripts/gen-sitemap.mjs",
     "dev": "next dev --turbopack",
     "build": "next build"
   },
