@@ -528,15 +528,59 @@ export const TOOLS: Tool[] = [
     icon: "wifi",
   },
   {
-    title: "PDF Tools Suite",
+    title: "PDF Merge",
     description:
-      "Merge, split, rotate, view metadata, and convert images — all your PDF needs in one place.",
-    href: "/tools/pdf-tools",
-    tags: "pdf merge combine split extract rotate metadata viewer image to pdf convert jpeg png browser privacy",
+      "Merge multiple PDF files into one. Reorder pages, drag and drop, and download — all in your browser.",
+    href: "/tools/pdf-merge",
+    tags: "pdf merge combine join files document browser privacy",
     category: "developer",
     tagLabel: "PDF",
     iconColor: "text-chart-3 bg-chart-3/10",
     icon: "files",
+  },
+  {
+    title: "PDF Split",
+    description:
+      "Split a PDF into individual pages or extract a page range. Download as separate files or a ZIP.",
+    href: "/tools/pdf-split",
+    tags: "pdf split extract pages range separate document browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "scissors",
+  },
+  {
+    title: "PDF Rotate",
+    description:
+      "Rotate all or selected pages in a PDF by 90, 180, or 270 degrees. Processed entirely in your browser.",
+    href: "/tools/pdf-rotate",
+    tags: "pdf rotate turn pages 90 180 270 degrees document browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "rotate-cw",
+  },
+  {
+    title: "Image to PDF",
+    description:
+      "Convert JPEG, PNG, WebP, GIF, or BMP images into a single PDF. Choose page size or fit to image.",
+    href: "/tools/image-to-pdf",
+    tags: "image to pdf convert jpeg png webp gif bmp document browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "image",
+  },
+  {
+    title: "PDF Metadata Viewer",
+    description:
+      "Inspect PDF metadata — title, author, subject, keywords, creator, producer, dates, page count, and version.",
+    href: "/tools/pdf-metadata",
+    tags: "pdf metadata viewer inspector title author creator producer document browser privacy",
+    category: "developer",
+    tagLabel: "PDF",
+    iconColor: "text-chart-3 bg-chart-3/10",
+    icon: "file-text",
   },
   {
     title: "Domain Inspector",
