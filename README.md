@@ -33,6 +33,20 @@ This repo is now a **Next.js static export** and should be deployed with **GitHu
   - `185.199.110.153`
   - `185.199.111.153`
 - Add `www` as a CNAME to `<your-github-username>.github.io`.
+
+#### CNAME Files
+
+There are two `CNAME` files in this repo:
+
+| File | Purpose |
+|------|---------|
+| `CNAME` (repo root) | GitHub Pages custom domain configuration |
+| `public/CNAME` | Copied to `out/` during the Next.js static export build |
+
+Both files **must contain the same domain** and be updated together if the
+custom domain ever changes. The build copies everything in `public/` to the
+output directory, so a mismatch would cause Pages to serve the wrong domain.
+
 ## 🎨 Customization
 
 ### Updating Social Links
