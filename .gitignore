@@ -22,3 +22,7 @@ public/og-image.png
 
 # claude code worktree scratch space
 .claude/
+
+# AI assistant working files
+audits/
+chats/
