@@ -9,18 +9,70 @@
  * Runs automatically before every dev/build via the prebuild / predev hooks.
  */
 
-import { readdirSync, writeFileSync } from "fs"
+import { readdirSync, readFileSync, writeFileSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..")
 const toolsDir = join(root, "components/tools")
 const outputFile = join(root, "app/tools/[slug]/client.tsx")
+const toolsFile = join(root, "lib/tools.ts")
 
 const slugs = readdirSync(toolsDir)
   .filter((f) => f.endsWith(".tsx"))
   .map((f) => f.replace(".tsx", ""))
   .sort()
+
+// --- Cross-check TOOLS (lib/tools.ts) against components/tools/*.tsx ---
+//
+// Pre-existing mismatches that predate this check. Don't add new slugs here —
+// fix the underlying TOOLS entry or component instead. Remove a slug from
+// this list once it's been resolved.
+const KNOWN_TOOLS_WITHOUT_COMPONENT = new Set(["browser-leak-tests", "domain-inspector", "guides"])
+const KNOWN_ORPHANED_COMPONENTS = new Set([
+  "blog",
+  "color-converter",
+  "cron-parser",
+  "dns-leak-test",
+  "dns-lookup",
+  "favorites",
+  "guide-privacy-101",
+  "guide-security-basics",
+  "number-base-converter",
+  "robots-txt-analyzer",
+  "text-case-converter",
+  "tool-history",
+  "totp-generator",
+  "webrtc-leak-test",
+  "whois-lookup",
+])
+
+const toolsSource = readFileSync(toolsFile, "utf8")
+const toolSlugs = [...toolsSource.matchAll(/href:\s*"\/tools\/([^"]+)"/g)].map((m) => m[1]).sort()
+
+const componentSet = new Set(slugs)
+const toolSet = new Set(toolSlugs)
+
+const toolsWithoutComponent = toolSlugs.filter(
+  (s) => !componentSet.has(s) && !KNOWN_TOOLS_WITHOUT_COMPONENT.has(s),
+)
+const orphanedComponents = slugs.filter((s) => !toolSet.has(s) && !KNOWN_ORPHANED_COMPONENTS.has(s))
+
+if (toolsWithoutComponent.length > 0 || orphanedComponents.length > 0) {
+  console.error("gen-tools-map: TOOLS / components/tools mismatch detected\n")
+  if (toolsWithoutComponent.length > 0) {
+    console.error(
+      `  TOOLS entries with no matching components/tools/<slug>.tsx file:\n    - ${toolsWithoutComponent.join("\n    - ")}\n`,
+    )
+  }
+  if (orphanedComponents.length > 0) {
+    console.error(
+      `  components/tools/*.tsx files with no matching TOOLS entry in lib/tools.ts:\n    - ${orphanedComponents.join("\n    - ")}\n`,
+    )
+  }
+  console.error("  Fix the entry/component, or if intentional, add the slug to the KNOWN_* allowlist in scripts/gen-tools-map.mjs.")
+  process.exit(1)
+}
 
 const mapEntries = slugs
   .map((s) => `  "${s}": dynamic(() => import("@/components/tools/${s}"), { loading }),`)
