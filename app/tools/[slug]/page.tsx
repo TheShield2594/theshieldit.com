@@ -68,7 +68,7 @@ export default async function ToolPage({
               Index
             </Link>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              Nº {String(TOOLS.indexOf(tool!) + 1).padStart(2, "0")} — {tool.tagLabel}
+              Nº {String(TOOLS.indexOf(tool) + 1).padStart(2, "0")} — {tool.tagLabel}
             </p>
           </div>
           <h1 className="mt-2 font-display text-3xl font-bold uppercase tracking-[0.02em] text-foreground sm:text-4xl">
@@ -82,7 +82,7 @@ export default async function ToolPage({
 
       <main className="flex flex-1 flex-col">
         <ToolClientContent slug={slug} />
-        <RelatedTools tool={tool!} />
+        <RelatedTools tool={tool} />
       </main>
 
       <SiteFooter />
