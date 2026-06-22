@@ -26,7 +26,7 @@
     "#ts-topbar {",
     "  position: fixed; top: 0; left: 0; right: 0; z-index: 999999;",
     "  height: " + NAV_HEIGHT + "px;",
-    "  background: rgba(6, 10, 18, 0.92);",
+    "  background: rgba(13, 11, 10, 0.92);",
     "  backdrop-filter: blur(16px);",
     "  -webkit-backdrop-filter: blur(16px);",
     "  border-bottom: 1px solid rgba(255, 255, 255, 0.07);",
@@ -37,51 +37,51 @@
     "#ts-topbar a { text-decoration: none; }",
     "#ts-topbar .ts-back {",
     "  display: flex; align-items: center; gap: 6px;",
-    "  color: #94a3b8; font-size: 13px; font-weight: 500;",
+    "  color: #a49b92; font-size: 13px; font-weight: 500;",
     "  padding: 5px 10px; border-radius: 6px;",
     "  transition: background 0.15s, color 0.15s;",
     "}",
-    "#ts-topbar .ts-back:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }",
+    "#ts-topbar .ts-back:hover { background: rgba(255,255,255,0.06); color: #faf5f0; }",
     "#ts-topbar .ts-divider {",
     "  width: 1px; height: 16px; background: rgba(255,255,255,0.1);",
     "  flex-shrink: 0;",
     "}",
     "#ts-topbar .ts-brand {",
     "  display: flex; align-items: center; gap: 7px;",
-    "  font-size: 14px; font-weight: 600; color: #f1f5f9;",
+    "  font-size: 14px; font-weight: 600; color: #faf5f0;",
     "}",
     "#ts-topbar .ts-flex { flex: 1; }",
     "#ts-topbar .ts-home-link {",
-    "  font-size: 12px; font-weight: 500; color: #3b82f6;",
+    "  font-size: 12px; font-weight: 500; color: #f97316;",
     "  padding: 5px 12px; border-radius: 6px;",
-    "  border: 1px solid rgba(59, 130, 246, 0.3);",
+    "  border: 1px solid rgba(249, 115, 22, 0.3);",
     "  transition: background 0.15s, border-color 0.15s;",
     "}",
     "#ts-topbar .ts-home-link:hover {",
-    "  background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.5);",
+    "  background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.5);",
     "}",
     /* ── Spacer that prevents content from hiding behind the fixed bar ── */
     "#ts-spacer { height: " + NAV_HEIGHT + "px; flex-shrink: 0; }",
     /* ── Footer ── */
     "#ts-footer {",
     "  border-top: 1px solid rgba(255, 255, 255, 0.07);",
-    "  background: rgba(6, 10, 18, 0.6);",
+    "  background: rgba(13, 11, 10, 0.6);",
     "  padding: 14px 16px;",
     "  display: flex; flex-wrap: wrap; align-items: center;",
     "  justify-content: center; gap: 6px 12px;",
     "  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;",
-    "  font-size: 12px; color: #64748b;",
+    "  font-size: 12px; color: #a49b92;",
     "  margin-top: 40px;",
     "}",
-    "#ts-footer a { color: #3b82f6; text-decoration: none; }",
-    "#ts-footer a:hover { color: #60a5fa; }",
+    "#ts-footer a { color: #f97316; text-decoration: none; }",
+    "#ts-footer a:hover { color: #fb923c; }",
     "#ts-footer .ts-dot { opacity: 0.4; }",
   ].join("\n");
 
   function shieldSVG(size) {
     return (
       '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24"' +
-      ' fill="none" stroke="#3b82f6" stroke-width="2.5"' +
+      ' fill="none" stroke="#f97316" stroke-width="2.5"' +
       ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' +
       '</svg>'

@@ -4,27 +4,48 @@ Modern, privacy-focused website for [theshieldit.com](https://theshieldit.com)
 
 ## 🛡️ Features
 
-- **Modern Design**: Clean, gradient-based design with smooth animations
+- **Next.js 15**: App Router with static export (`output: "export"`)
+- **TypeScript + Tailwind v4**: Typed components styled with the Field Kit design system
 - **Privacy-First**: Minimal tracking, uses privacy-friendly Umami analytics
 - **Responsive**: Fully responsive design that works on all devices
-- **Fast Loading**: Pure HTML/CSS with no external dependencies (except analytics)
-- **Animated Background**: Subtle floating gradient animation
-- **Interactive Cards**: Hover effects and smooth transitions
-- **SEO Optimized**: Proper meta tags and semantic HTML
+- **Legacy Tool Pages**: Standalone HTML tools under `public/` get a shared nav/footer via `public/shared-shell.js`
+- **SEO Optimized**: Generated sitemap, OG image, and proper meta tags
 
-## 🚀 Deployment to GitHub Pages
+## 🔧 Local Development
 
-This repo is now a **Next.js static export** and should be deployed with **GitHub Actions** (not “Deploy from branch”).
+This project uses [pnpm](https://pnpm.io/):
 
-1. Push to `main`.
-2. In GitHub, go to **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-4. The included workflow (`.github/workflows/deploy-pages.yml`) will:
-   - run `npm ci`
-   - run `npm run build` (exports static files to `out/`)
-   - publish `out/` to Pages
+```bash
+pnpm install
+pnpm dev
+```
 
-### Custom Domain Setup (theshieldit.com)
+This starts the Next.js dev server (with Turbopack) at `http://localhost:3000`.
+
+To produce a production static export locally:
+
+```bash
+pnpm build
+```
+
+This generates the tools map, OG image, and sitemap, then exports static files to `out/`.
+
+## 🚀 Deployment
+
+This repo supports two deployment paths — check which one is actually wired up for your environment before assuming:
+
+### Vercel
+
+`vercel.json` configures the build (`pnpm build`), security headers, and CSP. If the project is connected to Vercel, pushes are deployed automatically.
+
+### GitHub Pages
+
+The workflow at `.github/workflows/deploy-pages.yml` builds the static export and publishes `out/` to GitHub Pages on every push to `main`. To use this path:
+
+1. In GitHub, go to **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+
+#### Custom Domain Setup (theshieldit.com)
 
 - Keep `CNAME` in the repo root (already present).
 - In your DNS provider, point the root domain to GitHub Pages with these `A` records:
@@ -49,45 +70,34 @@ output directory, so a mismatch would cause Pages to serve the wrong domain.
 
 ## 🎨 Customization
 
-### Updating Social Links
-Edit the social links in the HTML file around line 550:
-```html
-<a href="https://linkedin.com/in/theshieldit" class="social-btn">
-<a href="mailto:brandon@theshieldit.com" class="social-btn">
-<a href="https://instagram.com/theshieldit" class="social-btn">
-```
+### Updating Site Content
 
-Note: Substack link is included in the "Educational Content" card, not in the top social links.
+The main site is built from React components under `app/` and `components/`. There's no single HTML file to edit — update the relevant component (e.g. `components/site-header.tsx`, `components/site-footer.tsx`) and the change will apply across the site.
 
 ### Changing Colors
-The color scheme uses CSS variables defined at the top of the `<style>` section:
+
+The color scheme uses CSS custom properties defined in `app/globals.css`:
+
 ```css
 :root {
-  --primary: #3b82f6;      /* Blue */
-  --secondary: #8b5cf6;    /* Purple */
-  --accent: #06b6d4;       /* Cyan */
-  --bg-dark: #0f172a;      /* Dark blue */
-  --bg-darker: #020617;    /* Almost black */
+  --background: 20 13% 5%;   /* #0d0b0a */
+  --foreground: 30 50% 96%;  /* #faf5f0 */
+  --primary: 25 95% 53%;     /* #f97316 */
+  --border: 30 17% 14%;      /* #2a241e */
 }
 ```
 
+Legacy static tool pages under `public/` get their nav/footer styling from `public/shared-shell.js`, which mirrors this same palette and should be kept in sync if the theme changes.
+
 ### Analytics
-The Umami analytics script is already integrated. Your website ID is configured in the HTML head:
-```html
-<script defer src="https://cloud.umami.is/script.js" data-website-id="f727bfa2-17ee-4141-82d3-a9b15d813fb6"></script>
-```
+
+The Umami analytics script is integrated site-wide. Your website ID is configured wherever the analytics script tag is rendered (search the codebase for `cloud.umami.is`).
 
 ## 📁 Adding More Pages
 
-To add additional pages (like `/tools`, `/about`, etc.):
+To add a new page to the Next.js app, create a new route under `app/` (e.g. `app/about/page.tsx`) following the conventions of existing routes.
 
-1. Create new HTML files in the same directory
-2. Link to them from the main page
-3. Maintain consistent styling by copying the CSS section
-
-## 🔧 Local Development
-
-Simply open `index.html` in your browser. No build process needed!
+To add a new standalone tool page, see `scripts/gen-tools-map.mjs` and the existing entries under `public/` and `app/tools/`.
 
 ## 📝 License
 
